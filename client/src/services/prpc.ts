@@ -20,7 +20,8 @@ export interface JsonRpcResponse<T> {
   };
 }
 
-export const DEFAULT_RPC_ENDPOINT = "http://localhost:6000/rpc";
+// Default to port 4000 as requested by user for their specific tunnel setup
+export const DEFAULT_RPC_ENDPOINT = "http://localhost:4000/rpc";
 
 export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<Pod[]> => {
   try {

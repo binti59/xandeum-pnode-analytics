@@ -52,11 +52,11 @@ export function ConnectionSettings({ currentEndpoint, onSave }: ConnectionSettin
               id="endpoint"
               value={endpoint}
               onChange={(e) => setEndpoint(e.target.value)}
-              placeholder="http://localhost:6000/rpc"
+              placeholder="http://localhost:4000/rpc"
               className="font-mono text-sm border-2 border-foreground rounded-none focus-visible:ring-0 focus-visible:border-primary"
             />
             <p className="text-xs text-muted-foreground">
-              Default: http://localhost:6000/rpc (or your tunneled port)
+              Default: http://localhost:4000/rpc (your tunneled port)
             </p>
           </div>
         </div>
