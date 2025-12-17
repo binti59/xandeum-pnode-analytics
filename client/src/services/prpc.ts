@@ -1,19 +1,30 @@
-export interface PNode {
-  identity: string;
-  ip: string;
+export interface Pod {
+  address: string;
   version: string;
-  lastSeen: number; // unix timestamp
+  last_seen: string; // Human readable timestamp
+  last_seen_timestamp: number; // Unix timestamp
 }
 
-export interface PNodeGossipResponse {
+export interface GetPodsResult {
+  pods: Pod[];
+  total_count: number;
+}
+
+export interface JsonRpcResponse<T> {
   jsonrpc: "2.0";
-  result: PNode[];
+  result: T;
   id: number;
+  error?: {
+    code: number;
+    message: string;
+  };
 }
 
+// Using the endpoint provided in the initial prompt, though docs mention local default.
+// In a real scenario, this would likely be a public node or a proxy.
 const RPC_ENDPOINT = "https://rpc.xandeum.network";
 
-export const getPNodeGossip = async (): Promise<PNode[]> => {
+export const getPods = async (): Promise<Pod[]> => {
   try {
     const response = await fetch(RPC_ENDPOINT, {
       method: "POST",
@@ -22,8 +33,7 @@ export const getPNodeGossip = async (): Promise<PNode[]> => {
       },
       body: JSON.stringify({
         jsonrpc: "2.0",
-        method: "getPNodeGossip",
-        params: [],
+        method: "get-pods", // Correct method name from docs
         id: 1,
       }),
     });
@@ -32,16 +42,15 @@ export const getPNodeGossip = async (): Promise<PNode[]> => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data: PNodeGossipResponse = await response.json();
+    const data: JsonRpcResponse<GetPodsResult> = await response.json();
 
-    if ("error" in data) {
-      // @ts-ignore - handling potential error response structure
+    if (data.error) {
       throw new Error(`RPC error: ${data.error.message}`);
     }
 
-    return data.result;
+    return data.result.pods;
   } catch (error) {
-    console.error("Failed to fetch pNode gossip:", error);
+    console.error("Failed to fetch pods:", error);
     throw error;
   }
 };

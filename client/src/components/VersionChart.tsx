@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PNode } from "@/services/prpc";
+import { Pod } from "@/services/prpc";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface VersionChartProps {
-  nodes: PNode[];
+  nodes: Pod[];
 }
 
 export function VersionChart({ nodes }: VersionChartProps) {

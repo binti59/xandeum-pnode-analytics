@@ -2,12 +2,12 @@ import { PNodeTable } from "@/components/PNodeTable";
 import { StatsCards } from "@/components/StatsCards";
 import { VersionChart } from "@/components/VersionChart";
 import { Button } from "@/components/ui/button";
-import { getPNodeGossip, PNode } from "@/services/prpc";
+import { getPods, Pod } from "@/services/prpc";
 import { Loader2, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
-  const [nodes, setNodes] = useState<PNode[]>([]);
+  const [nodes, setNodes] = useState<Pod[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -16,7 +16,7 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getPNodeGossip();
+      const data = await getPods();
       setNodes(data);
       setLastUpdated(new Date());
     } catch (err) {
@@ -37,7 +37,7 @@ export default function Dashboard() {
   const uniqueVersions = new Set(nodes.map((n) => n.version)).size;
   const recentlySeen = nodes.filter((n) => {
     const oneHourAgo = Date.now() / 1000 - 3600;
-    return n.lastSeen > oneHourAgo;
+    return n.last_seen_timestamp > oneHourAgo;
   }).length;
 
   return (

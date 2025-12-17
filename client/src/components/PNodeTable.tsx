@@ -6,16 +6,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PNode } from "@/services/prpc";
+import { Pod } from "@/services/prpc";
 import { ArrowUpDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
 interface PNodeTableProps {
-  nodes: PNode[];
+  nodes: Pod[];
 }
 
-type SortField = "lastSeen" | "version" | "ip";
+type SortField = "lastSeen" | "version" | "address";
 type SortDirection = "asc" | "desc";
 
 export function PNodeTable({ nodes }: PNodeTableProps) {
@@ -34,11 +34,11 @@ export function PNodeTable({ nodes }: PNodeTableProps) {
   const sortedNodes = [...nodes].sort((a, b) => {
     let comparison = 0;
     if (sortField === "lastSeen") {
-      comparison = a.lastSeen - b.lastSeen;
+      comparison = a.last_seen_timestamp - b.last_seen_timestamp;
     } else if (sortField === "version") {
       comparison = a.version.localeCompare(b.version);
-    } else if (sortField === "ip") {
-      comparison = a.ip.localeCompare(b.ip);
+    } else if (sortField === "address") {
+      comparison = a.address.localeCompare(b.address);
     }
     return sortDirection === "asc" ? comparison : -comparison;
   });
@@ -59,14 +59,13 @@ export function PNodeTable({ nodes }: PNodeTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[300px]">Identity</TableHead>
-            <TableHead>
-              <Button 
+            <TableHead className="w-[300px]">
+               <Button 
                 variant="ghost" 
-                onClick={() => handleSort("ip")}
+                onClick={() => handleSort("address")}
                 className="hover:bg-transparent px-0 font-semibold"
               >
-                IP Address
+                Address
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             </TableHead>
@@ -94,20 +93,19 @@ export function PNodeTable({ nodes }: PNodeTableProps) {
         </TableHeader>
         <TableBody>
           {sortedNodes.map((node) => (
-            <TableRow key={node.identity}>
-              <TableCell className="font-mono text-xs">
-                <span className="bg-muted px-2 py-1 font-bold" title={node.identity}>
-                  {node.identity.slice(0, 8)}...{node.identity.slice(-8)}
+            <TableRow key={node.address}>
+              <TableCell className="font-mono text-sm">
+                <span className="bg-muted px-2 py-1 font-bold" title={node.address}>
+                  {node.address}
                 </span>
               </TableCell>
-              <TableCell className="font-mono text-sm">{node.ip}</TableCell>
               <TableCell>
                 <span className="inline-flex items-center border-2 border-foreground px-2.5 py-0.5 text-xs font-bold bg-white text-foreground rounded-none">
                   {node.version}
                 </span>
               </TableCell>
               <TableCell className="text-right text-muted-foreground tabular-nums">
-                {formatLastSeen(node.lastSeen)}
+                {formatLastSeen(node.last_seen_timestamp)}
               </TableCell>
             </TableRow>
           ))}
