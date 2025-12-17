@@ -1,8 +1,9 @@
+import { ConnectionSettings } from "@/components/ConnectionSettings";
 import { PNodeTable } from "@/components/PNodeTable";
 import { StatsCards } from "@/components/StatsCards";
 import { VersionChart } from "@/components/VersionChart";
 import { Button } from "@/components/ui/button";
-import { getPods, Pod } from "@/services/prpc";
+import { DEFAULT_RPC_ENDPOINT, getPods, Pod } from "@/services/prpc";
 import { Loader2, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -11,16 +12,28 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  
+  // Initialize endpoint from localStorage or default
+  const [endpoint, setEndpoint] = useState<string>(() => {
+    return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
+  });
 
-  const fetchData = async () => {
+  const handleEndpointChange = (newEndpoint: string) => {
+    setEndpoint(newEndpoint);
+    localStorage.setItem("xandeum_rpc_endpoint", newEndpoint);
+    // Trigger a refresh when endpoint changes
+    fetchData(newEndpoint);
+  };
+
+  const fetchData = async (rpcUrl: string = endpoint) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getPods();
+      const data = await getPods(rpcUrl);
       setNodes(data);
       setLastUpdated(new Date());
     } catch (err) {
-      setError("Failed to fetch pNode data. Please try again later.");
+      setError(`Failed to fetch pNode data from ${rpcUrl}. Check your connection settings.`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -30,9 +43,9 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData();
     // Auto-refresh every 60 seconds
-    const interval = setInterval(fetchData, 60000);
+    const interval = setInterval(() => fetchData(), 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [endpoint]); // Re-run effect if endpoint changes (though fetchData handles it)
 
   const uniqueVersions = new Set(nodes.map((n) => n.version)).size;
   const recentlySeen = nodes.filter((n) => {
@@ -59,11 +72,16 @@ export default function Dashboard() {
                 Updated: {lastUpdated.toLocaleTimeString()}
               </span>
             )}
+            <ConnectionSettings 
+              currentEndpoint={endpoint} 
+              onSave={handleEndpointChange} 
+            />
             <Button 
-              onClick={fetchData} 
+              onClick={() => fetchData()} 
               disabled={loading}
               variant="outline"
               size="sm"
+              className="rounded-none border-2 border-foreground"
             >
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -76,16 +94,18 @@ export default function Dashboard() {
         </div>
 
         {error ? (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-destructive">
-            <h3 className="font-semibold">Error Loading Data</h3>
-            <p>{error}</p>
-            <Button 
-              variant="outline" 
-              className="mt-4 border-destructive/50 hover:bg-destructive/20"
-              onClick={fetchData}
-            >
-              Retry
-            </Button>
+          <div className="border-2 border-destructive bg-destructive/5 p-6 text-destructive">
+            <h3 className="font-bold uppercase tracking-tight">Error Loading Data</h3>
+            <p className="mt-2">{error}</p>
+            <div className="mt-4 flex gap-4">
+              <Button 
+                variant="outline" 
+                className="border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none"
+                onClick={() => fetchData()}
+              >
+                Retry
+              </Button>
+            </div>
           </div>
         ) : (
           <>
@@ -106,7 +126,7 @@ export default function Dashboard() {
               {/* Node Table - Takes up 2 columns on large screens */}
               <div className="md:col-span-2">
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold tracking-tight">
+                  <h2 className="text-2xl font-bold tracking-tight uppercase">
                     Active Nodes
                   </h2>
                   <PNodeTable nodes={nodes} />

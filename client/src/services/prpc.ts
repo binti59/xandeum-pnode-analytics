@@ -20,20 +20,18 @@ export interface JsonRpcResponse<T> {
   };
 }
 
-// Using the endpoint provided in the initial prompt, though docs mention local default.
-// In a real scenario, this would likely be a public node or a proxy.
-const RPC_ENDPOINT = "https://rpc.xandeum.network";
+export const DEFAULT_RPC_ENDPOINT = "http://localhost:6000/rpc";
 
-export const getPods = async (): Promise<Pod[]> => {
+export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<Pod[]> => {
   try {
-    const response = await fetch(RPC_ENDPOINT, {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         jsonrpc: "2.0",
-        method: "get-pods", // Correct method name from docs
+        method: "get-pods",
         id: 1,
       }),
     });
