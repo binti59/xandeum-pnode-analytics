@@ -26,6 +26,25 @@ export interface Pod {
   uptime?: number; // Seconds
 }
 
+export interface NodeStats {
+  metadata: {
+    total_bytes: number;
+    total_pages: number;
+    last_updated: number; // Unix timestamp
+    current_index?: number;
+  };
+  stats: {
+    cpu_percent: number;
+    ram_used: number;
+    ram_total: number;
+    uptime: number; // Seconds
+    packets_received: number;
+    packets_sent: number;
+    active_streams: number;
+  };
+  file_size: number; // Storage file size in bytes
+}
+
 export interface GetPodsResult {
   pods: Pod[];
   total_count: number;
@@ -63,7 +82,7 @@ export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<
           json: {
             endpoint,
             method: "get-pods",
-            params: [],
+            // Don't include params - not needed
           },
         },
       }),
@@ -94,6 +113,56 @@ export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<
 };
 
 /**
+ * Fetch detailed stats for a specific node
+ * Uses public RPC node as fallback since most nodes don't expose port 6000 publicly
+ * @param nodeAddress - The IP:port address of the node (e.g., "192.190.136.36:6000")
+ */
+export async function getNodeStats(nodeAddress: string, customEndpoint?: string): Promise<NodeStats> {
+  // Use custom endpoint if provided, otherwise fall back to public RPC node
+  // Most nodes only expose gossip port (9001), not RPC port (6000)
+  const endpoint = customEndpoint || DEFAULT_RPC_ENDPOINT;
+
+  try {
+    const response = await fetch("/api/trpc/proxy.rpc", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        "0": {
+          json: {
+            endpoint,
+            method: "get-stats",
+            // Don't include params - get-stats doesn't need it
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rpcResponse = data[0]?.result?.data?.json as JsonRpcResponse<NodeStats>;
+
+    if (!rpcResponse) {
+      throw new Error("Invalid response format from proxy");
+    }
+
+    if (rpcResponse.error) {
+      throw new Error(`RPC error: ${rpcResponse.error.message}`);
+    }
+
+    return rpcResponse.result;
+  } catch (error) {
+    console.error(`Failed to fetch stats for node ${nodeAddress}:`, error);
+    throw error;
+  }
+};
+
+/**
  * Format uptime in seconds to human-readable string
  * Example: 345600 seconds -> "4d 0h"
  */
@@ -116,6 +185,15 @@ export function formatUptime(seconds: number): string {
  * Example: 1073741824 -> "1.00 GB"
  */
 export function formatStorage(bytes: number): string {
+  const gb = bytes / (1024 * 1024 * 1024);
+  return `${gb.toFixed(2)} GB`;
+}
+
+/**
+ * Format RAM in bytes to GB
+ * Example: 8589934592 -> "8.00 GB"
+ */
+export function formatRAM(bytes: number): string {
   const gb = bytes / (1024 * 1024 * 1024);
   return `${gb.toFixed(2)} GB`;
 }

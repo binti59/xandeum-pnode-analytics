@@ -1,15 +1,47 @@
 import { Button } from "@/components/ui/button";
-import { Pod } from "@/services/prpc";
-import { Copy, X } from "lucide-react";
+import { Pod, NodeStats, getNodeStats, formatUptime, formatStorage, formatRAM } from "@/services/prpc";
+import { Copy, X, Loader2, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 interface NodeDetailsDrawerProps {
   node: Pod | null;
   onClose: () => void;
+  statsEndpoint?: string;
+  useCustomStats?: boolean;
 }
 
-export function NodeDetailsDrawer({ node, onClose }: NodeDetailsDrawerProps) {
+export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats }: NodeDetailsDrawerProps) {
+  const [stats, setStats] = useState<NodeStats | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!node) {
+      setStats(null);
+      setError(null);
+      return;
+    }
+
+    // Fetch stats when node changes
+    const fetchStats = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const nodeStats = await getNodeStats(node.address, useCustomStats ? statsEndpoint : undefined);
+        setStats(nodeStats);
+      } catch (err) {
+        console.error("Failed to fetch node stats:", err);
+        setError("Failed to load node statistics. The node may not be responding.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [node]);
+
   if (!node) return null;
 
   const copyToClipboard = (text: string, label: string) => {
@@ -97,50 +129,107 @@ export function NodeDetailsDrawer({ node, onClose }: NodeDetailsDrawerProps) {
 
               {/* Content */}
               <div className="p-6 space-y-8">
-                {/* Identity Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Identity</h3>
-                  <div className="space-y-0">
-                    <DetailRow label="Node ID" value={node.pubkey || "N/A"} copyable />
-                    <DetailRow label="Gossip" value={node.address} copyable />
-                    <DetailRow label="RPC" value={node.rpc_port ? `${node.address.split(":")[0]}:${node.rpc_port}` : "N/A"} copyable />
-                  </div>
-                </div>
-
-                {/* Software Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Software</h3>
-                  <div className="space-y-0">
-                    <DetailRow label="Version" value={node.version} />
-                    <DetailRow label="Last Seen" value={node.last_seen} />
-                  </div>
-                </div>
-
-                {/* Network Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Network</h3>
-                  <div className="space-y-0">
-                    <DetailRow label="Public Node" value={node.is_public ? "Yes" : "No"} />
-                  </div>
-                </div>
-
-                {/* Performance Section (if data available) */}
-                {node.uptime && (
-                  <div>
-                    <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Performance</h3>
-                    <div className="space-y-0">
-                      <DetailRow label="Uptime" value={`${Math.floor(node.uptime / 86400)}d ${Math.floor((node.uptime % 86400) / 3600)}h`} />
-                    </div>
+                {loading && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <p className="text-muted-foreground">Loading node statistics...</p>
                   </div>
                 )}
 
-                {/* Raw Data Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Raw Data (14 fields)</h3>
-                  <div className="bg-black/40 rounded-lg p-4 font-mono text-xs text-muted-foreground overflow-x-auto">
-                    <pre>{JSON.stringify(node, null, 2)}</pre>
+                {error && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+                    <AlertCircle className="h-8 w-8 text-yellow-500" />
+                    <p className="text-muted-foreground">{error}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => node && getNodeStats(node.address)}
+                      className="glass-input hover:bg-white/10 border-white/10 text-white"
+                    >
+                      Retry
+                    </Button>
                   </div>
-                </div>
+                )}
+
+                {!loading && !error && stats && (
+                  <>
+                    {/* Info Banner */}
+                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
+                      <p className="text-sm text-blue-300">
+                        <strong>Note:</strong> Most nodes only expose their gossip port (9001) publicly. 
+                        Stats shown below are from a public reference node (192.190.136.36:6000) and represent typical network performance.
+                      </p>
+                    </div>
+
+                    {/* Identity Section */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Identity</h3>
+                      <div className="space-y-0">
+                        <DetailRow label="Node ID" value={node.pubkey || "N/A"} copyable />
+                        <DetailRow label="Gossip" value={node.address} copyable />
+                        <DetailRow label="RPC" value={`${node.address.split(":")[0]}:6000`} copyable />
+                      </div>
+                    </div>
+
+                    {/* Software Section */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Software</h3>
+                      <div className="space-y-0">
+                        <DetailRow label="Version" value={node.version} />
+                        <DetailRow label="Last Seen" value={node.last_seen} />
+                      </div>
+                    </div>
+
+                    {/* Performance Section */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Performance</h3>
+                      <div className="space-y-0">
+                        <DetailRow label="Uptime" value={formatUptime(stats.stats.uptime)} />
+                        <DetailRow label="CPU Usage" value={`${stats.stats.cpu_percent.toFixed(1)}%`} />
+                        <DetailRow 
+                          label="RAM Usage" 
+                          value={`${formatRAM(stats.stats.ram_used)} / ${formatRAM(stats.stats.ram_total)}`} 
+                        />
+                        <DetailRow label="Storage" value={formatStorage(stats.file_size)} />
+                      </div>
+                    </div>
+
+                    {/* Network Section */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Network</h3>
+                      <div className="space-y-0">
+                        <DetailRow label="Active Streams" value={stats.stats.active_streams.toString()} />
+                        <DetailRow label="Packets Received" value={stats.stats.packets_received.toLocaleString()} />
+                        <DetailRow label="Packets Sent" value={stats.stats.packets_sent.toLocaleString()} />
+                        <DetailRow label="Public Node" value={node.is_public ? "Yes" : "No"} />
+                      </div>
+                    </div>
+
+                    {/* Storage Details */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Storage Details</h3>
+                      <div className="space-y-0">
+                        <DetailRow label="Total Bytes" value={stats.metadata.total_bytes.toLocaleString()} />
+                        <DetailRow label="Total Pages" value={stats.metadata.total_pages.toLocaleString()} />
+                        {stats.metadata.current_index !== undefined && (
+                          <DetailRow label="Current Index" value={stats.metadata.current_index.toString()} />
+                        )}
+                        <DetailRow 
+                          label="Last Updated" 
+                          value={new Date(stats.metadata.last_updated * 1000).toLocaleString()} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Raw Data Section */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Raw Data</h3>
+                      <div className="bg-black/40 rounded-lg p-4 font-mono text-xs text-muted-foreground overflow-x-auto">
+                        <pre>{JSON.stringify({ node, stats }, null, 2)}</pre>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

@@ -14,7 +14,7 @@ import { calculateHealthMetrics } from "@/lib/healthScore";
 import { trpc } from "@/lib/trpc";
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap } from "lucide-react";
+import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Default to public node
@@ -33,6 +33,24 @@ export default function Dashboard() {
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
   });
+  
+  const [statsEndpoint, setStatsEndpoint] = useState<string>(() => {
+    return localStorage.getItem("xandeum_stats_endpoint") || "";
+  });
+  
+  const [useCustomStats, setUseCustomStats] = useState<boolean>(() => {
+    return localStorage.getItem("xandeum_use_custom_stats") === "true";
+  });
+  
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(() => {
+    return localStorage.getItem("xandeum_auto_refresh") !== "false"; // Default to true
+  });
+  
+  const [refreshInterval, setRefreshInterval] = useState<number>(() => {
+    return parseInt(localStorage.getItem("xandeum_refresh_interval") || "60");
+  });
+  
+  const [countdown, setCountdown] = useState<number>(refreshInterval);
 
   // Use tRPC mutation for proxy requests
   const proxyMutation = trpc.proxy.rpc.useMutation({
@@ -51,9 +69,20 @@ export default function Dashboard() {
     },
   });
 
-  const handleEndpointChange = (newEndpoint: string) => {
+  const handleEndpointChange = (newEndpoint: string, newStatsEndpoint?: string, newUseCustomStats?: boolean) => {
     setEndpoint(newEndpoint);
     localStorage.setItem("xandeum_rpc_endpoint", newEndpoint);
+    
+    if (newStatsEndpoint !== undefined) {
+      setStatsEndpoint(newStatsEndpoint);
+      localStorage.setItem("xandeum_stats_endpoint", newStatsEndpoint);
+    }
+    
+    if (newUseCustomStats !== undefined) {
+      setUseCustomStats(newUseCustomStats);
+      localStorage.setItem("xandeum_use_custom_stats", String(newUseCustomStats));
+    }
+    
     fetchData(newEndpoint);
   };
 
@@ -67,9 +96,40 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(() => fetchData(), 60000);
-    return () => clearInterval(interval);
-  }, [endpoint]);
+    
+    if (!autoRefresh) return;
+    
+    // Reset countdown when interval changes
+    setCountdown(refreshInterval);
+    
+    const interval = setInterval(() => {
+      fetchData();
+      setCountdown(refreshInterval);
+    }, refreshInterval * 1000);
+    
+    const countdownTimer = setInterval(() => {
+      setCountdown(prev => Math.max(0, prev - 1));
+    }, 1000);
+    
+    return () => {
+      clearInterval(interval);
+      clearInterval(countdownTimer);
+    };
+  }, [endpoint, autoRefresh, refreshInterval]);
+  
+  const handleAutoRefreshToggle = (enabled: boolean) => {
+    setAutoRefresh(enabled);
+    localStorage.setItem("xandeum_auto_refresh", String(enabled));
+    if (enabled) {
+      setCountdown(refreshInterval);
+    }
+  };
+  
+  const handleIntervalChange = (seconds: number) => {
+    setRefreshInterval(seconds);
+    localStorage.setItem("xandeum_refresh_interval", String(seconds));
+    setCountdown(seconds);
+  };
 
   // Calculate health metrics
   const healthMetrics = calculateHealthMetrics(nodes);
@@ -120,14 +180,50 @@ export default function Dashboard() {
               Real-time pNode discovery & gossip monitoring
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Auto-refresh controls */}
+            <div className="flex items-center gap-2 glass-input px-3 py-1.5 rounded-lg border border-white/10">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 hover:bg-white/10"
+                onClick={() => handleAutoRefreshToggle(!autoRefresh)}
+                title={autoRefresh ? "Pause auto-refresh" : "Resume auto-refresh"}
+              >
+                {autoRefresh ? (
+                  <Pause className="h-3.5 w-3.5 text-primary" />
+                ) : (
+                  <Play className="h-3.5 w-3.5 text-muted-foreground" />
+                )}
+              </Button>
+              <select
+                value={refreshInterval}
+                onChange={(e) => handleIntervalChange(Number(e.target.value))}
+                className="bg-transparent text-xs text-white border-none outline-none cursor-pointer font-mono"
+                disabled={!autoRefresh}
+              >
+                <option value="30" className="bg-background">30s</option>
+                <option value="60" className="bg-background">1m</option>
+                <option value="120" className="bg-background">2m</option>
+                <option value="300" className="bg-background">5m</option>
+              </select>
+              {autoRefresh && (
+                <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  <span>{countdown}s</span>
+                </div>
+              )}
+            </div>
+            
             {lastUpdated && (
-              <span className="text-sm text-muted-foreground hidden md:inline-block font-mono">
+              <span className="text-xs text-muted-foreground hidden lg:inline-block font-mono glass-input px-3 py-1.5 rounded-lg border border-white/10">
                 Updated: {lastUpdated.toLocaleTimeString()}
               </span>
             )}
             <ConnectionSettings 
-              currentEndpoint={endpoint} 
+              currentEndpoint={endpoint}
+              currentStatsEndpoint={statsEndpoint}
+              useCustomStats={useCustomStats}
               onSave={handleEndpointChange} 
             />
             <Button 
@@ -264,7 +360,9 @@ export default function Dashboard() {
       {/* Node Details Drawer */}
       <NodeDetailsDrawer 
         node={selectedNode} 
-        onClose={() => setSelectedNode(null)} 
+        onClose={() => setSelectedNode(null)}
+        statsEndpoint={statsEndpoint}
+        useCustomStats={useCustomStats} 
       />
     </div>
   );

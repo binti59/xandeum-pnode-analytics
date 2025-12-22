@@ -32,14 +32,23 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         try {
+          // Build RPC request body
+          const rpcBody: any = {
+            jsonrpc: "2.0",
+            id: 1,
+            method: input.method,
+          };
+
+          // Only include params if provided and not empty (get-stats doesn't need params)
+          if (input.params !== undefined && input.params !== null && (
+            !Array.isArray(input.params) || input.params.length > 0
+          )) {
+            rpcBody.params = input.params;
+          }
+
           const response = await axios.post(
             input.endpoint,
-            {
-              jsonrpc: "2.0",
-              id: 1,
-              method: input.method,
-              params: input.params || [],
-            },
+            rpcBody,
             {
               headers: {
                 "Content-Type": "application/json",
