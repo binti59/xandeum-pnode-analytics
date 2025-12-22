@@ -3,6 +3,15 @@ export interface Pod {
   version: string;
   last_seen: string; // Human readable timestamp
   last_seen_timestamp: number; // Unix timestamp
+  
+  // Extended fields
+  is_public?: boolean;
+  pubkey?: string;
+  rpc_port?: number;
+  storage_committed?: number; // Bytes
+  storage_used?: number; // Bytes
+  storage_usage_percent?: number;
+  uptime?: number; // Seconds
 }
 
 export interface GetPodsResult {

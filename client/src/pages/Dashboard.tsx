@@ -1,7 +1,6 @@
 import { ConnectionSettings } from "@/components/ConnectionSettings";
-import { PNodeTable } from "@/components/PNodeTable";
-import { StatsCards } from "@/components/StatsCards";
-import { VersionChart } from "@/components/VersionChart";
+import { FilterBar } from "@/components/FilterBar";
+import { NodeCard } from "@/components/NodeCard";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_RPC_ENDPOINT, getPods, Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
@@ -14,6 +13,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [isMixedContentError, setIsMixedContentError] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
@@ -54,11 +54,14 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [endpoint]);
 
-  const uniqueVersions = new Set(nodes.map((n) => n.version)).size;
-  const recentlySeen = nodes.filter((n) => {
-    const oneHourAgo = Date.now() / 1000 - 3600;
-    return n.last_seen_timestamp > oneHourAgo;
-  }).length;
+  // Filter nodes based on search query
+  const filteredNodes = nodes.filter(node => 
+    node.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (node.pubkey && node.pubkey.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  const onlineCount = nodes.length; // Assuming all returned nodes are "online" in gossip
+  const publicCount = nodes.filter(n => n.is_public).length;
 
   return (
     <div className="min-h-screen text-foreground selection:bg-primary/30">
@@ -156,36 +159,27 @@ export default function Dashboard() {
           </motion.div>
         ) : (
           <>
-            {/* Stats Cards */}
-            <StatsCards
-              totalNodes={nodes.length}
-              uniqueVersions={uniqueVersions}
-              recentlySeen={recentlySeen}
+            {/* Filter Bar */}
+            <FilterBar 
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              totalCount={nodes.length}
+              onlineCount={onlineCount}
+              publicCount={publicCount}
             />
 
-            {/* Main Content Grid */}
-            <div className="grid gap-8 md:grid-cols-3">
-              {/* Version Chart */}
-              <div className="md:col-span-1 h-full">
-                <VersionChart nodes={nodes} />
-              </div>
-
-              {/* Node Table */}
-              <div className="md:col-span-2">
-                <div className="space-y-4">
-                  <motion.h2 
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="text-2xl font-bold tracking-tight text-white flex items-center gap-2"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    Active Nodes
-                  </motion.h2>
-                  <PNodeTable nodes={nodes} />
-                </div>
-              </div>
+            {/* Node Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredNodes.map((node, index) => (
+                <NodeCard key={node.address + index} node={node} />
+              ))}
             </div>
+            
+            {filteredNodes.length === 0 && !loading && (
+              <div className="text-center py-20 text-muted-foreground">
+                No pNodes found matching your search.
+              </div>
+            )}
           </>
         )}
       </div>
