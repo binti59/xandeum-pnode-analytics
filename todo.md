@@ -129,3 +129,6 @@
 - [x] Create mini leaderboard in stats panel showing top-ranked accessible nodes
 - [x] Add dedicated export button for RPC-accessible nodes only (CSV/JSON)
 - [x] Display loading state during background RPC scan
+
+## Bug Fix
+- [x] Fix TypeError in NodeDetailsDrawer when clicking nodes with private RPC ports (Cannot read properties of undefined reading 'uptime')

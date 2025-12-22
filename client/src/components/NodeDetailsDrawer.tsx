@@ -216,7 +216,7 @@ export function NodeDetailsDrawer({ node, onClose }: NodeDetailsDrawerProps) {
                   </div>
                 )}
 
-                {!loading && !error && stats && (
+                {!loading && !error && stats && stats.stats && (
                   <>
                     {/* Success Banner */}
                     <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
