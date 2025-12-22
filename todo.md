@@ -94,3 +94,14 @@
 - [x] Build leaderboard history page showing daily top 10 snapshots
 - [x] Add date range selector for viewing historical rankings
 - [x] Display badges on ranking table
+
+## New Feature Request (Node Performance History Page)
+- [x] Create NodeHistory page component with URL parameter for node address
+- [x] Add performance timeline chart showing score changes over time
+- [x] Add rank progression chart with trend line
+- [x] Display badge history timeline showing when badges were earned
+- [x] Display comprehensive statistics (average score, best rank, days tracked, current score/rank)
+- [x] Add geographic information section
+- [x] Make node cards clickable to navigate to history page
+- [x] Add back navigation to return to dashboard/rankings
+- [x] Handle cases where no historical data exists yet
