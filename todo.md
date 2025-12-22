@@ -121,3 +121,11 @@
 - [x] Add "RPC Accessible" filter to show only queryable nodes
 - [x] Sort nodes with accessible RPC ports to top of list by default
 - [x] Update node cards to show RPC status badge
+
+## New Feature Request (RPC Accessibility Enhancements)
+- [x] Implement background RPC scanning job that checks all nodes every 30 minutes
+- [x] Pre-populate statsCache with RPC accessibility status for all nodes
+- [x] Add RPC accessibility statistics panel to dashboard showing count of accessible nodes
+- [x] Create mini leaderboard in stats panel showing top-ranked accessible nodes
+- [x] Add dedicated export button for RPC-accessible nodes only (CSV/JSON)
+- [x] Display loading state during background RPC scan

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { exportToCSV, exportToJSON } from "@/lib/exportData";
+import { exportAccessibleToCSV, exportAccessibleToJSON } from "@/lib/exportRpcAccessible";
 import {
   calculateNodeRanking,
   getRankBadgeColor,
@@ -270,6 +271,7 @@ export default function Rankings() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground mr-2">Export:</span>
             <Button
               variant="outline"
               size="sm"
@@ -287,6 +289,27 @@ export default function Rankings() {
             >
               <FileJson className="h-4 w-4 mr-2" />
               JSON
+            </Button>
+            <div className="h-6 w-px bg-border mx-1" />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportAccessibleToCSV(nodes)}
+              className="glass-input hover:bg-primary/20 border-primary/30 text-primary"
+              title="Export only RPC-accessible nodes"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              🔓 CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportAccessibleToJSON(nodes)}
+              className="glass-input hover:bg-primary/20 border-primary/30 text-primary"
+              title="Export only RPC-accessible nodes"
+            >
+              <FileJson className="h-4 w-4 mr-2" />
+              🔓 JSON
             </Button>
           </div>
         </motion.div>

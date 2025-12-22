@@ -6,6 +6,7 @@ import { InsightsPanel } from "@/components/InsightsPanel";
 import { NetworkHealthTimeline } from "@/components/NetworkHealthTimeline";
 import { NodeCard } from "@/components/NodeCard";
 import { NodeDetailsDrawer } from "@/components/NodeDetailsDrawer";
+import { RpcStatsPanel } from "@/components/RpcStatsPanel";
 import { StatsCards } from "@/components/StatsCards";
 import { VersionDistributionChart } from "@/components/VersionDistributionChart";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { startBackgroundRpcScanning, stopBackgroundRpcScanning } from "@/lib/rpcScanner";
 
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
@@ -52,6 +54,12 @@ export default function Dashboard() {
   });
   
   const [countdown, setCountdown] = useState<number>(refreshInterval);
+  const [rpcScanProgress, setRpcScanProgress] = useState<{
+    total: number;
+    scanned: number;
+    accessible: number;
+    isScanning: boolean;
+  } | null>(null);
 
   // Use tRPC mutation for proxy requests
   const proxyMutation = trpc.proxy.rpc.useMutation({
@@ -97,7 +105,26 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
-    
+  }, []);
+
+  // Start background RPC scanning when nodes are available
+  useEffect(() => {
+    if (nodes.length > 0) {
+      startBackgroundRpcScanning(
+        () => nodes,
+        (progress) => {
+          setRpcScanProgress(progress);
+        }
+      );
+    }
+
+    return () => {
+      stopBackgroundRpcScanning();
+    };
+  }, [nodes]);
+
+  // Auto-refresh effect
+  useEffect(() => {
     if (!autoRefresh) return;
     
     // Reset countdown when interval changes
@@ -311,9 +338,10 @@ export default function Dashboard() {
             {/* Network Health Timeline */}
             <NetworkHealthTimeline currentScore={healthMetrics.overallScore} />
 
-            {/* Insights & Global Distribution */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Insights, RPC Stats & Global Distribution */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <InsightsPanel metrics={healthMetrics} />
+              <RpcStatsPanel nodes={nodes} scanProgress={rpcScanProgress} />
               <GlobalDistributionMap 
                 nodes={nodes} 
                 onNodeClick={(node) => setSelectedNode(node)} 
