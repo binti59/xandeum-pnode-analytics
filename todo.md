@@ -68,3 +68,15 @@
 - [x] Add interval selector dropdown (30s, 1m, 2m, 5m)
 - [x] Persist auto-refresh settings in localStorage
 - [x] Default auto-refresh enabled at 1 minute interval
+
+## New Feature Request (pNode Ranking System)
+- [x] Create ranking algorithm based on available metrics (version, geo diversity, stability)
+- [x] Build sortable ranking table component with columns (Rank, Node, Location, Version, Score, Status)
+- [x] Add ranking page accessible from dashboard navigation
+- [x] Implement score calculation (0-100 scale)
+- [x] Add sorting by different columns (rank, score, version, location)
+- [x] Prepare for future enhancement when detailed stats API becomes available
+- [x] Add filters to show top 10, top 50, or all nodes
+- [x] Add CSV/JSON export buttons
+- [x] Add summary stats (top score, average score, total nodes)
+- [x] Add medal badges for top 3 ranks

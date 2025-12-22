@@ -1,0 +1,407 @@
+import { Button } from "@/components/ui/button";
+import { exportToCSV, exportToJSON } from "@/lib/exportData";
+import {
+  calculateNodeRanking,
+  getRankBadgeColor,
+  getScoreBadgeColor,
+  RankedNode,
+} from "@/lib/nodeRanking";
+import { trpc } from "@/lib/trpc";
+import { Pod } from "@/services/prpc";
+import { motion } from "framer-motion";
+import {
+  ArrowDown,
+  ArrowUp,
+  Download,
+  FileJson,
+  Loader2,
+  Medal,
+  RefreshCw,
+  Trophy,
+  Zap,
+  LayoutDashboard,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
+
+const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
+
+type SortColumn = "rank" | "score" | "version" | "location";
+type SortDirection = "asc" | "desc";
+
+export default function Rankings() {
+  const [nodes, setNodes] = useState<Pod[]>([]);
+  const [rankedNodes, setRankedNodes] = useState<RankedNode[]>([]);
+  const [sortColumn, setSortColumn] = useState<SortColumn>("rank");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [filter, setFilter] = useState<"all" | "top10" | "top50">("all");
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  const endpoint = localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
+
+  const proxyMutation = trpc.proxy.rpc.useMutation({
+    onSuccess: (data: any) => {
+      if (data.result?.pods) {
+        setNodes(data.result.pods);
+        setLastUpdated(new Date());
+      }
+    },
+  });
+
+  const fetchData = () => {
+    proxyMutation.mutate({
+      endpoint,
+      method: "get-pods",
+      params: [],
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const ranked = calculateNodeRanking(nodes);
+    setRankedNodes(ranked);
+  }, [nodes]);
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedNodes = [...rankedNodes].sort((a, b) => {
+    let aVal: any;
+    let bVal: any;
+
+    switch (sortColumn) {
+      case "rank":
+        aVal = a.rank;
+        bVal = b.rank;
+        break;
+      case "score":
+        aVal = a.score;
+        bVal = b.score;
+        break;
+      case "version":
+        aVal = a.version || "";
+        bVal = b.version || "";
+        break;
+      case "location":
+        aVal = a.geo?.country || "Unknown";
+        bVal = b.geo?.country || "Unknown";
+        break;
+    }
+
+    if (sortDirection === "asc") {
+      return aVal > bVal ? 1 : -1;
+    } else {
+      return aVal < bVal ? 1 : -1;
+    }
+  });
+
+  const filteredNodes =
+    filter === "top10"
+      ? sortedNodes.slice(0, 10)
+      : filter === "top50"
+      ? sortedNodes.slice(0, 50)
+      : sortedNodes;
+
+  const loading = proxyMutation.isPending;
+
+  const SortIcon = ({ column }: { column: SortColumn }) => {
+    if (sortColumn !== column) return null;
+    return sortDirection === "asc" ? (
+      <ArrowUp className="h-4 w-4" />
+    ) : (
+      <ArrowDown className="h-4 w-4" />
+    );
+  };
+
+  return (
+    <div className="min-h-screen text-foreground selection:bg-primary/30">
+      {/* Background Glow Effects */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
+      </div>
+
+      <div className="container py-8 space-y-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl"
+        >
+          <div>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
+                <Trophy className="h-8 w-8 text-yellow-400 fill-yellow-400/20" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+                  pNode Rankings
+                </span>
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg">
+                Ranked by version, geographic diversity, and stability
+              </p>
+              <div className="flex items-center gap-3 mt-3">
+                <Link href="/">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
+                    <LayoutDashboard className="h-4 w-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href="/rankings">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                    Rankings
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 flex-wrap">
+            {lastUpdated && (
+              <span className="text-xs text-muted-foreground hidden lg:inline-block font-mono glass-input px-3 py-1.5 rounded-lg border border-white/10">
+                Updated: {lastUpdated.toLocaleTimeString()}
+              </span>
+            )}
+            <Button
+              onClick={fetchData}
+              disabled={loading}
+              variant="outline"
+              size="sm"
+              className="glass-input hover:bg-white/10 border-white/10 text-white"
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Filters and Export */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-4 rounded-xl"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Show:</span>
+            <div className="flex gap-2">
+              {(["all", "top10", "top50"] as const).map((f) => (
+                <Button
+                  key={f}
+                  variant={filter === f ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilter(f)}
+                  className={
+                    filter === f
+                      ? "bg-primary text-primary-foreground"
+                      : "glass-input hover:bg-white/10 border-white/10 text-white"
+                  }
+                >
+                  {f === "all" ? "All" : f === "top10" ? "Top 10" : "Top 50"}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportToCSV(filteredNodes)}
+              className="glass-input hover:bg-white/10 border-white/10 text-white"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => exportToJSON(filteredNodes)}
+              className="glass-input hover:bg-white/10 border-white/10 text-white"
+            >
+              <FileJson className="h-4 w-4 mr-2" />
+              JSON
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Rankings Table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="glass-panel rounded-2xl overflow-hidden"
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("rank")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Rank
+                      <SortIcon column="rank" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                    Node
+                  </th>
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("location")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Location
+                      <SortIcon column="location" />
+                    </div>
+                  </th>
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("version")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Version
+                      <SortIcon column="version" />
+                    </div>
+                  </th>
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("score")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Score
+                      <SortIcon column="score" />
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredNodes.map((node, index) => (
+                  <motion.tr
+                    key={node.address}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.02 }}
+                    className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-mono text-sm ${getRankBadgeColor(
+                          node.rank
+                        )}`}
+                      >
+                        {node.rank <= 3 && <Medal className="h-4 w-4" />}
+                        #{node.rank}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-mono text-sm text-white">
+                        {node.address}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1 font-mono">
+                        {node.pubkey?.substring(0, 16)}...
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{node.geo?.flag || "🌍"}</span>
+                        <div>
+                          <div className="text-sm text-white">
+                            {node.geo?.city || "Unknown"}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {node.geo?.country || "Unknown"}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="font-mono text-sm text-white">
+                        {node.version || "N/A"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div
+                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-bold text-sm ${getScoreBadgeColor(
+                          node.score
+                        )}`}
+                      >
+                        {node.score}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                        <span className="text-sm text-green-400">Online</span>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
+        {/* Summary Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          <div className="glass-panel p-6 rounded-xl">
+            <div className="flex items-center gap-3">
+              <Trophy className="h-8 w-8 text-yellow-400" />
+              <div>
+                <div className="text-sm text-muted-foreground">Top Score</div>
+                <div className="text-2xl font-bold text-white">
+                  {rankedNodes[0]?.score || 0}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="glass-panel p-6 rounded-xl">
+            <div className="flex items-center gap-3">
+              <Zap className="h-8 w-8 text-primary" />
+              <div>
+                <div className="text-sm text-muted-foreground">Average Score</div>
+                <div className="text-2xl font-bold text-white">
+                  {Math.round(
+                    rankedNodes.reduce((sum, n) => sum + n.score, 0) /
+                      rankedNodes.length || 0
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="glass-panel p-6 rounded-xl">
+            <div className="flex items-center gap-3">
+              <Medal className="h-8 w-8 text-orange-400" />
+              <div>
+                <div className="text-sm text-muted-foreground">Total Nodes</div>
+                <div className="text-2xl font-bold text-white">
+                  {rankedNodes.length}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

@@ -14,8 +14,9 @@ import { calculateHealthMetrics } from "@/lib/healthScore";
 import { trpc } from "@/lib/trpc";
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause } from "lucide-react";
+import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "wouter";
 
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
@@ -170,15 +171,30 @@ export default function Dashboard() {
           className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl"
         >
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
-              <Zap className="h-8 w-8 text-primary fill-primary/20" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-                Xandeum Analytics
-              </span>
-            </h1>
-            <p className="text-muted-foreground mt-2 text-lg">
-              Real-time pNode discovery & gossip monitoring
-            </p>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
+                <Zap className="h-8 w-8 text-primary fill-primary/20" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+                  Xandeum Analytics
+                </span>
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg">
+                Real-time pNode discovery & gossip monitoring
+              </p>
+              <div className="flex items-center gap-3 mt-3">
+                <Link href="/">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href="/rankings">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
+                    <Trophy className="h-4 w-4" />
+                    Rankings
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
             {/* Auto-refresh controls */}
