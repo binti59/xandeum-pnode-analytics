@@ -1,7 +1,11 @@
 import { ConnectionSettings } from "@/components/ConnectionSettings";
 import { FilterBar } from "@/components/FilterBar";
+import { GlobalDistributionMap } from "@/components/GlobalDistributionMap";
 import { HealthScoreCircle } from "@/components/HealthScoreCircle";
+import { InsightsPanel } from "@/components/InsightsPanel";
+import { NetworkHealthTimeline } from "@/components/NetworkHealthTimeline";
 import { NodeCard } from "@/components/NodeCard";
+import { NodeDetailsDrawer } from "@/components/NodeDetailsDrawer";
 import { StatsCards } from "@/components/StatsCards";
 import { VersionDistributionChart } from "@/components/VersionDistributionChart";
 import { Button } from "@/components/ui/button";
@@ -16,11 +20,15 @@ import { useEffect, useState } from "react";
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
+type FilterType = "all" | "online" | "offline";
+
 export default function Dashboard() {
   const [nodes, setNodes] = useState<Pod[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  const [selectedNode, setSelectedNode] = useState<Pod | null>(null);
   
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
@@ -66,13 +74,22 @@ export default function Dashboard() {
   // Calculate health metrics
   const healthMetrics = calculateHealthMetrics(nodes);
 
-  // Filter nodes based on search query
-  const filteredNodes = nodes.filter(node => 
-    node.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (node.pubkey && node.pubkey.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (node.geo?.city && node.geo.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    (node.geo?.country && node.geo.country.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  // Filter nodes based on search query and active filter
+  const filteredNodes = nodes.filter(node => {
+    // Search filter
+    const matchesSearch = 
+      node.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (node.pubkey && node.pubkey.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (node.geo?.city && node.geo.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (node.geo?.country && node.geo.country.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    if (!matchesSearch) return false;
+
+    // Status filter
+    if (activeFilter === "online") return true; // All nodes are online
+    if (activeFilter === "offline") return false; // No offline nodes in current data
+    return true; // "all"
+  });
 
   const loading = proxyMutation.isPending;
 
@@ -179,6 +196,18 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Network Health Timeline */}
+            <NetworkHealthTimeline currentScore={healthMetrics.overallScore} />
+
+            {/* Insights & Global Distribution */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <InsightsPanel metrics={healthMetrics} />
+              <GlobalDistributionMap 
+                nodes={nodes} 
+                onNodeClick={(node) => setSelectedNode(node)} 
+              />
+            </div>
+
             {/* Filter Bar with Export Buttons */}
             <div className="flex flex-col md:flex-row items-center gap-4">
               <div className="flex-1 w-full">
@@ -188,6 +217,8 @@ export default function Dashboard() {
                   totalCount={nodes.length}
                   onlineCount={healthMetrics.onlineNodes}
                   publicCount={nodes.filter(n => n.is_public).length}
+                  activeFilter={activeFilter}
+                  onFilterChange={setActiveFilter}
                 />
               </div>
               <div className="flex gap-2">
@@ -215,7 +246,9 @@ export default function Dashboard() {
             {/* Node Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNodes.map((node, index) => (
-                <NodeCard key={node.address + index} node={node} />
+                <div key={node.address + index} onClick={() => setSelectedNode(node)}>
+                  <NodeCard node={node} />
+                </div>
               ))}
             </div>
             
@@ -227,6 +260,12 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* Node Details Drawer */}
+      <NodeDetailsDrawer 
+        node={selectedNode} 
+        onClose={() => setSelectedNode(null)} 
+      />
     </div>
   );
 }
