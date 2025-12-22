@@ -61,6 +61,16 @@ export default function Dashboard() {
     isScanning: boolean;
   } | null>(null);
 
+  const handleManualRpcRefresh = () => {
+    if (rpcScanProgress?.isScanning) return; // Prevent spam
+    
+    // Stop current scan if running
+    stopBackgroundRpcScanning();
+    
+    // Start new scan
+    startBackgroundRpcScanning(() => nodes, setRpcScanProgress);
+  };
+
   // Use tRPC mutation for proxy requests
   const proxyMutation = trpc.proxy.rpc.useMutation({
     onSuccess: (data: any) => {
@@ -341,7 +351,11 @@ export default function Dashboard() {
             {/* Insights, RPC Stats & Global Distribution */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <InsightsPanel metrics={healthMetrics} />
-              <RpcStatsPanel nodes={nodes} scanProgress={rpcScanProgress} />
+              <RpcStatsPanel 
+                nodes={nodes} 
+                scanProgress={rpcScanProgress} 
+                onRefresh={handleManualRpcRefresh}
+              />
               <GlobalDistributionMap 
                 nodes={nodes} 
                 onNodeClick={(node) => setSelectedNode(node)} 

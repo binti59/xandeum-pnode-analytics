@@ -132,3 +132,9 @@
 
 ## Bug Fix
 - [x] Fix TypeError in NodeDetailsDrawer when clicking nodes with private RPC ports (Cannot read properties of undefined reading 'uptime')
+
+## New Feature Request (Manual RPC Re-scan)
+- [x] Add manual refresh button to RPC Accessibility panel
+- [x] Trigger full network re-scan on button click
+- [x] Show loading state during manual scan
+- [x] Add cooldown period to prevent spam (disabled state during scan)

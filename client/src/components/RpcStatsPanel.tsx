@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { statsCache } from "@/lib/statsCache";
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { Lock, Unlock, Trophy } from "lucide-react";
+import { Lock, Unlock, Trophy, RefreshCw } from "lucide-react";
 import { useMemo } from "react";
 
 interface RpcStatsPanelProps {
@@ -13,6 +13,7 @@ interface RpcStatsPanelProps {
     accessible: number;
     isScanning: boolean;
   } | null;
+  onRefresh?: () => void;
 }
 
 interface RankedNode {
@@ -21,7 +22,7 @@ interface RankedNode {
   rank: number;
 }
 
-export function RpcStatsPanel({ nodes, scanProgress }: RpcStatsPanelProps) {
+export function RpcStatsPanel({ nodes, scanProgress, onRefresh }: RpcStatsPanelProps) {
   const accessibleNodes = useMemo(() => {
     return nodes.filter((node) => {
       const cached = statsCache.get(node.address);
@@ -76,16 +77,32 @@ export function RpcStatsPanel({ nodes, scanProgress }: RpcStatsPanelProps) {
       transition={{ duration: 0.5, delay: 0.2 }}
     >
       <Card className="glass-panel p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Unlock className="w-5 h-5 text-primary" />
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Unlock className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold">RPC Accessibility</h3>
+              <p className="text-sm text-muted-foreground">
+                Nodes with open RPC ports
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold">RPC Accessibility</h3>
-            <p className="text-sm text-muted-foreground">
-              Nodes with open RPC ports
-            </p>
-          </div>
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              disabled={scanProgress?.isScanning}
+              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Re-scan all nodes for RPC accessibility"
+            >
+              <RefreshCw
+                className={`w-4 h-4 text-primary ${
+                  scanProgress?.isScanning ? "animate-spin" : ""
+                }`}
+              />
+            </button>
+          )}
         </div>
 
         {/* Stats Grid */}
