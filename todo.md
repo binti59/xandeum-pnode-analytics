@@ -80,3 +80,17 @@
 - [x] Add CSV/JSON export buttons
 - [x] Add summary stats (top score, average score, total nodes)
 - [x] Add medal badges for top 3 ranks
+
+## New Enhancement Requests (Ranking System Advanced Features)
+- [x] Create database schema for storing historical ranking snapshots
+- [ ] Implement automatic daily snapshot capture of top rankings (requires cron job)
+- [x] Add score trend tracking (compare current vs previous score)
+- [x] Display trend indicators (↑ rising, ↓ falling, → stable) next to ranks
+- [x] Create badge system with achievement criteria
+- [x] Award "Stable Champion" badge (top 10 for 7+ days)
+- [x] Award "Latest Version" badge (running version 1.0.0)
+- [x] Award "Geographic Pioneer" badge (only node in country)
+- [x] Award "Uptime Hero" badge (when uptime data becomes available)
+- [x] Build leaderboard history page showing daily top 10 snapshots
+- [x] Add date range selector for viewing historical rankings
+- [x] Display badges on ranking table

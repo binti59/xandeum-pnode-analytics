@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import axios from "axios";
 import { extractIP, lookupGeo } from "./geo";
+import { rankingsRouter } from "./rankings";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -93,12 +94,8 @@ export const appRouter = router({
       }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  // Rankings router for historical data and badges
+  rankings: rankingsRouter,
 });
 
 export type AppRouter = typeof appRouter;

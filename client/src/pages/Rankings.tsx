@@ -20,9 +20,13 @@ import {
   Trophy,
   Zap,
   LayoutDashboard,
+  TrendingUp,
+  TrendingDown,
+  Minus,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { getNodeBadges } from "@/lib/badges";
 
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
@@ -36,6 +40,8 @@ export default function Rankings() {
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [filter, setFilter] = useState<"all" | "top10" | "top50">("all");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [previousSnapshots, setPreviousSnapshots] = useState<Map<string, { rank: number; score: number }>>(new Map());
+  const [nodeBadges, setNodeBadges] = useState<Map<string, any[]>>(new Map());
 
   const endpoint = localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
 
@@ -63,7 +69,35 @@ export default function Rankings() {
   useEffect(() => {
     const ranked = calculateNodeRanking(nodes);
     setRankedNodes(ranked);
+
+    // Calculate badges for each node
+    const badgesMap = new Map();
+    ranked.forEach((node) => {
+      const badges = getNodeBadges(node, ranked);
+      if (badges.length > 0) {
+        badgesMap.set(node.address, badges);
+      }
+    });
+    setNodeBadges(badgesMap);
   }, [nodes]);
+
+  // Fetch previous snapshots for trend comparison
+  const snapshotQuery = trpc.rankings.getLatestSnapshots.useQuery(undefined, {
+    enabled: rankedNodes.length > 0,
+  });
+
+  useEffect(() => {
+    if (snapshotQuery.data) {
+      const prevMap = new Map();
+      snapshotQuery.data.forEach((snapshot: any) => {
+        prevMap.set(snapshot.nodeAddress, {
+          rank: snapshot.rank,
+          score: snapshot.score,
+        });
+      });
+      setPreviousSnapshots(prevMap);
+    }
+  }, [snapshotQuery.data]);
 
   const handleSort = (column: SortColumn) => {
     if (sortColumn === column) {
@@ -150,12 +184,18 @@ export default function Rankings() {
                 Ranked by version, geographic diversity, and stability
               </p>
               <div className="flex items-center gap-3 mt-3">
-                <Link href="/">
-                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
-                    <LayoutDashboard className="h-4 w-4" />
-                    Dashboard
-                  </Button>
-                </Link>
+              <Link href="/history">
+                <Button variant="outline" size="sm">
+                  <Trophy className="h-4 w-4 mr-2" />
+                  History
+                </Button>
+              </Link>
+              <Link href="/">
+                <Button variant="outline" size="sm">
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+              </Link>
                 <Link href="/rankings">
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                     Rankings
@@ -300,13 +340,41 @@ export default function Rankings() {
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-mono text-sm ${getRankBadgeColor(
-                          node.rank
-                        )}`}
-                      >
-                        {node.rank <= 3 && <Medal className="h-4 w-4" />}
-                        #{node.rank}
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-mono text-sm ${getRankBadgeColor(
+                            node.rank
+                          )}`}
+                        >
+                          {node.rank <= 3 && <Medal className="h-4 w-4" />}
+                          #{node.rank}
+                        </div>
+                        {(() => {
+                          const prev = previousSnapshots.get(node.address);
+                          if (!prev) return null;
+                          const rankDiff = prev.rank - node.rank;
+                          if (rankDiff > 0) {
+                            return (
+                              <div className="flex items-center gap-1 text-green-400 text-xs">
+                                <TrendingUp className="h-3 w-3" />
+                                <span>+{rankDiff}</span>
+                              </div>
+                            );
+                          } else if (rankDiff < 0) {
+                            return (
+                              <div className="flex items-center gap-1 text-red-400 text-xs">
+                                <TrendingDown className="h-3 w-3" />
+                                <span>{rankDiff}</span>
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div className="flex items-center gap-1 text-gray-400 text-xs">
+                                <Minus className="h-3 w-3" />
+                              </div>
+                            );
+                          }
+                        })()}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -336,12 +404,51 @@ export default function Rankings() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div
-                        className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-bold text-sm ${getScoreBadgeColor(
-                          node.score
-                        )}`}
-                      >
-                        {node.score}
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-bold text-sm ${getScoreBadgeColor(
+                              node.score
+                            )}`}
+                          >
+                            {node.score}
+                          </div>
+                          {(() => {
+                            const prev = previousSnapshots.get(node.address);
+                            if (!prev) return null;
+                            const scoreDiff = node.score - prev.score;
+                            if (scoreDiff > 0) {
+                              return (
+                                <div className="flex items-center gap-1 text-green-400 text-xs">
+                                  <TrendingUp className="h-3 w-3" />
+                                  <span>+{scoreDiff}</span>
+                                </div>
+                              );
+                            } else if (scoreDiff < 0) {
+                              return (
+                                <div className="flex items-center gap-1 text-red-400 text-xs">
+                                  <TrendingDown className="h-3 w-3" />
+                                  <span>{scoreDiff}</span>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
+                        {nodeBadges.get(node.address) && (
+                          <div className="flex gap-1 flex-wrap">
+                            {nodeBadges.get(node.address)!.map((badge: any) => (
+                              <div
+                                key={badge.type}
+                                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs ${badge.color}`}
+                                title={badge.description}
+                              >
+                                <span>{badge.icon}</span>
+                                <span className="hidden lg:inline">{badge.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
