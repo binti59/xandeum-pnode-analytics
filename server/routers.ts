@@ -29,6 +29,7 @@ export const appRouter = router({
           endpoint: z.string().url(),
           method: z.string(),
           params: z.any().optional(),
+          timeout: z.number().optional().default(10000),
         })
       )
       .mutation(async ({ input }) => {
@@ -54,7 +55,7 @@ export const appRouter = router({
               headers: {
                 "Content-Type": "application/json",
               },
-              timeout: 10000,
+              timeout: input.timeout,
             }
           );
 

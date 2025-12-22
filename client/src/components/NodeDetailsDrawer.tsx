@@ -1,45 +1,87 @@
 import { Button } from "@/components/ui/button";
-import { Pod, NodeStats, getNodeStats, formatUptime, formatStorage, formatRAM } from "@/services/prpc";
-import { Copy, X, Loader2, AlertCircle } from "lucide-react";
+import { Pod, NodeStats, formatUptime, formatStorage, formatRAM } from "@/services/prpc";
+import { Copy, X, Loader2, AlertCircle, RefreshCw, Lock, Unlock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { statsCache } from "@/lib/statsCache";
+import { trpc } from "@/lib/trpc";
 
 interface NodeDetailsDrawerProps {
   node: Pod | null;
   onClose: () => void;
-  statsEndpoint?: string;
-  useCustomStats?: boolean;
 }
 
-export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats }: NodeDetailsDrawerProps) {
+export function NodeDetailsDrawer({ node, onClose }: NodeDetailsDrawerProps) {
   const [stats, setStats] = useState<NodeStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [rpcAccessible, setRpcAccessible] = useState<boolean | null>(null);
+
+  const fetchNodeStats = async (forceRefresh = false) => {
+    if (!node) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Check cache first
+      if (!forceRefresh) {
+        const cached = statsCache.get(node.address);
+        if (cached) {
+          setStats(cached.stats);
+          setRpcAccessible(cached.accessible);
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Extract IP from address (format: "IP:PORT")
+      const ip = node.address.split(":")[0];
+      const endpoint = `http://${ip}:6000/rpc`;
+
+      // Attempt to fetch stats directly from the node with 5-second timeout
+      const utils = trpc.useUtils();
+      const response = await utils.client.proxy.rpc.mutate({
+        endpoint,
+        method: "get-stats",
+        timeout: 5000,
+      });
+
+      if (response.result) {
+        const nodeStats = response.result as NodeStats;
+        setStats(nodeStats);
+        setRpcAccessible(true);
+        statsCache.set(node.address, nodeStats, true);
+      } else {
+        throw new Error("No result in response");
+      }
+    } catch (err: any) {
+      console.error("Failed to fetch node stats:", err);
+      
+      // Check if it's a timeout or network error
+      if (err.message?.includes("timeout") || err.message?.includes("Network Error")) {
+        setError("RPC port private or unreachable");
+        setRpcAccessible(false);
+        statsCache.setInaccessible(node.address);
+      } else {
+        setError("Failed to load node statistics");
+        setRpcAccessible(false);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!node) {
       setStats(null);
       setError(null);
+      setRpcAccessible(null);
       return;
     }
 
-    // Fetch stats when node changes
-    const fetchStats = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const nodeStats = await getNodeStats(node.address, useCustomStats ? statsEndpoint : undefined);
-        setStats(nodeStats);
-      } catch (err) {
-        console.error("Failed to fetch node stats:", err);
-        setError("Failed to load node statistics. The node may not be responding.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
+    fetchNodeStats();
   }, [node]);
 
   if (!node) return null;
@@ -93,12 +135,12 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
               {/* Header */}
               <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-white/10 p-6 z-10">
                 <div className="flex items-start justify-between">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       {node.geo?.flag && (
                         <span className="text-2xl">{node.geo.flag}</span>
                       )}
-                      <h2 className="text-2xl font-bold text-white font-mono">
+                      <h2 className="text-xl font-bold text-white font-mono break-all">
                         {node.address}
                       </h2>
                     </div>
@@ -112,18 +154,35 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
                     variant="ghost"
                     size="icon"
                     onClick={onClose}
-                    className="text-muted-foreground hover:text-white"
+                    className="text-muted-foreground hover:text-white flex-shrink-0"
                   >
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
 
-                {/* Status Badge */}
-                <div className="mt-4">
+                {/* Status Badges */}
+                <div className="mt-4 flex items-center gap-2 flex-wrap">
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <span className="text-sm font-semibold">Online</span>
                   </div>
+                  
+                  {rpcAccessible !== null && (
+                    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${
+                      rpcAccessible 
+                        ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" 
+                        : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/30"
+                    }`}>
+                      {rpcAccessible ? (
+                        <Unlock className="h-3 w-3" />
+                      ) : (
+                        <Lock className="h-3 w-3" />
+                      )}
+                      <span className="text-sm font-semibold">
+                        {rpcAccessible ? "RPC Accessible" : "RPC Private"}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -132,20 +191,26 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
                 {loading && (
                   <div className="flex flex-col items-center justify-center py-12 gap-4">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    <p className="text-muted-foreground">Loading node statistics...</p>
+                    <p className="text-muted-foreground">Querying node RPC endpoint...</p>
                   </div>
                 )}
 
                 {error && (
                   <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
                     <AlertCircle className="h-8 w-8 text-yellow-500" />
-                    <p className="text-muted-foreground">{error}</p>
+                    <div>
+                      <p className="text-lg font-semibold text-white mb-2">{error}</p>
+                      <p className="text-sm text-muted-foreground max-w-sm">
+                        This node's RPC port (6000) is not publicly accessible. Most nodes keep this port private for security.
+                      </p>
+                    </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => node && getNodeStats(node.address)}
-                      className="glass-input hover:bg-white/10 border-white/10 text-white"
+                      onClick={() => fetchNodeStats(true)}
+                      className="glass-input hover:bg-white/10 border-white/10 text-white gap-2"
                     >
+                      <RefreshCw className="h-4 w-4" />
                       Retry
                     </Button>
                   </div>
@@ -153,12 +218,33 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
 
                 {!loading && !error && stats && (
                   <>
-                    {/* Info Banner */}
-                    <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
-                      <p className="text-sm text-blue-300">
-                        <strong>Note:</strong> Most nodes only expose their gossip port (9001) publicly. 
-                        Stats shown below are from a public reference node (192.190.136.36:6000) and represent typical network performance.
-                      </p>
+                    {/* Success Banner */}
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 mb-6">
+                      <div className="flex items-start gap-3">
+                        <Unlock className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-green-300 font-semibold mb-1">
+                            RPC Port Accessible
+                          </p>
+                          <p className="text-xs text-green-300/80">
+                            This node has its RPC port (6000) publicly accessible. Stats shown below are queried directly from this node in real-time.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Refresh Button */}
+                    <div className="flex justify-end">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fetchNodeStats(true)}
+                        disabled={loading}
+                        className="glass-input hover:bg-white/10 border-white/10 text-white gap-2"
+                      >
+                        <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                        Refresh Stats
+                      </Button>
                     </div>
 
                     {/* Identity Section */}
@@ -185,10 +271,10 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
                       <h3 className="text-lg font-bold text-white mb-4 uppercase tracking-wide">Performance</h3>
                       <div className="space-y-0">
                         <DetailRow label="Uptime" value={formatUptime(stats.stats.uptime)} />
-                        <DetailRow label="CPU Usage" value={`${stats.stats.cpu_percent.toFixed(1)}%`} />
+                        <DetailRow label="CPU Usage" value={`${stats.stats.cpu_percent.toFixed(2)}%`} />
                         <DetailRow 
                           label="RAM Usage" 
-                          value={`${formatRAM(stats.stats.ram_used)} / ${formatRAM(stats.stats.ram_total)}`} 
+                          value={`${formatRAM(stats.stats.ram_used)} / ${formatRAM(stats.stats.ram_total)} (${((stats.stats.ram_used / stats.stats.ram_total) * 100).toFixed(1)}%)`} 
                         />
                         <DetailRow label="Storage" value={formatStorage(stats.file_size)} />
                       </div>
@@ -201,7 +287,6 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
                         <DetailRow label="Active Streams" value={stats.stats.active_streams.toString()} />
                         <DetailRow label="Packets Received" value={stats.stats.packets_received.toLocaleString()} />
                         <DetailRow label="Packets Sent" value={stats.stats.packets_sent.toLocaleString()} />
-                        <DetailRow label="Public Node" value={node.is_public ? "Yes" : "No"} />
                       </div>
                     </div>
 
@@ -229,6 +314,12 @@ export function NodeDetailsDrawer({ node, onClose, statsEndpoint, useCustomStats
                       </div>
                     </div>
                   </>
+                )}
+
+                {!loading && !error && !stats && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+                    <p className="text-muted-foreground">No stats available</p>
+                  </div>
                 )}
               </div>
             </div>

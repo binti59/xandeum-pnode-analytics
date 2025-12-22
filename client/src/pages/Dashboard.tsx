@@ -377,8 +377,6 @@ export default function Dashboard() {
       <NodeDetailsDrawer 
         node={selectedNode} 
         onClose={() => setSelectedNode(null)}
-        statsEndpoint={statsEndpoint}
-        useCustomStats={useCustomStats} 
       />
     </div>
   );

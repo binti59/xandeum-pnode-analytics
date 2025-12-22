@@ -105,3 +105,19 @@
 - [x] Make node cards clickable to navigate to history page
 - [x] Add back navigation to return to dashboard/rankings
 - [x] Handle cases where no historical data exists yet
+
+## New Feature Request (On-Demand Stats Fetching + RPC Accessibility Prioritization)
+- [x] Update backend proxy to query individual nodes directly (http://<node-ip>:6000/rpc)
+- [x] Add timeout handling (5 seconds) for nodes with private/firewalled RPC ports
+- [x] Implement client-side caching (localStorage) for successful stats responses
+- [x] Update NodeDetailsDrawer to attempt direct node query on open
+- [x] Show loading spinner while fetching stats
+- [x] Display real stats (uptime, storage, CPU, RAM, network) if node responds
+- [x] Show "RPC port private" message if node times out or is unreachable
+- [x] Cache successful responses for 5 minutes to avoid repeated queries
+- [x] Add "Refresh Stats" button to manually re-fetch data
+- [x] Add visual indicator (🔓 unlocked/🔒 locked icon) for nodes with open/private RPC port
+- [ ] Add RPC accessibility bonus (+10 points) to ranking algorithm
+- [ ] Add "RPC Accessible" filter to show only queryable nodes
+- [ ] Sort nodes with accessible RPC ports to top of list by default
+- [ ] Update node cards to show RPC status badge
