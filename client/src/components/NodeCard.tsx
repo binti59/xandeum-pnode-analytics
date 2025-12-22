@@ -1,18 +1,26 @@
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
+import { statsCache } from "@/lib/statsCache";
+import { useState, useEffect } from "react";
 
 interface NodeCardProps {
   node: Pod;
 }
 
 export function NodeCard({ node }: NodeCardProps) {
-  const handleClick = () => {
-    window.location.href = `/node?node=${encodeURIComponent(node.address)}`;
-  };
+  const [rpcAccessible, setRpcAccessible] = useState<boolean | undefined>(undefined);
+  
+  useEffect(() => {
+    const cached = statsCache.get(node.address);
+    if (cached) {
+      setRpcAccessible(cached.accessible);
+    }
+  }, [node.address]);
+  
+  // Click handling is done by parent component (Dashboard wraps with onClick)
 
   return (
     <motion.div
-      onClick={handleClick}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02, y: -4 }}
@@ -39,11 +47,23 @@ export function NodeCard({ node }: NodeCardProps) {
       </div>
 
       {/* Status Badge */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-xs font-semibold uppercase">online</span>
         </div>
+        {rpcAccessible !== undefined && (
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border ${
+            rpcAccessible 
+              ? "bg-green-500/20 text-green-400 border-green-500/30" 
+              : "bg-gray-500/20 text-gray-400 border-gray-500/30"
+          }`}>
+            <span className="text-xs">{rpcAccessible ? "🔓" : "🔒"}</span>
+            <span className="text-xs font-semibold uppercase">
+              {rpcAccessible ? "RPC Open" : "RPC Private"}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Version Info */}

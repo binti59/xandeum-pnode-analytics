@@ -1,4 +1,13 @@
 import { Pod } from "@/services/prpc";
+import { statsCache } from "./statsCache";
+
+/**
+ * Check if a node has accessible RPC port based on cache
+ */
+function checkRpcAccessibility(nodeAddress: string): boolean {
+  const cached = statsCache.get(nodeAddress);
+  return cached?.accessible === true;
+}
 
 export interface RankedNode extends Pod {
   rank: number;
@@ -6,6 +15,8 @@ export interface RankedNode extends Pod {
   versionScore: number;
   geoScore: number;
   stabilityScore: number;
+  rpcAccessible?: boolean;
+  rpcBonus: number;
 }
 
 /**
@@ -62,8 +73,13 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
       stabilityScore = 10;
     }
     
+    // RPC Accessibility Bonus (10 points)
+    // Check cache to see if this node has accessible RPC port
+    const rpcAccessible = checkRpcAccessibility(node.address);
+    const rpcBonus = rpcAccessible ? 10 : 0;
+    
     // Total Score
-    const score = Math.round(versionScore + geoScore + stabilityScore);
+    const score = Math.round(versionScore + geoScore + stabilityScore + rpcBonus);
     
     return {
       ...node,
@@ -72,6 +88,8 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
       versionScore,
       geoScore,
       stabilityScore,
+      rpcAccessible,
+      rpcBonus,
     };
   });
   

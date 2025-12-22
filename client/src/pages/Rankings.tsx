@@ -30,15 +30,16 @@ import { getNodeBadges } from "@/lib/badges";
 
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
-type SortColumn = "rank" | "score" | "version" | "location";
+type SortColumn = "rank" | "score" | "version" | "location" | "rpc";
 type SortDirection = "asc" | "desc";
 
 export default function Rankings() {
   const [nodes, setNodes] = useState<Pod[]>([]);
   const [rankedNodes, setRankedNodes] = useState<RankedNode[]>([]);
   const [sortColumn, setSortColumn] = useState<SortColumn>("rank");
+  const [prioritizeRpc, setPrioritizeRpc] = useState<boolean>(true); // Prioritize RPC accessible nodes by default
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [filter, setFilter] = useState<"all" | "top10" | "top50">("all");
+  const [filter, setFilter] = useState<"all" | "top10" | "top50" | "rpc_accessible">("all");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [previousSnapshots, setPreviousSnapshots] = useState<Map<string, { rank: number; score: number }>>(new Map());
   const [nodeBadges, setNodeBadges] = useState<Map<string, any[]>>(new Map());
@@ -109,6 +110,15 @@ export default function Rankings() {
   };
 
   const sortedNodes = [...rankedNodes].sort((a, b) => {
+    // First, prioritize RPC accessible nodes if enabled
+    if (prioritizeRpc && sortColumn !== "rpc") {
+      const aRpc = a.rpcAccessible ? 1 : 0;
+      const bRpc = b.rpcAccessible ? 1 : 0;
+      if (aRpc !== bRpc) {
+        return bRpc - aRpc; // RPC accessible nodes come first
+      }
+    }
+    
     let aVal: any;
     let bVal: any;
 
@@ -129,6 +139,10 @@ export default function Rankings() {
         aVal = a.geo?.country || "Unknown";
         bVal = b.geo?.country || "Unknown";
         break;
+      case "rpc":
+        aVal = a.rpcAccessible ? 1 : 0;
+        bVal = b.rpcAccessible ? 1 : 0;
+        break;
     }
 
     if (sortDirection === "asc") {
@@ -143,6 +157,8 @@ export default function Rankings() {
       ? sortedNodes.slice(0, 10)
       : filter === "top50"
       ? sortedNodes.slice(0, 50)
+      : filter === "rpc_accessible"
+      ? sortedNodes.filter(node => node.rpcAccessible === true)
       : sortedNodes;
 
   const loading = proxyMutation.isPending;
@@ -235,8 +251,8 @@ export default function Rankings() {
         >
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Show:</span>
-            <div className="flex gap-2">
-              {(["all", "top10", "top50"] as const).map((f) => (
+            <div className="flex gap-2 flex-wrap">
+              {(["all", "top10", "top50", "rpc_accessible"] as const).map((f) => (
                 <Button
                   key={f}
                   variant={filter === f ? "default" : "outline"}
@@ -248,7 +264,7 @@ export default function Rankings() {
                       : "glass-input hover:bg-white/10 border-white/10 text-white"
                   }
                 >
-                  {f === "all" ? "All" : f === "top10" ? "Top 10" : "Top 50"}
+                  {f === "all" ? "All" : f === "top10" ? "Top 10" : f === "top50" ? "Top 50" : "🔓 RPC Accessible"}
                 </Button>
               ))}
             </div>
@@ -325,8 +341,14 @@ export default function Rankings() {
                       <SortIcon column="score" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Status
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("rpc")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Status
+                      <SortIcon column="rpc" />
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -452,9 +474,21 @@ export default function Rankings() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-                        <span className="text-sm text-green-400">Online</span>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                          <span className="text-sm text-green-400">Online</span>
+                        </div>
+                        {node.rpcAccessible !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs">
+                              {node.rpcAccessible ? "🔓" : "🔒"}
+                            </span>
+                            <span className={`text-xs ${node.rpcAccessible ? "text-green-400" : "text-gray-400"}`}>
+                              {node.rpcAccessible ? "RPC Open" : "RPC Private"}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </td>
                   </motion.tr>

@@ -117,7 +117,7 @@
 - [x] Cache successful responses for 5 minutes to avoid repeated queries
 - [x] Add "Refresh Stats" button to manually re-fetch data
 - [x] Add visual indicator (🔓 unlocked/🔒 locked icon) for nodes with open/private RPC port
-- [ ] Add RPC accessibility bonus (+10 points) to ranking algorithm
-- [ ] Add "RPC Accessible" filter to show only queryable nodes
-- [ ] Sort nodes with accessible RPC ports to top of list by default
-- [ ] Update node cards to show RPC status badge
+- [x] Add RPC accessibility bonus (+10 points) to ranking algorithm
+- [x] Add "RPC Accessible" filter to show only queryable nodes
+- [x] Sort nodes with accessible RPC ports to top of list by default
+- [x] Update node cards to show RPC status badge
