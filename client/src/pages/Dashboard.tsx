@@ -5,13 +5,14 @@ import { VersionChart } from "@/components/VersionChart";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_RPC_ENDPOINT, getPods, Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { Loader2, RefreshCw, Zap } from "lucide-react";
+import { AlertTriangle, Loader2, Lock, RefreshCw, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const [nodes, setNodes] = useState<Pod[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isMixedContentError, setIsMixedContentError] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   
   const [endpoint, setEndpoint] = useState<string>(() => {
@@ -27,13 +28,21 @@ export default function Dashboard() {
   const fetchData = async (rpcUrl: string = endpoint) => {
     setLoading(true);
     setError(null);
+    setIsMixedContentError(false);
     try {
       const data = await getPods(rpcUrl);
       setNodes(data);
       setLastUpdated(new Date());
-    } catch (err) {
-      setError(`Failed to fetch pNode data from ${rpcUrl}. Check your connection settings.`);
+    } catch (err: any) {
       console.error(err);
+      
+      // Detect Mixed Content Error (HTTPS site fetching HTTP resource)
+      if (window.location.protocol === 'https:' && rpcUrl.startsWith('http:')) {
+        setIsMixedContentError(true);
+        setError("Security Block: Browser blocked HTTP request from HTTPS site.");
+      } else {
+        setError(`Failed to fetch pNode data from ${rpcUrl}. Check your connection settings.`);
+      }
     } finally {
       setLoading(false);
     }
@@ -112,11 +121,30 @@ export default function Dashboard() {
             className="glass-panel border-destructive/50 bg-destructive/10 p-6 text-destructive rounded-xl"
           >
             <h3 className="font-bold uppercase tracking-tight flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-              Connection Error
+              {isMixedContentError ? <Lock className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
+              {isMixedContentError ? "Mixed Content Security Block" : "Connection Error"}
             </h3>
-            <p className="mt-2 text-destructive-foreground/80">{error}</p>
-            <div className="mt-4 flex gap-4">
+            
+            <p className="mt-2 text-destructive-foreground/90 font-medium">{error}</p>
+            
+            {isMixedContentError && (
+              <div className="mt-4 p-4 bg-black/40 rounded-lg border border-white/10 text-sm text-muted-foreground space-y-2">
+                <p className="text-white font-semibold">Why is this happening?</p>
+                <p>This dashboard is secure (HTTPS), but your RPC endpoint is insecure (HTTP). Browsers block this by default.</p>
+                
+                <p className="text-white font-semibold mt-4">How to fix it:</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>
+                    <span className="text-primary">Option 1 (Easiest):</span> Click the "lock" icon in your browser address bar &rarr; Site Settings &rarr; Allow "Insecure Content".
+                  </li>
+                  <li>
+                    <span className="text-primary">Option 2 (Recommended):</span> Use a tunneling service like <strong>ngrok</strong> to get an HTTPS URL: <code className="bg-black/50 px-1 py-0.5 rounded">ngrok http 4000</code>
+                  </li>
+                </ul>
+              </div>
+            )}
+
+            <div className="mt-6 flex gap-4">
               <Button 
                 variant="outline" 
                 className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
