@@ -41,7 +41,17 @@ export function NodeCard({ node }: NodeCardProps) {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h3 className="font-mono font-bold text-lg text-white">{ip}</h3>
+              {node.geo?.flag && (
+                <span className="text-xl" title={`${node.geo.city}, ${node.geo.country}`}>
+                  {node.geo.flag}
+                </span>
+              )}
+              <div className="flex flex-col">
+                <h3 className="font-mono font-bold text-lg text-white leading-tight">{ip}</h3>
+                {node.geo?.city && (
+                  <span className="text-xs text-muted-foreground">{node.geo.city}</span>
+                )}
+              </div>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button 

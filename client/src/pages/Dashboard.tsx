@@ -1,22 +1,46 @@
 import { ConnectionSettings } from "@/components/ConnectionSettings";
 import { FilterBar } from "@/components/FilterBar";
+import { HealthScoreCircle } from "@/components/HealthScoreCircle";
 import { NodeCard } from "@/components/NodeCard";
+import { StatsCards } from "@/components/StatsCards";
+import { VersionDistributionChart } from "@/components/VersionDistributionChart";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_RPC_ENDPOINT, getPods, Pod } from "@/services/prpc";
+import { exportToCSV, exportToJSON } from "@/lib/exportData";
+import { calculateHealthMetrics } from "@/lib/healthScore";
+import { trpc } from "@/lib/trpc";
+import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { AlertTriangle, Loader2, Lock, RefreshCw, Zap } from "lucide-react";
+import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+
+// Default to public node
+const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
 export default function Dashboard() {
   const [nodes, setNodes] = useState<Pod[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMixedContentError, setIsMixedContentError] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
+  });
+
+  // Use tRPC mutation for proxy requests
+  const proxyMutation = trpc.proxy.rpc.useMutation({
+    onSuccess: (data: any) => {
+      if (data.result && data.result.pods) {
+        setNodes(data.result.pods);
+        setLastUpdated(new Date());
+        setError(null);
+      } else {
+        setError("Invalid response format from RPC");
+      }
+    },
+    onError: (err: any) => {
+      console.error("Proxy error:", err);
+      setError(`Failed to fetch pNode data: ${err.message}`);
+    },
   });
 
   const handleEndpointChange = (newEndpoint: string) => {
@@ -25,27 +49,12 @@ export default function Dashboard() {
     fetchData(newEndpoint);
   };
 
-  const fetchData = async (rpcUrl: string = endpoint) => {
-    setLoading(true);
-    setError(null);
-    setIsMixedContentError(false);
-    try {
-      const data = await getPods(rpcUrl);
-      setNodes(data);
-      setLastUpdated(new Date());
-    } catch (err: any) {
-      console.error(err);
-      
-      // Detect Mixed Content Error (HTTPS site fetching HTTP resource)
-      if (window.location.protocol === 'https:' && rpcUrl.startsWith('http:')) {
-        setIsMixedContentError(true);
-        setError("Security Block: Browser blocked HTTP request from HTTPS site.");
-      } else {
-        setError(`Failed to fetch pNode data from ${rpcUrl}. Check your connection settings.`);
-      }
-    } finally {
-      setLoading(false);
-    }
+  const fetchData = (rpcUrl: string = endpoint) => {
+    proxyMutation.mutate({
+      endpoint: rpcUrl,
+      method: "get-pods",
+      params: [],
+    });
   };
 
   useEffect(() => {
@@ -54,14 +63,18 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [endpoint]);
 
+  // Calculate health metrics
+  const healthMetrics = calculateHealthMetrics(nodes);
+
   // Filter nodes based on search query
   const filteredNodes = nodes.filter(node => 
     node.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (node.pubkey && node.pubkey.toLowerCase().includes(searchQuery.toLowerCase()))
+    (node.pubkey && node.pubkey.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (node.geo?.city && node.geo.city.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (node.geo?.country && node.geo.country.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const onlineCount = nodes.length; // Assuming all returned nodes are "online" in gossip
-  const publicCount = nodes.filter(n => n.is_public).length;
+  const loading = proxyMutation.isPending;
 
   return (
     <div className="min-h-screen text-foreground selection:bg-primary/30">
@@ -124,28 +137,11 @@ export default function Dashboard() {
             className="glass-panel border-destructive/50 bg-destructive/10 p-6 text-destructive rounded-xl"
           >
             <h3 className="font-bold uppercase tracking-tight flex items-center gap-2">
-              {isMixedContentError ? <Lock className="h-5 w-5" /> : <AlertTriangle className="h-5 w-5" />}
-              {isMixedContentError ? "Mixed Content Security Block" : "Connection Error"}
+              <AlertTriangle className="h-5 w-5" />
+              Connection Error
             </h3>
             
             <p className="mt-2 text-destructive-foreground/90 font-medium">{error}</p>
-            
-            {isMixedContentError && (
-              <div className="mt-4 p-4 bg-black/40 rounded-lg border border-white/10 text-sm text-muted-foreground space-y-2">
-                <p className="text-white font-semibold">Why is this happening?</p>
-                <p>This dashboard is secure (HTTPS), but your RPC endpoint is insecure (HTTP). Browsers block this by default.</p>
-                
-                <p className="text-white font-semibold mt-4">How to fix it:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  <li>
-                    <span className="text-primary">Option 1 (Easiest):</span> Click the "lock" icon in your browser address bar &rarr; Site Settings &rarr; Allow "Insecure Content".
-                  </li>
-                  <li>
-                    <span className="text-primary">Option 2 (Recommended):</span> Use a tunneling service like <strong>ngrok</strong> to get an HTTPS URL: <code className="bg-black/50 px-1 py-0.5 rounded">ngrok http 4000</code>
-                  </li>
-                </ul>
-              </div>
-            )}
 
             <div className="mt-6 flex gap-4">
               <Button 
@@ -159,14 +155,62 @@ export default function Dashboard() {
           </motion.div>
         ) : (
           <>
-            {/* Filter Bar */}
-            <FilterBar 
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              totalCount={nodes.length}
-              onlineCount={onlineCount}
-              publicCount={publicCount}
-            />
+            {/* Health Score & Stats Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-1">
+                <HealthScoreCircle
+                  score={healthMetrics.overallScore}
+                  availabilityScore={healthMetrics.availabilityScore}
+                  versionHealthScore={healthMetrics.versionHealthScore}
+                  distributionScore={healthMetrics.distributionScore}
+                />
+              </div>
+              <div className="lg:col-span-2 flex flex-col gap-6">
+                <StatsCards
+                  totalNodes={healthMetrics.totalNodes}
+                  onlineNodes={healthMetrics.onlineNodes}
+                  uniqueCountries={healthMetrics.uniqueCountries}
+                  atRiskNodes={healthMetrics.atRiskNodes}
+                />
+                <VersionDistributionChart
+                  versionDistribution={healthMetrics.versionDistribution}
+                  latestVersion={healthMetrics.latestVersion}
+                />
+              </div>
+            </div>
+
+            {/* Filter Bar with Export Buttons */}
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <div className="flex-1 w-full">
+                <FilterBar 
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  totalCount={nodes.length}
+                  onlineCount={healthMetrics.onlineNodes}
+                  publicCount={nodes.filter(n => n.is_public).length}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => exportToCSV(nodes)}
+                  className="glass-input hover:bg-white/10 border-white/10 text-white"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  CSV
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => exportToJSON(nodes)}
+                  className="glass-input hover:bg-white/10 border-white/10 text-white"
+                >
+                  <FileJson className="mr-2 h-4 w-4" />
+                  JSON
+                </Button>
+              </div>
+            </div>
 
             {/* Node Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
