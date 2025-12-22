@@ -4,7 +4,8 @@ import { StatsCards } from "@/components/StatsCards";
 import { VersionChart } from "@/components/VersionChart";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_RPC_ENDPOINT, getPods, Pod } from "@/services/prpc";
-import { Loader2, RefreshCw } from "lucide-react";
+import { motion } from "framer-motion";
+import { Loader2, RefreshCw, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
@@ -13,7 +14,6 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   
-  // Initialize endpoint from localStorage or default
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
   });
@@ -21,7 +21,6 @@ export default function Dashboard() {
   const handleEndpointChange = (newEndpoint: string) => {
     setEndpoint(newEndpoint);
     localStorage.setItem("xandeum_rpc_endpoint", newEndpoint);
-    // Trigger a refresh when endpoint changes
     fetchData(newEndpoint);
   };
 
@@ -42,10 +41,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
-    // Auto-refresh every 60 seconds
     const interval = setInterval(() => fetchData(), 60000);
     return () => clearInterval(interval);
-  }, [endpoint]); // Re-run effect if endpoint changes (though fetchData handles it)
+  }, [endpoint]);
 
   const uniqueVersions = new Set(nodes.map((n) => n.version)).size;
   const recentlySeen = nodes.filter((n) => {
@@ -54,21 +52,35 @@ export default function Dashboard() {
   }).length;
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className="min-h-screen text-foreground selection:bg-primary/30">
+      {/* Background Glow Effects */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
+      </div>
+
       <div className="container py-8 space-y-8">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl"
+        >
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground">
-              Xandeum pNode Analytics
+            <h1 className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
+              <Zap className="h-8 w-8 text-primary fill-primary/20" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+                Xandeum Analytics
+              </span>
             </h1>
             <p className="text-muted-foreground mt-2 text-lg">
-              Real-time discovery and monitoring of Xandeum pNodes via gossip protocol.
+              Real-time pNode discovery & gossip monitoring
             </p>
           </div>
           <div className="flex items-center gap-4">
             {lastUpdated && (
-              <span className="text-sm text-muted-foreground hidden md:inline-block">
+              <span className="text-sm text-muted-foreground hidden md:inline-block font-mono">
                 Updated: {lastUpdated.toLocaleTimeString()}
               </span>
             )}
@@ -81,32 +93,39 @@ export default function Dashboard() {
               disabled={loading}
               variant="outline"
               size="sm"
-              className="rounded-none border-2 border-foreground"
+              className="glass-input hover:bg-white/10 border-white/10 text-white"
             >
               {loading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin text-primary" />
               ) : (
-                <RefreshCw className="mr-2 h-4 w-4" />
+                <RefreshCw className="mr-2 h-4 w-4 text-primary" />
               )}
               Refresh
             </Button>
           </div>
-        </div>
+        </motion.div>
 
         {error ? (
-          <div className="border-2 border-destructive bg-destructive/5 p-6 text-destructive">
-            <h3 className="font-bold uppercase tracking-tight">Error Loading Data</h3>
-            <p className="mt-2">{error}</p>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-panel border-destructive/50 bg-destructive/10 p-6 text-destructive rounded-xl"
+          >
+            <h3 className="font-bold uppercase tracking-tight flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+              Connection Error
+            </h3>
+            <p className="mt-2 text-destructive-foreground/80">{error}</p>
             <div className="mt-4 flex gap-4">
               <Button 
                 variant="outline" 
-                className="border-2 border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground rounded-none"
+                className="border-destructive/50 text-destructive hover:bg-destructive hover:text-white"
                 onClick={() => fetchData()}
               >
-                Retry
+                Retry Connection
               </Button>
             </div>
-          </div>
+          </motion.div>
         ) : (
           <>
             {/* Stats Cards */}
@@ -118,17 +137,23 @@ export default function Dashboard() {
 
             {/* Main Content Grid */}
             <div className="grid gap-8 md:grid-cols-3">
-              {/* Version Chart - Takes up 1 column on large screens */}
-              <div className="md:col-span-1">
+              {/* Version Chart */}
+              <div className="md:col-span-1 h-full">
                 <VersionChart nodes={nodes} />
               </div>
 
-              {/* Node Table - Takes up 2 columns on large screens */}
+              {/* Node Table */}
               <div className="md:col-span-2">
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-bold tracking-tight uppercase">
+                  <motion.h2 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-2xl font-bold tracking-tight text-white flex items-center gap-2"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                     Active Nodes
-                  </h2>
+                  </motion.h2>
                   <PNodeTable nodes={nodes} />
                 </div>
               </div>

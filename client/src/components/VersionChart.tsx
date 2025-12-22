@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pod } from "@/services/prpc";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { motion } from "framer-motion";
+import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 interface VersionChartProps {
   nodes: Pod[];
@@ -19,48 +20,69 @@ export function VersionChart({ nodes }: VersionChartProps) {
     }))
     .sort((a, b) => b.count - a.count);
 
+  const colors = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "var(--chart-5)",
+  ];
+
   return (
-    <Card className="border-2 border-foreground shadow-none rounded-none h-full">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold tracking-tight uppercase">Version Distribution</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-              <XAxis 
-                dataKey="version" 
-                stroke="#888888"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                stroke="#888888"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => `${value}`}
-              />
-              <Tooltip 
-                cursor={{ fill: 'transparent' }}
-                contentStyle={{ 
-                  backgroundColor: 'var(--card)', 
-                  borderColor: 'var(--border)',
-                  borderRadius: 'var(--radius)',
-                  color: 'var(--foreground)'
-                }}
-              />
-              <Bar 
-                dataKey="count" 
-                fill="var(--chart-1)" 
-                radius={[0, 0, 0, 0]}
-                barSize={40}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="h-full"
+    >
+      <Card className="glass-panel h-full border-none">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold tracking-tight uppercase neon-text text-primary">
+            Version Distribution
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <XAxis 
+                  dataKey="version" 
+                  stroke="var(--muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="var(--muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${value}`}
+                />
+                <Tooltip 
+                  cursor={{ fill: 'var(--muted)/20' }}
+                  contentStyle={{ 
+                    backgroundColor: 'var(--popover)', 
+                    borderColor: 'var(--border)',
+                    borderRadius: 'var(--radius)',
+                    color: 'var(--foreground)',
+                    boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)'
+                  }}
+                />
+                <Bar 
+                  dataKey="count" 
+                  radius={[4, 4, 0, 0]}
+                  barSize={40}
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

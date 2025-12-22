@@ -7,7 +7,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pod } from "@/services/prpc";
-import { ArrowUpDown } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUpDown, Clock, Globe, Tag } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
@@ -55,62 +56,76 @@ export function PNodeTable({ nodes }: PNodeTableProps) {
   };
 
   return (
-    <div className="border-2 border-foreground bg-card shadow-none rounded-none">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="glass-panel rounded-xl overflow-hidden"
+    >
       <Table>
-        <TableHeader>
-          <TableRow>
+        <TableHeader className="bg-black/20">
+          <TableRow className="hover:bg-transparent border-white/5">
             <TableHead className="w-[300px]">
                <Button 
                 variant="ghost" 
                 onClick={() => handleSort("address")}
-                className="hover:bg-transparent px-0 font-semibold"
+                className="hover:bg-white/5 hover:text-primary px-2 font-semibold text-muted-foreground transition-colors"
               >
+                <Globe className="mr-2 h-4 w-4" />
                 Address
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className="ml-2 h-3 w-3 opacity-50" />
               </Button>
             </TableHead>
             <TableHead>
               <Button 
                 variant="ghost" 
                 onClick={() => handleSort("version")}
-                className="hover:bg-transparent px-0 font-semibold"
+                className="hover:bg-white/5 hover:text-blue-400 px-2 font-semibold text-muted-foreground transition-colors"
               >
+                <Tag className="mr-2 h-4 w-4" />
                 Version
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className="ml-2 h-3 w-3 opacity-50" />
               </Button>
             </TableHead>
             <TableHead className="text-right">
               <Button 
                 variant="ghost" 
                 onClick={() => handleSort("lastSeen")}
-                className="hover:bg-transparent px-0 font-semibold ml-auto"
+                className="hover:bg-white/5 hover:text-purple-400 px-2 font-semibold text-muted-foreground transition-colors ml-auto"
               >
+                <Clock className="mr-2 h-4 w-4" />
                 Last Seen
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className="ml-2 h-3 w-3 opacity-50" />
               </Button>
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedNodes.map((node) => (
-            <TableRow key={node.address}>
+          {sortedNodes.map((node, index) => (
+            <TableRow 
+              key={node.address} 
+              className="border-white/5 hover:bg-white/5 transition-colors group"
+            >
               <TableCell className="font-mono text-sm">
-                <span className="bg-muted px-2 py-1 font-bold" title={node.address}>
-                  {node.address}
-                </span>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
+                  <span className="text-foreground/90 group-hover:text-primary transition-colors">
+                    {node.address}
+                  </span>
+                </div>
               </TableCell>
               <TableCell>
-                <span className="inline-flex items-center border-2 border-foreground px-2.5 py-0.5 text-xs font-bold bg-white text-foreground rounded-none">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   {node.version}
                 </span>
               </TableCell>
-              <TableCell className="text-right text-muted-foreground tabular-nums">
+              <TableCell className="text-right text-muted-foreground tabular-nums group-hover:text-foreground transition-colors">
                 {formatLastSeen(node.last_seen_timestamp)}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </div>
+    </motion.div>
   );
 }

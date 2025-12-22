@@ -42,127 +42,68 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* Swiss Style / International Typographic Style Configuration */
 :root {
-  /* Swiss Red (#ff3b30) as Primary */
-  --primary: oklch(0.6 0.24 29.234); 
-  --primary-foreground: oklch(0.985 0 0);
+  /* Default to Dark Mode for Premium Crypto Feel */
+  --background: oklch(0.1 0.01 240); /* Deep void black/blue */
+  --foreground: oklch(0.98 0 0); /* Pure white text */
   
-  /* Cobalt Blue (#0047bb) for Charts/Data */
-  --chart-1: oklch(0.45 0.2 260);
-  --chart-2: oklch(0.6 0.24 29.234); /* Red */
-  --chart-3: oklch(0.8 0.15 80); /* Yellow/Orange */
-  --chart-4: oklch(0.5 0.15 140); /* Green */
-  --chart-5: oklch(0.3 0 0); /* Black */
-
-  --radius: 0rem; /* Sharp corners for Swiss Style */
+  --card: oklch(0.15 0.02 240 / 0.7); /* Glassy dark card */
+  --card-foreground: oklch(0.98 0 0);
   
-  /* Stark White Background */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0 0 0); /* Pure Black Text */
+  --popover: oklch(0.12 0.02 240);
+  --popover-foreground: oklch(0.98 0 0);
   
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0 0 0);
+  --primary: oklch(0.65 0.22 150); /* Neon Green/Cyan for crypto vibes */
+  --primary-foreground: oklch(0.1 0.01 240);
   
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0 0 0);
+  --secondary: oklch(0.25 0.05 240);
+  --secondary-foreground: oklch(0.98 0 0);
   
-  /* Light Grey for Secondary/Muted */
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.2 0.02 240);
+  --muted-foreground: oklch(0.7 0.02 240);
   
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.4 0 0);
+  --accent: oklch(0.25 0.05 240);
+  --accent-foreground: oklch(0.98 0 0);
   
-  --accent: oklch(0.96 0 0);
-  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.6 0.25 25);
+  --destructive-foreground: oklch(0.98 0 0);
   
-  --destructive: oklch(0.6 0.24 29.234);
-  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.3 0.05 240 / 0.3);
+  --input: oklch(0.3 0.05 240 / 0.3);
+  --ring: oklch(0.65 0.22 150);
   
-  /* Strong Borders */
-  --border: oklch(0 0 0); /* Black borders */
-  --input: oklch(0 0 0);
-  --ring: oklch(0 0 0);
+  --radius: 0.75rem;
   
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0 0 0);
-  --sidebar-primary: oklch(0 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.96 0 0);
-  --sidebar-accent-foreground: oklch(0 0 0);
-  --sidebar-border: oklch(0 0 0);
-  --sidebar-ring: oklch(0 0 0);
+  --chart-1: oklch(0.65 0.22 150); /* Neon Green */
+  --chart-2: oklch(0.6 0.2 200); /* Cyan */
+  --chart-3: oklch(0.55 0.2 250); /* Blue */
+  --chart-4: oklch(0.5 0.2 300); /* Purple */
+  --chart-5: oklch(0.45 0.2 350); /* Pink */
+  
+  --sidebar: oklch(0.12 0.02 240);
+  --sidebar-foreground: oklch(0.98 0 0);
+  --sidebar-primary: oklch(0.65 0.22 150);
+  --sidebar-primary-foreground: oklch(0.1 0.01 240);
+  --sidebar-accent: oklch(0.2 0.02 240);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-border: oklch(0.3 0.05 240 / 0.3);
+  --sidebar-ring: oklch(0.65 0.22 150);
 }
 
-.dark {
-  /* Inverted Swiss Style */
-  --primary: oklch(0.6 0.24 29.234);
-  --primary-foreground: oklch(0.985 0 0);
-  
-  --background: oklch(0.1 0 0);
-  --foreground: oklch(0.985 0 0);
-  
-  --card: oklch(0.1 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  
-  --popover: oklch(0.1 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  
-  --accent: oklch(0.2 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  
-  --destructive: oklch(0.6 0.24 29.234);
-  --destructive-foreground: oklch(0.985 0 0);
-  
-  --border: oklch(0.985 0 0); /* White borders */
-  --input: oklch(0.985 0 0);
-  --ring: oklch(0.985 0 0);
-  
-  --chart-1: oklch(0.6 0.2 260);
-  --chart-2: oklch(0.6 0.24 29.234);
-  --chart-3: oklch(0.8 0.15 80);
-  --chart-4: oklch(0.6 0.15 140);
-  --chart-5: oklch(0.8 0 0);
-  
-  --sidebar: oklch(0.1 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.2 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.985 0 0);
-  --sidebar-ring: oklch(0.985 0 0);
+/* Force dark mode styles even without .dark class since we want a dark-only app */
+body {
+  @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary;
+  background-image: 
+    radial-gradient(circle at 50% 0%, oklch(0.2 0.1 240 / 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 0% 50%, oklch(0.2 0.1 150 / 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 100% 50%, oklch(0.2 0.1 300 / 0.2) 0%, transparent 40%);
+  background-attachment: fixed;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02"; /* Enable stylistic sets for Inter */
-  }
-  
-  /* Swiss Style Typography Adjustments */
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
-  }
-  
-  h1 {
-    @apply text-5xl md:text-6xl lg:text-7xl; /* Huge Typography */
-    letter-spacing: -0.04em;
-  }
-  
-  /* Thick Rules */
-  hr {
-    @apply border-t-4 border-foreground my-8;
-  }
-  
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -201,12 +142,20 @@
     .container {
       padding-left: 2rem;
       padding-right: 2rem;
-      max-width: 1400px; /* Wider container for dashboard */
+      max-width: 1280px;
     }
   }
   
-  /* Custom Swiss Style Card */
-  .swiss-card {
-    @apply border-2 border-foreground bg-card p-6 shadow-none;
+  /* Glassmorphism Utilities */
+  .glass-panel {
+    @apply bg-card/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+  
+  .glass-input {
+    @apply bg-black/20 border-white/10 focus:border-primary/50 focus:ring-primary/20 transition-all duration-300;
+  }
+  
+  .neon-text {
+    text-shadow: 0 0 10px var(--primary);
   }
 }
