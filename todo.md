@@ -266,4 +266,4 @@
 - [x] Update VIDEO_SCRIPT.md with custom domain
 - [x] Update INDEX.md with custom domain
 - [x] Recreate submission package archive
-- [ ] Push changes to GitHub repository
+- [x] Push changes to GitHub repository
