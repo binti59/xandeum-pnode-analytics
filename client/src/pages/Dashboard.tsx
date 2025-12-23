@@ -5,7 +5,7 @@ import { HealthScoreCircle } from "@/components/HealthScoreCircle";
 import { InsightsPanel } from "@/components/InsightsPanel";
 import { NetworkHealthTimeline } from "@/components/NetworkHealthTimeline";
 import { NodeCard } from "@/components/NodeCard";
-import { NodeDetailsDrawer } from "@/components/NodeDetailsDrawer";
+
 import { RpcStatsPanel } from "@/components/RpcStatsPanel";
 import { StatsCards } from "@/components/StatsCards";
 import { VersionDistributionChart } from "@/components/VersionDistributionChart";
@@ -31,7 +31,7 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
-  const [selectedNode, setSelectedNode] = useState<Pod | null>(null);
+
   
   const [endpoint, setEndpoint] = useState<string>(() => {
     return localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
@@ -358,7 +358,7 @@ export default function Dashboard() {
               />
               <GlobalDistributionMap 
                 nodes={nodes} 
-                onNodeClick={(node) => setSelectedNode(node)} 
+                onNodeClick={(node) => console.log('Map node clicked:', node.address)} 
               />
             </div>
 
@@ -400,9 +400,7 @@ export default function Dashboard() {
             {/* Node Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNodes.map((node, index) => (
-                <div key={node.address + index} onClick={() => setSelectedNode(node)}>
-                  <NodeCard node={node} />
-                </div>
+                <NodeCard key={node.address + index} node={node} />
               ))}
             </div>
             
@@ -415,11 +413,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Node Details Drawer */}
-      <NodeDetailsDrawer 
-        node={selectedNode} 
-        onClose={() => setSelectedNode(null)}
-      />
+
     </div>
   );
 }

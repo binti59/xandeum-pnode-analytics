@@ -150,7 +150,7 @@
 - [x] Fix RPC scanner to use correct method (get-stats instead of get-version)
 - [x] Fix RPC scanner request format to match tRPC batched format
 - [x] Fix RPC scanner response parsing to extract from tRPC wrapper
-- [x] Test with user's nodes (62.171.135.107 and 62.171.138.27) - Direct test successful, but scanner shows as private (needs debugging) which have port 6000 open
+- [x] Test expandable cards with accessible nodes - All features working perfectly! - Direct test successful, but scanner shows as private (needs debugging) which have port 6000 open
 
 ## Bug Fix - RPC Scanner Request Format Mismatch
 - [x] Identified issue: raw fetch() cannot call tRPC endpoints directly
@@ -193,3 +193,11 @@
 - [x] Handle both accessible (expandable) and private (not expandable) nodes
 - [x] Add smooth expand/collapse animation with AnimatePresence
 - [x] Test expandable cards with accessible nodes - SUCCESS! Card expands showing stats inline
+
+
+## UI/UX Improvements
+- [x] Implement localStorage caching for fetched node stats (5-minute TTL)
+- [x] Add refresh button on expanded cards to re-fetch stats
+- [x] Improve "Click to view detailed statistics" button visibility (changed to primary color, always visible)
+- [x] Remove NodeDetailsDrawer component (no longer needed with inline stats)
+- [x] Remove drawer trigger from Dashboard component

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { statsCache } from "@/lib/statsCache";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Loader2, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
 
 interface NodeCardProps {
   node: Pod;
@@ -21,6 +21,23 @@ export function NodeCard({ node }: NodeCardProps) {
     const cached = statsCache.get(node.address);
     if (cached) {
       setRpcAccessible(cached.accessible);
+    }
+    
+    // Load stats from localStorage if available
+    const cachedStats = localStorage.getItem(`node_stats_${node.address}`);
+    if (cachedStats) {
+      try {
+        const parsed = JSON.parse(cachedStats);
+        // Check if cache is less than 5 minutes old
+        if (parsed.timestamp && Date.now() - parsed.timestamp < 5 * 60 * 1000) {
+          setStats(parsed.data);
+        } else {
+          // Clear expired cache
+          localStorage.removeItem(`node_stats_${node.address}`);
+        }
+      } catch (e) {
+        console.error('Failed to parse cached stats:', e);
+      }
     }
   }, [node.address]);
   
@@ -100,6 +117,11 @@ export function NodeCard({ node }: NodeCardProps) {
           const rpcResponse = await response.json();
           if (rpcResponse && rpcResponse.result) {
             setStats(rpcResponse.result);
+            // Cache stats in localStorage with timestamp
+            localStorage.setItem(`node_stats_${node.address}`, JSON.stringify({
+              data: rpcResponse.result,
+              timestamp: Date.now()
+            }));
           }
         }
       } catch (error) {
@@ -123,6 +145,43 @@ export function NodeCard({ node }: NodeCardProps) {
     if (bytes >= 1073741824) return `${(bytes / 1073741824).toFixed(2)} GB`;
     if (bytes >= 1048576) return `${(bytes / 1048576).toFixed(2)} MB`;
     return `${(bytes / 1024).toFixed(2)} KB`;
+  };
+  
+  const handleRefreshStats = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card collapse
+    setLoadingStats(true);
+    try {
+      const nodeIP = node.address.split(':')[0];
+      const endpoint = `http://${nodeIP}:6000/rpc`;
+      
+      const response = await fetch("/api/proxy-rpc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          endpoint,
+          method: "get-stats",
+          timeout: 10000,
+        }),
+      });
+      
+      if (response.ok) {
+        const rpcResponse = await response.json();
+        if (rpcResponse && rpcResponse.result) {
+          setStats(rpcResponse.result);
+          // Update cache
+          localStorage.setItem(`node_stats_${node.address}`, JSON.stringify({
+            data: rpcResponse.result,
+            timestamp: Date.now()
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to refresh stats:", error);
+    } finally {
+      setLoadingStats(false);
+    }
   };
 
   return (
@@ -207,13 +266,13 @@ export function NodeCard({ node }: NodeCardProps) {
           </p>
         )}
         {rpcAccessible && (
-          <p className="text-xs text-muted-foreground text-center opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+          <div className="flex items-center justify-center gap-1 text-xs font-medium text-primary/80">
             {expanded ? (
               <><ChevronUp className="h-3 w-3" /> Click to collapse</>
             ) : (
               <><ChevronDown className="h-3 w-3" /> Click to view detailed statistics</>
             )}
-          </p>
+          </div>
         )}
       </div>
 
@@ -228,6 +287,22 @@ export function NodeCard({ node }: NodeCardProps) {
             className="overflow-hidden"
           >
             <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+              {/* Refresh Button */}
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleRefreshStats}
+                  disabled={loadingStats}
+                  size="sm"
+                  variant="ghost"
+                  className="text-xs h-7 px-2"
+                >
+                  {loadingStats ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <><RefreshCw className="h-3 w-3 mr-1" /> Refresh</>
+                  )}
+                </Button>
+              </div>
               {loadingStats ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
