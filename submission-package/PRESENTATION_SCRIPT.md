@@ -30,9 +30,9 @@ Notice the **Version Health bar at 79%**—this immediately signals that while m
 
 **[Scroll to Performance Alerts Widget]**
 
-Here's where we move from passive analytics to **active monitoring**. The Performance Alerts widget continuously scans all accessible nodes and automatically detects issues across five categories:
+Here's where we move from passive analytics to **active monitoring**. The Performance Alerts widget continuously scans all accessible nodes and automatically detects issues across four categories:
 
-**Critical alerts** appear when nodes experience severe problems—CPU usage exceeding 90%, RAM above 95%, or complete offline status. **Warning alerts** catch emerging issues before they become critical: CPU between 80-90%, RAM between 90-95%, or storage space running low above 85%.
+**Critical alerts** appear when nodes experience severe problems—CPU usage exceeding 90%, RAM above 95%, or complete offline status. **Warning alerts** catch emerging issues before they become critical: CPU between 80-90% and RAM between 90-95%.
 
 Right now, you can see we have **5 critical alerts** for nodes that are currently offline or inaccessible. Each alert shows the exact node address, the timestamp, and provides a direct link to investigate further on the Performance page.
 
@@ -40,17 +40,7 @@ This transforms the platform from a dashboard into a **monitoring system**—ope
 
 ---
 
-## Section 3: Storage Space Monitoring (30 seconds)
-
-**[Click on an accessible node card to expand it]**
-
-Storage monitoring is critical for a storage network like Xandeum. When you expand any accessible node, you see comprehensive statistics including **storage usage**. The platform displays both absolute values—gigabytes used versus total capacity—and the percentage, making it easy to spot nodes approaching capacity limits.
-
-This data feeds directly into the Performance Alerts system. If any node exceeds 85% storage capacity, operators receive an immediate warning alert, and above 95%, it escalates to critical. This prevents storage-related failures before they impact the network.
-
----
-
-## Section 4: Intelligent RPC Accessibility Scanning (30 seconds)
+## Section 3: Intelligent RPC Accessibility Scanning (30 seconds)
 
 **[Scroll to RPC Accessibility panel]**
 
@@ -60,7 +50,7 @@ Currently, we can see **0 accessible nodes** out of 242 private nodes, with a **
 
 ---
 
-## Section 5: Rankings - Intelligent Node Scoring (30 seconds)
+## Section 4: Rankings - Intelligent Node Scoring (30 seconds)
 
 **[Navigate to Rankings page]**
 
@@ -72,7 +62,7 @@ Operators can use these rankings to identify the most reliable nodes for critica
 
 ---
 
-## Section 6: Performance Trends - Historical Analysis (45 seconds)
+## Section 5: Performance Trends - Historical Analysis (45 seconds)
 
 **[Navigate to Performance page]**
 
@@ -86,7 +76,7 @@ This level of **automated intelligence** transforms raw metrics into actionable 
 
 ---
 
-## Section 7: User Experience Excellence (30 seconds)
+## Section 6: User Experience Excellence (30 seconds)
 
 **[Demonstrate interactive features]**
 
@@ -98,7 +88,7 @@ Every interaction feels polished. Click any node card to expand detailed statist
 
 ---
 
-## Section 8: Geographic Distribution & Network Insights (20 seconds)
+## Section 7: Geographic Distribution & Network Insights (20 seconds)
 
 **[Scroll to Global Distribution Map]**
 
@@ -147,9 +137,9 @@ Thank you for your time. I'm confident this platform represents the level of exc
 **For Functionality Criterion:**
 - Automated background RPC scanning (every 5 minutes)
 - Intelligent health scoring algorithm (composite of 3 factors)
-- Real-time performance alerts (5 alert types, 2 severity levels)
+- Real-time performance alerts (4 alert types, 2 severity levels)
 - Historical trend analysis (24-hour rolling window, 5-minute snapshots)
-- Storage space monitoring (integrated into alerts and node cards)
+- Automated performance data collection without user interaction
 
 **For Clarity Criterion:**
 - Color-coded health indicators (green/yellow/red)

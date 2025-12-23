@@ -308,3 +308,12 @@
 - [x] Fix PerformanceAlerts component to use node.address instead of node.ip
 - [x] Update all alert messages to display correct node addresses
 - [x] Test alerts widget - verified showing correct node addresses
+
+
+## Documentation Update - Remove Storage Monitoring References
+- [x] Remove storage monitoring from PRESENTATION_SCRIPT.md
+- [x] Check SUBMISSION.md - no node storage references found (only localStorage)
+- [x] Check README.md - no node storage references found (only localStorage)
+- [x] Check VIDEO_SCRIPT.md - file not in submission package
+- [ ] Update submission package with corrected documentation
+- [ ] Push updated documentation to GitHub
