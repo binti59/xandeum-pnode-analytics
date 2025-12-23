@@ -165,3 +165,13 @@
 - [x] Update prpc.ts getNodeStats() to use new endpoint
 - [x] Update rpcScanner.ts checkNodeRpcAccessibility() to use new endpoint
 - [x] Test with user's nodes (62.171.135.107 and 62.171.138.27) - Direct test successful, but scanner shows as private (needs debugging)
+
+
+## Scanner Improvements for User Node Detection
+- [x] Increase RPC_TIMEOUT from 5 to 10 seconds in rpcScanner.ts
+- [x] Reduce BATCH_SIZE from 5 to 3 concurrent requests
+- [x] Add debug logging to checkNodeRpcAccessibility() to track failures
+- [x] Log timeout errors, network errors, and invalid responses separately
+- [x] Create manual "Test RPC" button for individual node cards
+- [x] Display test result (success/failure reason) in real-time
+- [x] Test with user's nodes (62.171.135.107 - SUCCESS! Manual test shows RPC accessible)

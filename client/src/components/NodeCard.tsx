@@ -2,6 +2,8 @@ import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
 import { statsCache } from "@/lib/statsCache";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface NodeCardProps {
   node: Pod;
@@ -9,6 +11,8 @@ interface NodeCardProps {
 
 export function NodeCard({ node }: NodeCardProps) {
   const [rpcAccessible, setRpcAccessible] = useState<boolean | undefined>(undefined);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
   
   useEffect(() => {
     const cached = statsCache.get(node.address);
@@ -16,6 +20,51 @@ export function NodeCard({ node }: NodeCardProps) {
       setRpcAccessible(cached.accessible);
     }
   }, [node.address]);
+  
+  const handleTestRpc = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    setTesting(true);
+    setTestResult(null);
+    
+    try {
+      const nodeIP = node.address.split(':')[0];
+      const endpoint = `http://${nodeIP}:6000/rpc`;
+      
+      const response = await fetch("/api/proxy-rpc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          endpoint,
+          method: "get-stats",
+          timeout: 10000,
+        }),
+      });
+      
+      if (response.ok) {
+        const rpcResponse = await response.json();
+        
+        if (rpcResponse && !rpcResponse.error && rpcResponse.result) {
+          setTestResult("✅ RPC Accessible!");
+          setRpcAccessible(true);
+          statsCache.set(node.address, {} as any, true);
+        } else {
+          setTestResult("❌ Invalid response");
+          setRpcAccessible(false);
+        }
+      } else {
+        const errorText = await response.text();
+        setTestResult(`❌ HTTP ${response.status}`);
+        setRpcAccessible(false);
+      }
+    } catch (error: any) {
+      setTestResult(`❌ ${error.message}`);
+      setRpcAccessible(false);
+    } finally {
+      setTesting(false);
+    }
+  };
   
   // Click handling is done by parent component (Dashboard wraps with onClick)
 
@@ -74,10 +123,31 @@ export function NodeCard({ node }: NodeCardProps) {
         </div>
       </div>
 
-      {/* Click to view details hint */}
-      <div className="mt-4 pt-4 border-t border-white/5">
+      {/* Test RPC Button */}
+      <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
+        <Button
+          onClick={handleTestRpc}
+          disabled={testing}
+          size="sm"
+          variant="outline"
+          className="w-full text-xs"
+        >
+          {testing ? (
+            <>
+              <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+              Testing RPC...
+            </>
+          ) : (
+            "🔍 Test RPC Port"
+          )}
+        </Button>
+        {testResult && (
+          <p className="text-xs text-center font-medium">
+            {testResult}
+          </p>
+        )}
         <p className="text-xs text-muted-foreground text-center opacity-0 group-hover:opacity-100 transition-opacity">
-          Click to view detailed statistics →
+          Click card to view detailed statistics →
         </p>
       </div>
     </motion.div>

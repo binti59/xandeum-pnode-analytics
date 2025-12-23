@@ -3,7 +3,7 @@ import { statsCache } from "./statsCache";
 
 const RPC_SCAN_INTERVAL = 30 * 60 * 1000; // 30 minutes
 const RPC_PORT = 6000;
-const RPC_TIMEOUT = 5000; // 5 seconds
+const RPC_TIMEOUT = 10000; // 10 seconds (increased from 5 for better detection)
 
 interface ScanProgress {
   total: number;
@@ -21,17 +21,22 @@ let progressCallback: ScanProgressCallback | null = null;
  * Check if a single node's RPC port is accessible
  */
 async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> {
+  const nodeIP = nodeAddress.split(':')[0];
+  const endpoint = `http://${nodeIP}:${RPC_PORT}/rpc`;
+  
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT);
 
+    console.log(`[RPC Scanner] Testing ${nodeIP}...`);
+    
     const response = await fetch("/api/proxy-rpc", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        endpoint: `http://${nodeAddress.split(':')[0]}:${RPC_PORT}/rpc`,
+        endpoint,
         method: "get-stats",
         timeout: RPC_TIMEOUT,
       }),
@@ -44,12 +49,27 @@ async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> 
       const rpcResponse = await response.json();
       
       // Check if we got a valid JSON-RPC 2.0 response with stats
-      return rpcResponse && !rpcResponse.error && rpcResponse.result !== undefined;
+      const isAccessible = rpcResponse && !rpcResponse.error && rpcResponse.result !== undefined;
+      
+      if (isAccessible) {
+        console.log(`[RPC Scanner] ✅ ${nodeIP} - ACCESSIBLE`, rpcResponse.result);
+      } else {
+        console.log(`[RPC Scanner] ❌ ${nodeIP} - Invalid response:`, rpcResponse);
+      }
+      
+      return isAccessible;
+    } else {
+      console.log(`[RPC Scanner] ❌ ${nodeIP} - HTTP ${response.status}:`, await response.text());
     }
 
     return false;
-  } catch (error) {
+  } catch (error: any) {
     // Timeout or network error means RPC is not accessible
+    if (error.name === 'AbortError') {
+      console.log(`[RPC Scanner] ⏱️ ${nodeIP} - TIMEOUT (>${RPC_TIMEOUT}ms)`);
+    } else {
+      console.log(`[RPC Scanner] 🔌 ${nodeIP} - Network error:`, error.message);
+    }
     return false;
   }
 }
@@ -73,7 +93,7 @@ export async function scanAllNodesRpcAccessibility(
   }
 
   // Process nodes in batches to avoid overwhelming the server
-  const BATCH_SIZE = 5;
+  const BATCH_SIZE = 3; // Reduced from 5 to give each node more time
   for (let i = 0; i < nodes.length; i += BATCH_SIZE) {
     const batch = nodes.slice(i, i + BATCH_SIZE);
     
