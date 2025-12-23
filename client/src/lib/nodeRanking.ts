@@ -24,7 +24,7 @@ export interface RankedNode extends Pod {
  * Score range: 0-100
  */
 export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
-  const LATEST_VERSION = "1.0.0";
+  const LATEST_VERSION = "0.8.0";
   const CURRENT_TIME = Date.now() / 1000;
   
   // Count nodes per country for geographic diversity scoring
@@ -36,8 +36,7 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
   
   const rankedNodes: RankedNode[] = nodes.map(node => {
     // Version Score (40 points)
-    // Latest version (1.0.0) = 40 points
-    // 0.8.0 = 30 points
+    // Latest version (0.8.0) = 40 points
     // 0.7.x = 20 points
     // Others = 10 points
     let versionScore = 10;

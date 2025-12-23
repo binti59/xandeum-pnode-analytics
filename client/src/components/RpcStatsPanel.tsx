@@ -36,11 +36,9 @@ export function RpcStatsPanel({ nodes, scanProgress, onRefresh }: RpcStatsPanelP
       // Simple scoring based on version and location
       let score = 50; // Base score
 
-      // Version scoring
-      if (node.version === "1.0.0") {
+      // Version scoring (0.8.0 is current stable)
+      if (node.version === "0.8.0") {
         score += 30;
-      } else if (node.version?.startsWith("0.8.0")) {
-        score += 20;
       } else if (node.version?.startsWith("0.7")) {
         score += 10;
       }

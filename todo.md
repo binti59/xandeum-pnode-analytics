@@ -138,3 +138,9 @@
 - [x] Trigger full network re-scan on button click
 - [x] Show loading state during manual scan
 - [x] Add cooldown period to prevent spam (disabled state during scan)
+
+## Version Recognition Update
+- [x] Update ranking algorithm to recognize 0.8.0 as latest version (not 1.0.0)
+- [x] Update health metrics calculation to use 0.8.0 as current version
+- [x] Update badge system to award "Latest Version" badge for 0.8.0
+- [x] Update insights panel to reflect correct version status
