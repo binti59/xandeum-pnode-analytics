@@ -81,4 +81,27 @@ export const statsCache = {
       console.error("Error clearing stats cache:", error);
     }
   },
+
+  getAllAccessible(): string[] {
+    try {
+      const accessibleNodes: string[] = [];
+      const keys = Object.keys(localStorage);
+      
+      keys.forEach(key => {
+        if (key.startsWith(CACHE_KEY_PREFIX)) {
+          const nodeAddress = key.substring(CACHE_KEY_PREFIX.length);
+          const cached = this.get(nodeAddress);
+          
+          if (cached && cached.accessible) {
+            accessibleNodes.push(nodeAddress);
+          }
+        }
+      });
+      
+      return accessibleNodes;
+    } catch (error) {
+      console.error("Error getting accessible nodes from cache:", error);
+      return [];
+    }
+  },
 };

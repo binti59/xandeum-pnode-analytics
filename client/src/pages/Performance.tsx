@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { getNodePerformanceHistory, getNodesWithHistory } from "@/lib/performanceHistory";
 import { statsCache } from "@/lib/statsCache";
-import { Activity, TrendingUp, Clock, Cpu, HardDrive } from "lucide-react";
+import { Activity, TrendingUp, Clock, Cpu, HardDrive, Zap, Trophy, LayoutDashboard } from "lucide-react";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 
 interface NodeOption {
   address: string;
@@ -75,30 +77,55 @@ export default function Performance() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white p-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <Activity className="w-8 h-8 text-purple-400" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Performance Trends
-          </h1>
-        </div>
-        <p className="text-slate-400">
-          Historical performance data for accessible nodes over the past 24 hours
-        </p>
-      </motion.div>
+      <div className="container py-8 space-y-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl"
+        >
+          <div>
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
+                <Activity className="h-8 w-8 text-primary fill-primary/20" />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
+                  Performance Trends
+                </span>
+              </h1>
+              <p className="text-muted-foreground mt-2 text-lg">
+                Historical performance data for accessible nodes over the past 24 hours
+              </p>
+              <div className="flex items-center gap-3 mt-3">
+                <Link href="/">
+                  <Button variant="outline" size="sm">
+                    <LayoutDashboard className="h-4 w-4 mr-2" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <Link href="/rankings">
+                  <Button variant="outline" size="sm">
+                    <Trophy className="h-4 w-4 mr-2" />
+                    Rankings
+                  </Button>
+                </Link>
+                <Link href="/performance">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                    Performance
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
-      {/* Controls */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6 mb-6"
-      >
+        {/* Controls */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-panel rounded-2xl p-6"
+        >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Node Selector */}
           <div>
@@ -145,18 +172,18 @@ export default function Performance() {
         </div>
       </motion.div>
 
-      {/* Charts */}
-      {selectedNode && chartData.length > 0 ? (
-        <div className="space-y-6">
-          {/* CPU Usage Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
-          >
+        {/* Charts */}
+        {selectedNode && chartData.length > 0 ? (
+          <div className="space-y-6">
+            {/* CPU Usage Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="glass-panel rounded-2xl p-6"
+            >
             <div className="flex items-center gap-2 mb-4">
-              <Cpu className="w-5 h-5 text-blue-400" />
+              <Cpu className="w-5 h-5 text-primary" />
               <h2 className="text-xl font-semibold">CPU Usage</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -184,24 +211,24 @@ export default function Performance() {
                 <Line 
                   type="monotone" 
                   dataKey="cpu" 
-                  stroke="#60a5fa" 
+                  stroke="oklch(0.65 0.22 150)" 
                   strokeWidth={2}
-                  dot={{ fill: '#60a5fa', r: 3 }}
+                  dot={{ fill: 'oklch(0.65 0.22 150)', r: 3 }}
                   name="CPU Usage (%)"
                 />
               </LineChart>
             </ResponsiveContainer>
           </motion.div>
 
-          {/* RAM Usage Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
-          >
+            {/* RAM Usage Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="glass-panel rounded-2xl p-6"
+            >
             <div className="flex items-center gap-2 mb-4">
-              <HardDrive className="w-5 h-5 text-green-400" />
+              <HardDrive className="w-5 h-5 text-chart-2" />
               <h2 className="text-xl font-semibold">RAM Usage</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -230,24 +257,24 @@ export default function Performance() {
                 <Line 
                   type="monotone" 
                   dataKey="ramPercent" 
-                  stroke="#34d399" 
+                  stroke="oklch(0.6 0.2 200)" 
                   strokeWidth={2}
-                  dot={{ fill: '#34d399', r: 3 }}
+                  dot={{ fill: 'oklch(0.6 0.2 200)', r: 3 }}
                   name="RAM Usage (%)"
                 />
               </LineChart>
             </ResponsiveContainer>
           </motion.div>
 
-          {/* Uptime Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
-          >
+            {/* Uptime Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-panel rounded-2xl p-6"
+            >
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-5 h-5 text-purple-400" />
+              <Clock className="w-5 h-5 text-chart-4" />
               <h2 className="text-xl font-semibold">Uptime Trend</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -277,24 +304,24 @@ export default function Performance() {
                 <Line 
                   type="monotone" 
                   dataKey="uptime" 
-                  stroke="#a78bfa" 
+                  stroke="oklch(0.5 0.2 300)" 
                   strokeWidth={2}
-                  dot={{ fill: '#a78bfa', r: 3 }}
+                  dot={{ fill: 'oklch(0.5 0.2 300)', r: 3 }}
                   name="Uptime (hours)"
                 />
               </LineChart>
             </ResponsiveContainer>
           </motion.div>
 
-          {/* Active Streams Chart */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-6"
-          >
+            {/* Active Streams Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="glass-panel rounded-2xl p-6"
+            >
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="w-5 h-5 text-yellow-400" />
+              <TrendingUp className="w-5 h-5 text-chart-5" />
               <h2 className="text-xl font-semibold">Active Streams</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -322,32 +349,33 @@ export default function Performance() {
                 <Line 
                   type="monotone" 
                   dataKey="activeStreams" 
-                  stroke="#fbbf24" 
+                  stroke="oklch(0.45 0.2 350)" 
                   strokeWidth={2}
-                  dot={{ fill: '#fbbf24', r: 3 }}
+                  dot={{ fill: 'oklch(0.45 0.2 350)', r: 3 }}
                   name="Active Streams"
                 />
               </LineChart>
             </ResponsiveContainer>
           </motion.div>
-        </div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-12 text-center"
-        >
-          <Activity className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-slate-400 mb-2">
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="glass-panel rounded-2xl p-12 text-center"
+          >
+          <Activity className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-foreground/70 mb-2">
             No Performance Data Available
           </h3>
-          <p className="text-slate-500">
+          <p className="text-muted-foreground">
             {availableNodes.length === 0
               ? "No accessible nodes have been scanned yet. Visit the dashboard to start collecting data."
               : "Select a node to view its performance trends."}
           </p>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }

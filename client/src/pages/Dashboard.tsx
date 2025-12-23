@@ -19,6 +19,7 @@ import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { startBackgroundRpcScanning, stopBackgroundRpcScanning } from "@/lib/rpcScanner";
+import { startPerformanceCollection, stopPerformanceCollection, getCollectionProgress, CollectionProgress } from "@/lib/performanceCollector";
 
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
@@ -60,6 +61,8 @@ export default function Dashboard() {
     accessible: number;
     isScanning: boolean;
   } | null>(null);
+  
+  const [perfCollectionProgress, setPerfCollectionProgress] = useState<CollectionProgress | null>(null);
 
   const handleManualRpcRefresh = () => {
     if (rpcScanProgress?.isScanning) return; // Prevent spam
@@ -132,6 +135,20 @@ export default function Dashboard() {
       stopBackgroundRpcScanning();
     };
   }, [nodes]);
+  
+  // Start automated performance data collection
+  useEffect(() => {
+    // Start collection after RPC scan has identified accessible nodes
+    if (rpcScanProgress && !rpcScanProgress.isScanning && rpcScanProgress.accessible > 0) {
+      startPerformanceCollection((progress) => {
+        setPerfCollectionProgress(progress);
+      });
+    }
+    
+    return () => {
+      stopPerformanceCollection();
+    };
+  }, [rpcScanProgress]);
 
   // Auto-refresh effect
   useEffect(() => {

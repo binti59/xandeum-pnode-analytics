@@ -228,3 +228,23 @@
 - [x] Add navigation link to Performance page in Dashboard and Rankings
 - [x] Add route to App.tsx for /performance path
 - [x] Add Active Streams chart to show network activity trends
+
+
+## Bug Fix - Performance Page Navigation and Styling
+- [x] Add navigation header to Performance page with back links to Dashboard/Rankings
+- [x] Update Performance page background gradient to match Dashboard (slate-950 via purple-950)
+- [x] Update chart panel styling to match glassmorphism design (glass-panel class)
+- [x] Ensure consistent color palette across all pages (primary, chart-2, chart-4, chart-5)
+- [x] Test navigation flow between all pages
+
+
+## Feature - Automated Background Performance Data Collection
+- [x] Create performanceCollector.ts utility for automated data collection
+- [x] Implement periodic collection job (every 5 minutes)
+- [x] Query all accessible nodes from statsCache automatically
+- [x] Store performance snapshots using addPerformanceSnapshot()
+- [x] Add progress tracking and error handling
+- [x] Integrate with Dashboard component lifecycle (start/stop)
+- [x] Add getAllAccessible() method to statsCache
+- [x] Export CollectionProgress interface for type safety
+- [x] Automatic data accumulation without user interaction
