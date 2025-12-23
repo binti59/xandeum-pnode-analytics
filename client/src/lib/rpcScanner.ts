@@ -25,15 +25,15 @@ async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT);
 
-    const response = await fetch("/api/trpc/proxy.rpc", {
+    const response = await fetch("/api/proxy-rpc", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         endpoint: `http://${nodeAddress.split(':')[0]}:${RPC_PORT}/rpc`,
-        method: "get-version",
-        params: [],
+        method: "get-stats",
+        timeout: RPC_TIMEOUT,
       }),
       signal: controller.signal,
     });
@@ -41,8 +41,10 @@ async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> 
     clearTimeout(timeoutId);
 
     if (response.ok) {
-      const data = await response.json();
-      return data.result !== undefined;
+      const rpcResponse = await response.json();
+      
+      // Check if we got a valid JSON-RPC 2.0 response with stats
+      return rpcResponse && !rpcResponse.error && rpcResponse.result !== undefined;
     }
 
     return false;

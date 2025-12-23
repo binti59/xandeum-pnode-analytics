@@ -70,21 +70,16 @@ export const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
  */
 export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<Pod[]> => {
   try {
-    // Use backend proxy endpoint
-    const response = await fetch("/api/trpc/proxy.rpc", {
+    // Use backend REST proxy endpoint
+    const response = await fetch("/api/proxy-rpc", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify({
-        "0": {
-          json: {
-            endpoint,
-            method: "get-pods",
-            // Don't include params - not needed
-          },
-        },
+        endpoint,
+        method: "get-pods",
       }),
     });
 
@@ -92,10 +87,7 @@ export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    
-    // Extract result from tRPC response format
-    const rpcResponse = data[0]?.result?.data?.json as JsonRpcResponse<GetPodsResult>;
+    const rpcResponse = await response.json() as JsonRpcResponse<GetPodsResult>;
 
     if (!rpcResponse) {
       throw new Error("Invalid response format from proxy");
@@ -123,20 +115,15 @@ export async function getNodeStats(nodeAddress: string, customEndpoint?: string)
   const endpoint = customEndpoint || DEFAULT_RPC_ENDPOINT;
 
   try {
-    const response = await fetch("/api/trpc/proxy.rpc", {
+    const response = await fetch("/api/proxy-rpc", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify({
-        "0": {
-          json: {
-            endpoint,
-            method: "get-stats",
-            // Don't include params - get-stats doesn't need it
-          },
-        },
+        endpoint,
+        method: "get-stats",
       }),
     });
 
@@ -144,8 +131,7 @@ export async function getNodeStats(nodeAddress: string, customEndpoint?: string)
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    const rpcResponse = data[0]?.result?.data?.json as JsonRpcResponse<NodeStats>;
+    const rpcResponse = await response.json() as JsonRpcResponse<NodeStats>;
 
     if (!rpcResponse) {
       throw new Error("Invalid response format from proxy");

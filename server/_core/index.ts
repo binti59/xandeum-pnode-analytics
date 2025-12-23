@@ -35,6 +35,10 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
+  // REST endpoint for RPC proxy (for raw fetch calls from prpc.ts and rpcScanner.ts)
+  const { proxyRpcHandler } = await import("../proxyRpc");
+  app.post("/api/proxy-rpc", proxyRpcHandler);
   // tRPC API
   app.use(
     "/api/trpc",

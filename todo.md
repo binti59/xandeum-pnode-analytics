@@ -144,3 +144,24 @@
 - [x] Update health metrics calculation to use 0.8.0 as current version
 - [x] Update badge system to award "Latest Version" badge for 0.8.0
 - [x] Update insights panel to reflect correct version status
+
+
+## Bug Fix - RPC Scanner Not Working
+- [x] Fix RPC scanner to use correct method (get-stats instead of get-version)
+- [x] Fix RPC scanner request format to match tRPC batched format
+- [x] Fix RPC scanner response parsing to extract from tRPC wrapper
+- [x] Test with user's nodes (62.171.135.107 and 62.171.138.27) - Direct test successful, but scanner shows as private (needs debugging) which have port 6000 open
+
+## Bug Fix - RPC Scanner Request Format Mismatch
+- [x] Identified issue: raw fetch() cannot call tRPC endpoints directly
+- [ ] Create dedicated REST endpoint /api/proxy-rpc for RPC proxying
+- [ ] Update prpc.ts to use new REST endpoint
+- [ ] Update rpcScanner.ts to use new REST endpoint
+
+## Bug Fix - Create REST Endpoint for RPC Proxy
+- [x] Create /api/proxy-rpc REST endpoint following Xandeum pRPC protocol
+- [x] Endpoint accepts {endpoint, method, params} and returns JSON-RPC 2.0 response
+- [x] Update prpc.ts getPods() to use new endpoint
+- [x] Update prpc.ts getNodeStats() to use new endpoint
+- [x] Update rpcScanner.ts checkNodeRpcAccessibility() to use new endpoint
+- [x] Test with user's nodes (62.171.135.107 and 62.171.138.27) - Direct test successful, but scanner shows as private (needs debugging)
