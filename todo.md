@@ -248,3 +248,12 @@
 - [x] Add getAllAccessible() method to statsCache
 - [x] Export CollectionProgress interface for type safety
 - [x] Automatic data accumulation without user interaction
+
+
+## Bug Fix - CPU % Not Displaying in Node Cards
+- [x] Investigate why CPU percentage is not showing in expandable node cards
+- [x] Check if stats API response includes CPU data
+- [x] Verify CPU data parsing and display logic
+- [x] Fixed field name from `cpu` to `cpu_percent` in NodeCard component
+- [x] Fixed field name from `ram` to `ram_used` in performance snapshot
+- [x] Test with accessible nodes to confirm fix - verified RPC returns cpu_percent field

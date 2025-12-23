@@ -127,8 +127,8 @@ export function NodeCard({ node }: NodeCardProps) {
             // Add to performance history
             if (rpcResponse.result.uptime !== undefined) {
               addPerformanceSnapshot(node.address, {
-                cpu: rpcResponse.result.cpu || 0,
-                ram: rpcResponse.result.ram || 0,
+                cpu: rpcResponse.result.cpu_percent || 0,
+                ram: rpcResponse.result.ram_used || 0,
                 ramTotal: rpcResponse.result.ram_total || 4294967296,
                 uptime: rpcResponse.result.uptime || 0,
                 activeStreams: rpcResponse.result.active_streams || 0,
@@ -330,7 +330,7 @@ export function NodeCard({ node }: NodeCardProps) {
                   </div>
                   <div className="space-y-1">
                     <span className="text-xs text-muted-foreground uppercase tracking-wider">CPU Usage</span>
-                    <p className="text-sm font-mono text-white">{stats.cpu?.toFixed(2)}%</p>
+                    <p className="text-sm font-mono text-white">{stats.cpu_percent?.toFixed(2)}%</p>
                   </div>
                   <div className="space-y-1">
                     <span className="text-xs text-muted-foreground uppercase tracking-wider">RAM Usage</span>

@@ -5,7 +5,8 @@
 **Bounty**: Xandeum pNode Analytics Platform (Superteam)  
 **Submission Date**: December 23, 2024  
 **Live Platform**: [https://xandeum-pnode-analytics.manus.space](https://xandeum-pnode-analytics.manus.space)  
-**GitHub Repository**: [Link to repository]
+**GitHub Repository**: [https://github.com/binti59/xandeum-pnode-analytics](https://github.com/binti59/xandeum-pnode-analytics)  
+**Video Demo**: [Record using VIDEO_SCRIPT.md guide and upload to YouTube as unlisted]
 
 ---
 
