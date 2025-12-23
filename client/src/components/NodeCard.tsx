@@ -1,6 +1,7 @@
 import { Pod } from "@/services/prpc";
 import { motion, AnimatePresence } from "framer-motion";
 import { statsCache } from "@/lib/statsCache";
+import { addPerformanceSnapshot } from "@/lib/performanceHistory";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
@@ -122,6 +123,19 @@ export function NodeCard({ node }: NodeCardProps) {
               data: rpcResponse.result,
               timestamp: Date.now()
             }));
+            
+            // Add to performance history
+            if (rpcResponse.result.uptime !== undefined) {
+              addPerformanceSnapshot(node.address, {
+                cpu: rpcResponse.result.cpu || 0,
+                ram: rpcResponse.result.ram || 0,
+                ramTotal: rpcResponse.result.ram_total || 4294967296,
+                uptime: rpcResponse.result.uptime || 0,
+                activeStreams: rpcResponse.result.active_streams || 0,
+                packetsReceived: rpcResponse.result.packets_received || 0,
+                packetsSent: rpcResponse.result.packets_sent || 0,
+              });
+            }
           }
         }
       } catch (error) {

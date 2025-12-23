@@ -15,7 +15,7 @@ import { calculateHealthMetrics } from "@/lib/healthScore";
 import { trpc } from "@/lib/trpc";
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy } from "lucide-react";
+import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy, Activity } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { startBackgroundRpcScanning, stopBackgroundRpcScanning } from "@/lib/rpcScanner";
@@ -228,6 +228,12 @@ export default function Dashboard() {
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
                     <Trophy className="h-4 w-4" />
                     Rankings
+                  </Button>
+                </Link>
+                <Link href="/performance">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
+                    <Activity className="h-4 w-4" />
+                    Performance
                   </Button>
                 </Link>
               </div>

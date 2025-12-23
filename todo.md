@@ -213,3 +213,18 @@
 - [x] Fetch stats from statsCache for accessible nodes during ranking calculation
 - [x] Display performance breakdown in Rankings page (tooltip + inline breakdown)
 - [x] Test with accessible nodes to verify scoring accuracy - SUCCESS! Top nodes show performance breakdown
+
+
+## Feature - Performance Monitoring Page
+- [x] Create performance history tracking system using localStorage
+- [x] Store CPU, RAM, uptime snapshots every 5 minutes for accessible nodes
+- [x] Maintain 24-hour rolling window of historical data
+- [x] Integrate tracking into NodeCard when stats are fetched
+- [x] Create Performance.tsx page component
+- [x] Add trend charts using recharts library (CPU, RAM, Uptime over time)
+- [x] Display accessible nodes with performance trends
+- [x] Add node selector to view individual node performance history
+- [x] Add time range filter (1h/6h/24h)
+- [x] Add navigation link to Performance page in Dashboard and Rankings
+- [x] Add route to App.tsx for /performance path
+- [x] Add Active Streams chart to show network activity trends

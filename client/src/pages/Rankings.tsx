@@ -213,7 +213,13 @@ export default function Rankings() {
                   Dashboard
                 </Button>
               </Link>
-                <Link href="/rankings">
+              <Link href="/performance">
+                <Button variant="outline" size="sm">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Performance
+                </Button>
+              </Link>
+              <Link href="/rankings">
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                     Rankings
                   </Button>
