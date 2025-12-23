@@ -1,5 +1,8 @@
 import { ConnectionSettings } from "@/components/ConnectionSettings";
 import { FilterBar } from "@/components/FilterBar";
+import { PerformanceAlerts } from "@/components/PerformanceAlerts";
+import { DashboardSkeleton } from "@/components/DashboardSkeleton";
+import { EmptyState } from "@/components/EmptyState";
 import { GlobalDistributionMap } from "@/components/GlobalDistributionMap";
 import { HealthScoreCircle } from "@/components/HealthScoreCircle";
 import { InsightsPanel } from "@/components/InsightsPanel";
@@ -319,12 +322,14 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {error ? (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass-panel border-destructive/50 bg-destructive/10 p-6 text-destructive rounded-xl"
-          >
+      {loading && nodes.length === 0 ? (
+        <DashboardSkeleton />
+      ) : error ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-panel border-destructive/50 bg-destructive/10 p-6 text-destructive rounded-xl"
+        >
             <h3 className="font-bold uppercase tracking-tight flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />
               Connection Error
@@ -371,9 +376,14 @@ export default function Dashboard() {
             {/* Network Health Timeline */}
             <NetworkHealthTimeline currentScore={healthMetrics.overallScore} />
 
-            {/* Insights, RPC Stats & Global Distribution */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Performance Alerts & Insights Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <PerformanceAlerts nodes={nodes} />
               <InsightsPanel metrics={healthMetrics} />
+            </div>
+
+            {/* RPC Stats & Global Distribution */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <RpcStatsPanel 
                 nodes={nodes} 
                 scanProgress={rpcScanProgress} 

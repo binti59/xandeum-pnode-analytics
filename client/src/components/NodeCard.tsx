@@ -350,6 +350,17 @@ export function NodeCard({ node }: NodeCardProps) {
                     <span className="text-xs text-muted-foreground uppercase tracking-wider">Packets Sent</span>
                     <p className="text-sm font-mono text-white">{stats.packets_sent?.toLocaleString()}</p>
                   </div>
+                  {stats.disk_used && stats.disk_total && (
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider">Storage Usage</span>
+                      <p className="text-sm font-mono text-white">
+                        {formatBytes(stats.disk_used)} / {formatBytes(stats.disk_total)}
+                        <span className="ml-2 text-xs text-muted-foreground">
+                          ({((stats.disk_used / stats.disk_total) * 100).toFixed(1)}%)
+                        </span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="text-sm text-center text-muted-foreground py-4">Failed to load stats</p>

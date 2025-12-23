@@ -275,3 +275,36 @@
 - [x] Apply same logic to Availability and Distribution bars for consistency
 - [x] Added getHealthBgColor() function for proper background color mapping
 - [x] Test with different health score values - verified 79% shows correct width and yellow color
+
+
+## Feature - Performance Alerts Dashboard Widget
+- [x] Create PerformanceAlerts.tsx component with compact card design
+- [x] Add real-time alert monitoring for CPU >80%, RAM >90%, Storage >85%
+- [x] Add offline node detection alerts
+- [x] Add outdated version alerts
+- [x] Show last 5 alerts with timestamps
+- [x] Add badge showing total active alerts count (critical/warning)
+- [x] Add click-to-navigate to Performance page for specific node
+- [x] Add storage space monitoring to NodeStats interface (disk_used, disk_total)
+- [x] Display storage space in expandable node cards
+- [ ] Add storage metric to Performance trends page charts
+- [x] Integrate alerts widget into Dashboard layout
+
+## Feature - Loading Skeletons & Empty States
+- [x] Skeleton.tsx component already exists with shimmer effect
+- [x] Create DashboardSkeleton component for full dashboard loading state
+- [x] Add loading skeletons for Dashboard stats cards
+- [x] Add loading skeletons for node cards grid
+- [x] Add loading skeletons for charts (Version Distribution, Health Timeline)
+- [x] Create EmptyState.tsx component with icon and action button
+- [x] Add loading skeleton to Dashboard initial load
+- [ ] Add empty state for "No nodes found" with search
+- [ ] Add empty state for "No accessible nodes" in RPC panel
+- [ ] Add empty state for "No performance data" in Performance page
+- [ ] Add success toasts for completed actions
+
+
+## Bug Fix - Performance Alerts Node Address
+- [x] Fix PerformanceAlerts component to use node.address instead of node.ip
+- [x] Update all alert messages to display correct node addresses
+- [x] Test alerts widget - verified showing correct node addresses

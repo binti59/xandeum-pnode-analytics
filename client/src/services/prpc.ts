@@ -37,6 +37,8 @@ export interface NodeStats {
     cpu_percent: number;
     ram_used: number;
     ram_total: number;
+    disk_used?: number; // Bytes
+    disk_total?: number; // Bytes
     uptime: number; // Seconds
     packets_received: number;
     packets_sent: number;
