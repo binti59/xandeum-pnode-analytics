@@ -111,7 +111,7 @@
 
 "The Xandeum pNode Analytics platform delivers enterprise-grade monitoring with features you'd expect from commercial validator dashboards like stakewiz.com - but specifically tailored for Xandeum's pNode network."
 
-"The platform is live at xandeum-pnode-analytics.manus.space, and the full source code is available on GitHub. Thank you for considering this submission!"
+"The platform is live at xandanalytics.bikramjitchowdhury.com, and the full source code is available on GitHub. Thank you for considering this submission!"
 
 ---
 

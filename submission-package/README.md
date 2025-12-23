@@ -2,7 +2,7 @@
 
 **A comprehensive, real-time analytics dashboard for monitoring Xandeum storage provider nodes (pNodes)**
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://xandeum-pnode-analytics.manus.space)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://xandanalytics.bikramjitchowdhury.com)
 [![Built with Manus](https://img.shields.io/badge/Built%20with-Manus-blue)](https://manus.im)
 
 ---
@@ -11,7 +11,7 @@
 
 The Xandeum pNode Analytics Platform is a professional-grade monitoring solution designed specifically for the Xandeum storage network. Built with modern web technologies and a focus on user experience, this platform provides comprehensive insights into pNode performance, network health, and real-time statistics.
 
-**Live Platform:** [https://xandeum-pnode-analytics.manus.space](https://xandeum-pnode-analytics.manus.space)
+**Live Platform:** [https://xandanalytics.bikramjitchowdhury.com](https://xandanalytics.bikramjitchowdhury.com)
 
 ---
 
@@ -142,7 +142,7 @@ The platform implements a sophisticated data pipeline optimized for real-time mo
 
 The platform is deployed and accessible at:
 
-**https://xandeum-pnode-analytics.manus.space**
+**https://xandanalytics.bikramjitchowdhury.com**
 
 The deployment includes:
 - **Automatic HTTPS**: SSL/TLS encryption for all connections
@@ -325,7 +325,7 @@ This project is submitted for the Xandeum pNode Analytics Bounty (Superteam).
 
 For questions, feedback, or support regarding this submission:
 
-- **Platform**: [https://xandeum-pnode-analytics.manus.space](https://xandeum-pnode-analytics.manus.space)
+- **Platform**: [https://xandanalytics.bikramjitchowdhury.com](https://xandanalytics.bikramjitchowdhury.com)
 - **Xandeum Discord**: [https://discord.gg/uqRSmmM5m](https://discord.gg/uqRSmmM5m)
 
 ---

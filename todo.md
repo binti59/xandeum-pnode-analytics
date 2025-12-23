@@ -257,3 +257,13 @@
 - [x] Fixed field name from `cpu` to `cpu_percent` in NodeCard component
 - [x] Fixed field name from `ram` to `ram_used` in performance snapshot
 - [x] Test with accessible nodes to confirm fix - verified RPC returns cpu_percent field
+
+
+## Update - Change Live Platform URL to Custom Domain
+- [x] Update README.md with https://xandanalytics.bikramjitchowdhury.com/
+- [x] Update SUBMISSION.md with custom domain
+- [x] Update USER_GUIDE.md with custom domain
+- [x] Update VIDEO_SCRIPT.md with custom domain
+- [x] Update INDEX.md with custom domain
+- [x] Recreate submission package archive
+- [ ] Push changes to GitHub repository

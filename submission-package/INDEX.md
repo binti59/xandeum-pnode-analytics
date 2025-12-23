@@ -2,7 +2,7 @@
 
 **Superteam Bounty Submission**  
 **Date**: December 23, 2024  
-**Live Platform**: https://xandeum-pnode-analytics.manus.space
+**Live Platform**: https://xandanalytics.bikramjitchowdhury.com
 
 ---
 
@@ -56,7 +56,7 @@ This submission package contains all documentation and materials for the Xandeum
 
 ### 🌐 Live Platform
 
-**URL**: https://xandeum-pnode-analytics.manus.space
+**URL**: https://xandanalytics.bikramjitchowdhury.com
 
 The platform is fully deployed and accessible for review. Key features to test:
 
@@ -139,7 +139,7 @@ The platform is fully deployed and accessible for review. Key features to test:
 
 ### Deployment
 
-- **Live URL**: https://xandeum-pnode-analytics.manus.space
+- **Live URL**: https://xandanalytics.bikramjitchowdhury.com
 - **HTTPS**: Automatic SSL/TLS encryption
 - **CDN**: Global content delivery
 - **Database**: Managed PostgreSQL with automated backups
@@ -170,7 +170,7 @@ Compared to existing Solana validator dashboards (stakewiz.com, topvalidators.ap
 
 ### Accessing the Platform
 
-1. Navigate to https://xandeum-pnode-analytics.manus.space
+1. Navigate to https://xandanalytics.bikramjitchowdhury.com
 2. Platform automatically connects to Xandeum RPC and loads node data
 3. Explore Dashboard, Rankings, and Performance pages via top navigation
 4. Use search box to find specific nodes by IP or location
@@ -204,7 +204,7 @@ Compared to existing Solana validator dashboards (stakewiz.com, topvalidators.ap
 
 ## Contact & Support
 
-**Live Platform**: https://xandeum-pnode-analytics.manus.space  
+**Live Platform**: https://xandanalytics.bikramjitchowdhury.com  
 **Xandeum Discord**: https://discord.gg/uqRSmmM5m  
 **Submission Date**: December 23, 2024
 
@@ -230,5 +230,5 @@ Compared to existing Solana validator dashboards (stakewiz.com, topvalidators.ap
 ---
 
 **Submitted for**: Xandeum pNode Analytics Bounty (Superteam)  
-**Platform**: https://xandeum-pnode-analytics.manus.space  
+**Platform**: https://xandanalytics.bikramjitchowdhury.com  
 **Date**: December 23, 2024

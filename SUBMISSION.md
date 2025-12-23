@@ -4,7 +4,7 @@
 
 **Bounty**: Xandeum pNode Analytics Platform (Superteam)  
 **Submission Date**: December 23, 2024  
-**Live Platform**: [https://xandeum-pnode-analytics.manus.space](https://xandeum-pnode-analytics.manus.space)  
+**Live Platform**: [https://xandanalytics.bikramjitchowdhury.com](https://xandanalytics.bikramjitchowdhury.com)  
 **GitHub Repository**: [https://github.com/binti59/xandeum-pnode-analytics](https://github.com/binti59/xandeum-pnode-analytics)  
 **Video Demo**: [Record using VIDEO_SCRIPT.md guide and upload to YouTube as unlisted]
 
@@ -287,7 +287,7 @@ This interaction pattern reduces clicks and keeps users in context, improving wo
 
 The platform is deployed and fully accessible at:
 
-**https://xandeum-pnode-analytics.manus.space**
+**https://xandanalytics.bikramjitchowdhury.com**
 
 The deployment includes:
 

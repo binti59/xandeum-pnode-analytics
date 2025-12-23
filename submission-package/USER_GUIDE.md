@@ -24,7 +24,7 @@
 
 The Xandeum pNode Analytics Platform is accessible via web browser at:
 
-**https://xandeum-pnode-analytics.manus.space**
+**https://xandanalytics.bikramjitchowdhury.com**
 
 No installation, registration, or configuration is required. Simply navigate to the URL and the platform will automatically connect to the Xandeum network and begin displaying pNode data.
 
@@ -642,4 +642,4 @@ A: The platform is open source. You can contribute code, report bugs, or suggest
 
 **Need more help?** Join the Xandeum Discord community at https://discord.gg/uqRSmmM5m
 
-**Platform URL**: https://xandeum-pnode-analytics.manus.space
+**Platform URL**: https://xandanalytics.bikramjitchowdhury.com
