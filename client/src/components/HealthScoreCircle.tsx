@@ -1,4 +1,4 @@
-import { getHealthColor, getHealthLabel } from "@/lib/healthScore";
+import { getHealthColor, getHealthBgColor, getHealthLabel } from "@/lib/healthScore";
 import { motion } from "framer-motion";
 
 interface HealthScoreCircleProps {
@@ -95,7 +95,7 @@ function ScoreBar({ label, score, weight }: { label: string; score: number; weig
           initial={{ width: 0 }}
           animate={{ width: `${score}%` }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className={`h-full ${getHealthColor(score).replace('text-', 'bg-')}`}
+          className={`h-full ${getHealthBgColor(score)}`}
         />
       </div>
     </div>
