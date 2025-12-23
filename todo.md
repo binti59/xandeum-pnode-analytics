@@ -175,3 +175,21 @@
 - [x] Create manual "Test RPC" button for individual node cards
 - [x] Display test result (success/failure reason) in real-time
 - [x] Test with user's nodes (62.171.135.107 - SUCCESS! Manual test shows RPC accessible)
+
+
+## Bug Fix - Accessible Nodes Show No Stats in Drawer
+- [x] Fixed NodeDetailsDrawer using tRPC hook incorrectly in async function
+- [x] Changed to use REST endpoint /api/proxy-rpc instead
+- [x] Fixed 503 errors by reducing BATCH_SIZE to 1 (sequential scanning)
+- [x] Added 500ms delay between requests to prevent backend overload
+- [ ] Verify stats display correctly for both accessible and private nodes
+
+
+## Feature - Expandable Node Cards with Inline Stats
+- [x] Make NodeCard expandable with click to show/hide details (only for accessible nodes)
+- [x] Display inline stats when card is expanded (uptime, CPU, RAM, streams, packets)
+- [x] Fetch stats on-demand when user expands card
+- [x] Show loading state while fetching stats
+- [x] Handle both accessible (expandable) and private (not expandable) nodes
+- [x] Add smooth expand/collapse animation with AnimatePresence
+- [x] Test expandable cards with accessible nodes - SUCCESS! Card expands showing stats inline

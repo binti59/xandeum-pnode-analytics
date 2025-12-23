@@ -40,16 +40,25 @@ export function NodeDetailsDrawer({ node, onClose }: NodeDetailsDrawerProps) {
       const ip = node.address.split(":")[0];
       const endpoint = `http://${ip}:6000/rpc`;
 
-      // Attempt to fetch stats directly from the node with 5-second timeout
-      const utils = trpc.useUtils();
-      const response = await utils.client.proxy.rpc.mutate({
-        endpoint,
-        method: "get-stats",
-        timeout: 5000,
+      // Attempt to fetch stats directly from the node with 10-second timeout
+      const response = await fetch("/api/proxy-rpc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          endpoint,
+          method: "get-stats",
+          timeout: 10000,
+        }),
       });
 
-      if (response.result) {
-        const nodeStats = response.result as NodeStats;
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data.result) {
+        const nodeStats = data.result as NodeStats;
         setStats(nodeStats);
         setRpcAccessible(true);
         statsCache.set(node.address, nodeStats, true);

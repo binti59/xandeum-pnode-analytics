@@ -92,30 +92,28 @@ export async function scanAllNodesRpcAccessibility(
     onProgress({ ...progress });
   }
 
-  // Process nodes in batches to avoid overwhelming the server
-  const BATCH_SIZE = 3; // Reduced from 5 to give each node more time
-  for (let i = 0; i < nodes.length; i += BATCH_SIZE) {
-    const batch = nodes.slice(i, i + BATCH_SIZE);
+  // Process nodes sequentially to avoid overwhelming the server with 503 errors
+  const DELAY_BETWEEN_REQUESTS = 500; // 500ms delay between requests
+  
+  for (const node of nodes) {
+    const isAccessible = await checkNodeRpcAccessibility(node.address);
     
-    await Promise.all(
-      batch.map(async (node) => {
-        const isAccessible = await checkNodeRpcAccessibility(node.address);
-        
-        if (isAccessible) {
-          progress.accessible++;
-          // Cache as accessible (we don't have full stats yet, but we know it's reachable)
-          statsCache.set(node.address, {} as any, true);
-        } else {
-          statsCache.setInaccessible(node.address);
-        }
-        
-        progress.scanned++;
-        
-        if (onProgress) {
-          onProgress({ ...progress });
-        }
-      })
-    );
+    if (isAccessible) {
+      progress.accessible++;
+      // Cache as accessible (we don't have full stats yet, but we know it's reachable)
+      statsCache.set(node.address, {} as any, true);
+    } else {
+      statsCache.setInaccessible(node.address);
+    }
+    
+    progress.scanned++;
+    
+    if (onProgress) {
+      onProgress({ ...progress });
+    }
+    
+    // Add delay between requests to prevent backend overload
+    await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_REQUESTS));
   }
 
   progress.isScanning = false;

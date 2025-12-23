@@ -1,9 +1,9 @@
 import { Pod } from "@/services/prpc";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { statsCache } from "@/lib/statsCache";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 interface NodeCardProps {
   node: Pod;
@@ -13,6 +13,9 @@ export function NodeCard({ node }: NodeCardProps) {
   const [rpcAccessible, setRpcAccessible] = useState<boolean | undefined>(undefined);
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [stats, setStats] = useState<any>(null);
+  const [loadingStats, setLoadingStats] = useState(false);
   
   useEffect(() => {
     const cached = statsCache.get(node.address);
@@ -66,7 +69,61 @@ export function NodeCard({ node }: NodeCardProps) {
     }
   };
   
-  // Click handling is done by parent component (Dashboard wraps with onClick)
+  const handleCardClick = async () => {
+    if (!rpcAccessible) {
+      // Don't expand for private nodes
+      return;
+    }
+    
+    setExpanded(!expanded);
+    
+    // Fetch stats if expanding and don't have stats yet
+    if (!expanded && !stats) {
+      setLoadingStats(true);
+      try {
+        const nodeIP = node.address.split(':')[0];
+        const endpoint = `http://${nodeIP}:6000/rpc`;
+        
+        const response = await fetch("/api/proxy-rpc", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            endpoint,
+            method: "get-stats",
+            timeout: 10000,
+          }),
+        });
+        
+        if (response.ok) {
+          const rpcResponse = await response.json();
+          if (rpcResponse && rpcResponse.result) {
+            setStats(rpcResponse.result);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch stats:", error);
+      } finally {
+        setLoadingStats(false);
+      }
+    }
+  };
+  
+  const formatUptime = (seconds: number) => {
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    if (days > 0) return `${days}d ${hours}h`;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}m`;
+  };
+  
+  const formatBytes = (bytes: number) => {
+    if (bytes >= 1073741824) return `${(bytes / 1073741824).toFixed(2)} GB`;
+    if (bytes >= 1048576) return `${(bytes / 1048576).toFixed(2)} MB`;
+    return `${(bytes / 1024).toFixed(2)} KB`;
+  };
 
   return (
     <motion.div
@@ -74,7 +131,10 @@ export function NodeCard({ node }: NodeCardProps) {
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02, y: -4 }}
       transition={{ duration: 0.2 }}
-      className="glass-panel p-5 rounded-xl cursor-pointer hover:border-primary/50 transition-all group"
+      onClick={handleCardClick}
+      className={`glass-panel p-5 rounded-xl transition-all group ${
+        rpcAccessible ? 'cursor-pointer hover:border-primary/50' : 'cursor-default'
+      }`}
     >
       {/* Header with Flag and Location */}
       <div className="flex items-start justify-between mb-4">
@@ -146,10 +206,69 @@ export function NodeCard({ node }: NodeCardProps) {
             {testResult}
           </p>
         )}
-        <p className="text-xs text-muted-foreground text-center opacity-0 group-hover:opacity-100 transition-opacity">
-          Click card to view detailed statistics →
-        </p>
+        {rpcAccessible && (
+          <p className="text-xs text-muted-foreground text-center opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+            {expanded ? (
+              <><ChevronUp className="h-3 w-3" /> Click to collapse</>
+            ) : (
+              <><ChevronDown className="h-3 w-3" /> Click to view detailed statistics</>
+            )}
+          </p>
+        )}
       </div>
+
+      {/* Expandable Stats Section */}
+      <AnimatePresence>
+        {expanded && rpcAccessible && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+              {loadingStats ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                  <span className="ml-2 text-sm text-muted-foreground">Loading stats...</span>
+                </div>
+              ) : stats ? (
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Uptime</span>
+                    <p className="text-sm font-mono text-white">{formatUptime(stats.uptime)}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">CPU Usage</span>
+                    <p className="text-sm font-mono text-white">{stats.cpu?.toFixed(2)}%</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">RAM Usage</span>
+                    <p className="text-sm font-mono text-white">
+                      {formatBytes(stats.ram_used)} / {formatBytes(stats.ram_total)}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Active Streams</span>
+                    <p className="text-sm font-mono text-white">{stats.active_streams}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Packets Received</span>
+                    <p className="text-sm font-mono text-white">{stats.packets_received?.toLocaleString()}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">Packets Sent</span>
+                    <p className="text-sm font-mono text-white">{stats.packets_sent?.toLocaleString()}</p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-center text-muted-foreground py-4">Failed to load stats</p>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
