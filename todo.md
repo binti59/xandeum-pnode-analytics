@@ -201,3 +201,15 @@
 - [x] Improve "Click to view detailed statistics" button visibility (changed to primary color, always visible)
 - [x] Remove NodeDetailsDrawer component (no longer needed with inline stats)
 - [x] Remove drawer trigger from Dashboard component
+
+
+## Feature - Performance-Based Rankings
+- [x] Design performance scoring system using real-time metrics (20 points total)
+- [x] Add CPU efficiency score (lower CPU usage = higher score, max 5 points)
+- [x] Add RAM efficiency score (lower RAM usage = higher score, max 5 points)
+- [x] Add uptime reliability score (longer uptime = higher score, max 5 points)
+- [x] Add network activity score (active streams + packet throughput, max 5 points)
+- [x] Update nodeRanking.ts to incorporate performance metrics
+- [x] Fetch stats from statsCache for accessible nodes during ranking calculation
+- [x] Display performance breakdown in Rankings page (tooltip + inline breakdown)
+- [x] Test with accessible nodes to verify scoring accuracy - SUCCESS! Top nodes show performance breakdown

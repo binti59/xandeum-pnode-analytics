@@ -17,6 +17,11 @@ export interface RankedNode extends Pod {
   stabilityScore: number;
   rpcAccessible?: boolean;
   rpcBonus: number;
+  performanceScore: number;
+  cpuEfficiency?: number;
+  ramEfficiency?: number;
+  uptimeReliability?: number;
+  networkActivity?: number;
 }
 
 /**
@@ -77,8 +82,75 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
     const rpcAccessible = checkRpcAccessibility(node.address);
     const rpcBonus = rpcAccessible ? 10 : 0;
     
-    // Total Score
-    const score = Math.round(versionScore + geoScore + stabilityScore + rpcBonus);
+    // Performance Score (20 points) - Only for accessible nodes with stats
+    let performanceScore = 0;
+    let cpuEfficiency, ramEfficiency, uptimeReliability, networkActivity;
+    
+    if (rpcAccessible) {
+      const cached = statsCache.get(node.address);
+      const stats = cached?.stats;
+      
+      if (stats) {
+        // CPU Efficiency (5 points): Lower CPU usage = better
+        // 0-25% CPU = 5 points, 25-50% = 3 points, 50-75% = 1 point, >75% = 0 points
+        const cpuUsage = stats.stats?.cpu_percent || 0;
+        if (cpuUsage < 25) {
+          cpuEfficiency = 5;
+        } else if (cpuUsage < 50) {
+          cpuEfficiency = 3;
+        } else if (cpuUsage < 75) {
+          cpuEfficiency = 1;
+        } else {
+          cpuEfficiency = 0;
+        }
+        
+        // RAM Efficiency (5 points): Lower RAM usage percentage = better
+        // <50% = 5 points, 50-70% = 3 points, 70-90% = 1 point, >90% = 0 points
+        const ramTotal = stats.stats?.ram_total || 0;
+        const ramUsed = stats.stats?.ram_used || 0;
+        const ramUsagePercent = ramTotal > 0 ? (ramUsed / ramTotal) * 100 : 0;
+        if (ramUsagePercent < 50) {
+          ramEfficiency = 5;
+        } else if (ramUsagePercent < 70) {
+          ramEfficiency = 3;
+        } else if (ramUsagePercent < 90) {
+          ramEfficiency = 1;
+        } else {
+          ramEfficiency = 0;
+        }
+        
+        // Uptime Reliability (5 points): Longer uptime = more reliable
+        // >7 days = 5 points, 3-7 days = 3 points, 1-3 days = 2 points, <1 day = 1 point
+        const uptimeSeconds = stats.stats?.uptime || 0;
+        const uptimeDays = uptimeSeconds / 86400;
+        if (uptimeDays > 7) {
+          uptimeReliability = 5;
+        } else if (uptimeDays > 3) {
+          uptimeReliability = 3;
+        } else if (uptimeDays > 1) {
+          uptimeReliability = 2;
+        } else {
+          uptimeReliability = 1;
+        }
+        
+        // Network Activity (5 points): Active streams + packet throughput
+        // High activity = 5 points, medium = 3 points, low = 1 point
+        const activeStreams = stats.stats?.active_streams || 0;
+        const totalPackets = (stats.stats?.packets_received || 0) + (stats.stats?.packets_sent || 0);
+        if (activeStreams >= 5 || totalPackets > 10000000) {
+          networkActivity = 5;
+        } else if (activeStreams >= 2 || totalPackets > 1000000) {
+          networkActivity = 3;
+        } else {
+          networkActivity = 1;
+        }
+        
+        performanceScore = cpuEfficiency + ramEfficiency + uptimeReliability + networkActivity;
+      }
+    }
+    
+    // Total Score (now out of 120 instead of 100)
+    const score = Math.round(versionScore + geoScore + stabilityScore + rpcBonus + performanceScore);
     
     return {
       ...node,
@@ -89,6 +161,11 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
       stabilityScore,
       rpcAccessible,
       rpcBonus,
+      performanceScore,
+      cpuEfficiency,
+      ramEfficiency,
+      uptimeReliability,
+      networkActivity,
     };
   });
   

@@ -197,8 +197,8 @@ export default function Rankings() {
                   pNode Rankings
                 </span>
               </h1>
-              <p className="text-muted-foreground mt-2 text-lg">
-                Ranked by version, geographic diversity, and stability
+              <p className="text-muted-foreground max-w-2xl">
+                Ranked by version, geographic diversity, stability, RPC accessibility, and real-time performance metrics
               </p>
               <div className="flex items-center gap-3 mt-3">
               <Link href="/history">
@@ -455,6 +455,7 @@ export default function Rankings() {
                             className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-bold text-sm ${getScoreBadgeColor(
                               node.score
                             )}`}
+                            title={`Total: ${node.score} | Version: ${node.versionScore} | Geo: ${Math.round(node.geoScore)} | Stability: ${node.stabilityScore} | RPC: ${node.rpcBonus}${node.performanceScore > 0 ? ` | Performance: ${node.performanceScore}` : ''}`}
                           >
                             {node.score}
                           </div>
@@ -492,6 +493,23 @@ export default function Rankings() {
                                 <span className="hidden lg:inline">{badge.name}</span>
                               </div>
                             ))}
+                          </div>
+                        )}
+                        {node.performanceScore > 0 && (
+                          <div className="text-xs text-muted-foreground space-y-0.5">
+                            <div className="font-semibold text-primary">Performance:</div>
+                            {node.cpuEfficiency !== undefined && (
+                              <div>CPU: {node.cpuEfficiency}/5</div>
+                            )}
+                            {node.ramEfficiency !== undefined && (
+                              <div>RAM: {node.ramEfficiency}/5</div>
+                            )}
+                            {node.uptimeReliability !== undefined && (
+                              <div>Uptime: {node.uptimeReliability}/5</div>
+                            )}
+                            {node.networkActivity !== undefined && (
+                              <div>Network: {node.networkActivity}/5</div>
+                            )}
                           </div>
                         )}
                       </div>
