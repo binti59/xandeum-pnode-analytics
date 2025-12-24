@@ -404,3 +404,17 @@
 - [ ] Add Storage chart to Performance trends page
 - [ ] Show storage usage over time in Performance visualization
 - [ ] Update Performance page to track storage in history
+
+
+## Feature - Storage as Ranking Factor
+- [x] Update ranking algorithm to include storage as 5th factor (20 points)
+- [x] Storage scoring: >1TB=20pts, 500GB-1TB=15pts, 100-500GB=10pts, <100GB=5pts
+- [x] Update Rankings page tooltip to show storage score breakdown
+- [x] Total score now out of 140 (was 120)
+
+## Feature - Storage Chart in Performance Trends
+- [x] Add Storage chart to Performance page (5th chart after Active Streams)
+- [x] Update performance history tracking to include storage (file_size)
+- [x] Update performanceCollector to capture storage in snapshots
+- [x] Show storage usage over 24-hour window
+- [x] Format storage values in GB for chart display

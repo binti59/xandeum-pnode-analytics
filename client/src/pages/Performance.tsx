@@ -63,6 +63,7 @@ export default function Performance() {
         ramPercent: (snapshot.ram / snapshot.ramTotal) * 100,
         uptime: snapshot.uptime / 3600, // Convert to hours
         activeStreams: snapshot.activeStreams,
+        storageGB: snapshot.storage ? snapshot.storage / (1024 ** 3) : 0, // Convert bytes to GB
       }));
   };
 
@@ -353,6 +354,53 @@ export default function Performance() {
                   strokeWidth={2}
                   dot={{ fill: 'oklch(0.45 0.2 350)', r: 3 }}
                   name="Active Streams"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </motion.div>
+
+            {/* Storage Chart */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="glass-panel rounded-2xl p-6"
+            >
+            <div className="flex items-center gap-2 mb-4">
+              <HardDrive className="w-5 h-5 text-purple-400" />
+              <h2 className="text-xl font-semibold">Storage Capacity</h2>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <XAxis 
+                  dataKey="time" 
+                  stroke="rgba(255,255,255,0.5)"
+                  tick={{ fill: 'rgba(255,255,255,0.7)' }}
+                />
+                <YAxis 
+                  stroke="rgba(255,255,255,0.5)"
+                  tick={{ fill: 'rgba(255,255,255,0.7)' }}
+                  label={{ value: 'Storage (GB)', angle: -90, position: 'insideLeft', fill: 'rgba(255,255,255,0.7)' }}
+                  tickFormatter={(value: number) => `${value.toFixed(0)} GB`}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    borderRadius: '8px'
+                  }}
+                  labelStyle={{ color: '#fff' }}
+                  formatter={(value: number) => `${value.toFixed(2)} GB`}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="storageGB" 
+                  stroke="oklch(0.6 0.25 280)" 
+                  strokeWidth={2}
+                  dot={{ fill: 'oklch(0.6 0.25 280)', r: 3 }}
+                  name="Storage (GB)"
                 />
               </LineChart>
             </ResponsiveContainer>

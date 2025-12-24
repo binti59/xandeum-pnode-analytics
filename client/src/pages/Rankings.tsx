@@ -461,7 +461,7 @@ export default function Rankings() {
                             className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-bold text-sm ${getScoreBadgeColor(
                               node.score
                             )}`}
-                            title={`Total: ${node.score} | Version: ${node.versionScore} | Geo: ${Math.round(node.geoScore)} | Stability: ${node.stabilityScore} | RPC: ${node.rpcBonus}${node.performanceScore > 0 ? ` | Performance: ${node.performanceScore}` : ''}`}
+                            title={`Total: ${node.score} | Version: ${node.versionScore} | Geo: ${Math.round(node.geoScore)} | Stability: ${node.stabilityScore} | RPC: ${node.rpcBonus}${node.performanceScore > 0 ? ` | Performance: ${node.performanceScore}` : ''}${node.storageScore > 0 ? ` | Storage: ${node.storageScore}` : ''}`}
                           >
                             {node.score}
                           </div>

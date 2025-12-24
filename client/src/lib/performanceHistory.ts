@@ -14,6 +14,7 @@ export interface PerformanceSnapshot {
   activeStreams: number;
   packetsReceived: number;
   packetsSent: number;
+  storage?: number; // file_size in bytes
 }
 
 export interface NodePerformanceHistory {
@@ -85,6 +86,7 @@ export function addPerformanceSnapshot(
     activeStreams: number;
     packetsReceived: number;
     packetsSent: number;
+    storage?: number;
   }
 ) {
   const history = getPerformanceHistory();

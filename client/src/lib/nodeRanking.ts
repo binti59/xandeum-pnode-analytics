@@ -18,15 +18,17 @@ export interface RankedNode extends Pod {
   rpcAccessible?: boolean;
   rpcBonus: number;
   performanceScore: number;
+  storageScore: number;
   cpuEfficiency?: number;
   ramEfficiency?: number;
   uptimeReliability?: number;
   networkActivity?: number;
+  storageCapacity?: number;
 }
 
 /**
  * Calculate node ranking score based on available metrics
- * Score range: 0-100
+ * Score range: 0-140 (with storage)
  */
 export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
   const LATEST_VERSION = "0.8.0";
@@ -85,6 +87,10 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
     // Performance Score (20 points) - Only for accessible nodes with stats
     let performanceScore = 0;
     let cpuEfficiency, ramEfficiency, uptimeReliability, networkActivity;
+    
+    // Storage Score (20 points) - Reward nodes with more storage capacity
+    let storageScore = 0;
+    let storageCapacity;
     
     if (rpcAccessible) {
       const cached = statsCache.get(node.address);
@@ -146,11 +152,27 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
         }
         
         performanceScore = cpuEfficiency + ramEfficiency + uptimeReliability + networkActivity;
+        
+        // Storage Capacity (20 points): More storage = better
+        // >1TB = 20 points, 500GB-1TB = 15 points, 100GB-500GB = 10 points, <100GB = 5 points
+        const storageBytes = stats.file_size || 0;
+        const storageGB = storageBytes / (1024 ** 3);
+        storageCapacity = storageGB;
+        
+        if (storageGB > 1024) { // >1TB
+          storageScore = 20;
+        } else if (storageGB > 500) {
+          storageScore = 15;
+        } else if (storageGB > 100) {
+          storageScore = 10;
+        } else if (storageGB > 0) {
+          storageScore = 5;
+        }
       }
     }
     
-    // Total Score (now out of 120 instead of 100)
-    const score = Math.round(versionScore + geoScore + stabilityScore + rpcBonus + performanceScore);
+    // Total Score (now out of 140 with storage)
+    const score = Math.round(versionScore + geoScore + stabilityScore + rpcBonus + performanceScore + storageScore);
     
     return {
       ...node,
@@ -162,10 +184,12 @@ export function calculateNodeRanking(nodes: Pod[]): RankedNode[] {
       rpcAccessible,
       rpcBonus,
       performanceScore,
+      storageScore,
       cpuEfficiency,
       ramEfficiency,
       uptimeReliability,
       networkActivity,
+      storageCapacity,
     };
   });
   

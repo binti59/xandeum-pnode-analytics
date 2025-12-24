@@ -101,13 +101,14 @@ async function collectPerformanceData() {
     if (stats && stats.uptime !== undefined) {
       // Successfully fetched stats, add to performance history
       addPerformanceSnapshot(nodeAddress, {
-        cpu: stats.cpu || 0,
-        ram: stats.ram || 0,
+        cpu: stats.cpu_percent || 0,
+        ram: stats.ram_used || 0,
         ramTotal: stats.ram_total || 4294967296,
         uptime: stats.uptime || 0,
         activeStreams: stats.active_streams || 0,
         packetsReceived: stats.packets_received || 0,
         packetsSent: stats.packets_sent || 0,
+        storage: stats.file_size || 0,
       });
       progress.successful++;
       console.log(`[PerformanceCollector] ✓ Collected data for ${nodeAddress}`);
