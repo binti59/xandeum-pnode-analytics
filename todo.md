@@ -418,3 +418,17 @@
 - [x] Update performanceCollector to capture storage in snapshots
 - [x] Show storage usage over 24-hour window
 - [x] Format storage values in GB for chart display
+
+
+## Bug Fix - Storage Column Showing 0.00 GB
+- [x] Investigate why Rankings table shows 0.00 GB for nodes with RPC stats
+- [x] Check if statsCache.get() is returning correct file_size data
+- [x] Verify nodeRanking.ts is accessing stats.file_size correctly
+- [x] Check if field name mismatch (file_size vs stats.stats.file_size)
+- [x] Test with accessible nodes that have storage data
+- [x] Verify storageCapacity is calculated and passed to Rankings component
+- [x] Fixed rpcScanner.ts to save actual stats data instead of empty objects
+- [x] Modified checkNodeRpcAccessibility() to return stats with accessibility status
+- [x] Updated scanAllNodesRpcAccessibility() to cache real stats data
+- [x] Verified storage values display correctly (406.06 GB, 24.21 GB, 316.65 GB)
+- [x] Tested storage column sorting functionality - works correctly

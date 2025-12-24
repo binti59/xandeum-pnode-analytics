@@ -18,26 +18,25 @@ let scanInterval: NodeJS.Timeout | null = null;
 let progressCallback: ScanProgressCallback | null = null;
 
 /**
- * Check if a single node's RPC port is accessible
+ * Check if a single node's RPC port is accessible and return stats if available
  */
-async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> {
+export async function checkNodeRpcAccessibility(nodeAddress: string): Promise<{ accessible: boolean; stats?: any }> {
   const nodeIP = nodeAddress.split(':')[0];
-  const endpoint = `http://${nodeIP}:${RPC_PORT}/rpc`;
+  const nodePort = nodeAddress.split(':')[1] || '9001';
+  const rpcPort = 6000; // Xandeum pNodes use port 6000 for RPC
+  const endpoint = `http://${nodeIP}:${rpcPort}/rpc`;
   
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), RPC_TIMEOUT);
 
-    console.log(`[RPC Scanner] Testing ${nodeIP}...`);
-    
-    const response = await fetch("/api/proxy-rpc", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  try {
+    const response = await fetch('/api/proxy-rpc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         endpoint,
-        method: "get-stats",
+        method: 'get-stats',
+        params: [],
         timeout: RPC_TIMEOUT,
       }),
       signal: controller.signal,
@@ -53,16 +52,15 @@ async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> 
       
       if (isAccessible) {
         console.log(`[RPC Scanner] ✅ ${nodeIP} - ACCESSIBLE`, rpcResponse.result);
+        return { accessible: true, stats: rpcResponse.result };
       } else {
         console.log(`[RPC Scanner] ❌ ${nodeIP} - Invalid response:`, rpcResponse);
       }
-      
-      return isAccessible;
     } else {
       console.log(`[RPC Scanner] ❌ ${nodeIP} - HTTP ${response.status}:`, await response.text());
     }
 
-    return false;
+    return { accessible: false };
   } catch (error: any) {
     // Timeout or network error means RPC is not accessible
     if (error.name === 'AbortError') {
@@ -70,7 +68,7 @@ async function checkNodeRpcAccessibility(nodeAddress: string): Promise<boolean> 
     } else {
       console.log(`[RPC Scanner] 🔌 ${nodeIP} - Network error:`, error.message);
     }
-    return false;
+    return { accessible: false };
   }
 }
 
@@ -96,12 +94,12 @@ export async function scanAllNodesRpcAccessibility(
   const DELAY_BETWEEN_REQUESTS = 500; // 500ms delay between requests
   
   for (const node of nodes) {
-    const isAccessible = await checkNodeRpcAccessibility(node.address);
+    const result = await checkNodeRpcAccessibility(node.address);
     
-    if (isAccessible) {
+    if (result.accessible && result.stats) {
       progress.accessible++;
-      // Cache as accessible (we don't have full stats yet, but we know it's reachable)
-      statsCache.set(node.address, {} as any, true);
+      // Cache with actual stats data including file_size
+      statsCache.set(node.address, result.stats, true);
     } else {
       statsCache.setInaccessible(node.address);
     }
