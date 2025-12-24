@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 100px;
+        padding-right: 100px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 42px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 50px;
+        line-height: 1.2;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .highlight {
+        color: #00F0FF;
+      }
+      
+      /* Excellence pillars */
+      .pillars {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 50px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .pillar {
+        flex: 1;
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        padding-top: 25px;
+        padding-left: 25px;
+        padding-right: 25px;
+        text-align: center;
+      }
+      
+      .pillar.purple-accent {
+        background: rgba(112, 0, 255, 0.05);
+        border-color: rgba(112, 0, 255, 0.3);
+      }
+      
+      .pillar-icon {
+        font-size: 36px;
+        margin-bottom: 15px;
+      }
+      
+      .pillar-icon.cyan {
+        color: #00F0FF;
+      }
+      
+      .pillar-icon.purple {
+        color: #7000FF;
+      }
+      
+      .pillar-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      
+      .pillar-title.cyan {
+        color: #00F0FF;
+      }
+      
+      .pillar-title.purple {
+        color: #7000FF;
+      }
+      
+      .pillar-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #A0AEC0;
+      }
+      
+      /* Closing statement */
+      .closing {
+        font-family: 'Inter', sans-serif;
+        font-size: 20px;
+        line-height: 1.6;
+        color: #FFFFFF;
+        text-align: center;
+        max-width: 900px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .closing-highlight {
+        color: #00F0FF;
+        font-weight: 600;
+      }
+      
+      /* Platform info */
+      .platform-info {
+        display: flex;
+        gap: 50px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .info-icon {
+        font-size: 24px;
+        color: #7000FF;
+      }
+      
+      .info-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        color: #A0AEC0;
+      }
+      
+      .info-link {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        color: #00F0FF;
+        font-weight: 600;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            Platform represents<br><span class="highlight">first-place excellence</span>
+        </h2>
+        
+        <div class="pillars">
+            <div class="pillar">
+                <div class="pillar-icon cyan"><i class="fas fa-rocket"></i></div>
+                <div class="pillar-title cyan">Exceeds Baseline</div>
+                <div class="pillar-desc">
+                    Goes far beyond basic pRPC integration with automated intelligence, proactive monitoring, and predictive analytics
+                </div>
+            </div>
+            
+            <div class="pillar purple-accent">
+                <div class="pillar-icon purple"><i class="fas fa-lightbulb"></i></div>
+                <div class="pillar-title purple">Delivers Innovation</div>
+                <div class="pillar-desc">
+                    Transforms passive dashboards into active monitoring systems with real-time alerts and automated insights
+                </div>
+            </div>
+            
+            <div class="pillar">
+                <div class="pillar-icon cyan"><i class="fas fa-award"></i></div>
+                <div class="pillar-title cyan">Production Quality</div>
+                <div class="pillar-desc">
+                    Enterprise-grade user experience with polished design, comprehensive documentation, and measurable operator value
+                </div>
+            </div>
+        </div>
+        
+        <p class="closing">
+            This platform demonstrates <span class="closing-highlight">technical excellence</span>, <span class="closing-highlight">innovative thinking</span>, and <span class="closing-highlight">operator-focused design</span> that sets a new standard for Xandeum pNode analytics. It solves real problems for network operators while maintaining the polish and reliability expected of production systems.
+        </p>
+        
+        <div class="platform-info">
+            <div class="info-item">
+                <i class="fas fa-globe info-icon"></i>
+                <div>
+                    <div class="info-text">Live Platform:</div>
+                    <div class="info-link">xandanalytics.bikramjitchowdhury.com</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -322,6 +322,51 @@
 ## Create Presentation Slides for Submission Package
 - [x] Create detailed slide content outline (15 slides)
 - [x] Generate professional presentation PDF
-- [ ] Remove PRESENTATION_SCRIPT.md and VIDEO_SCRIPT.md from submission package
-- [ ] Update submission package with presentation PDF
-- [ ] Push to GitHub
+- [x] Remove PRESENTATION_SCRIPT.md and VIDEO_SCRIPT.md from submission package
+- [x] Update submission package with presentation PDF
+- [x] Push to GitHub
+
+
+## Generate HTML Slide Presentation
+- [ ] Generate interactive HTML slides from slide content
+- [ ] Export slides to PPT format
+- [ ] Add to submission package
+
+
+## Competitive Analysis - Surpass Competitor Platforms
+- [x] Analyze pglobe.vercel.app features and implementation
+- [x] Analyze explorerxandeum.vercel.app features and implementation
+- [x] Identify storage statistics display methods
+- [x] Check if storage data is available via RPC endpoints - file_size field available!
+- [ ] Implement storage statistics in cards, rankings, and performance pages
+- [x] Identify any unique features competitors have
+- [ ] Implement Watchlist feature (save favorite nodes)
+- [ ] Implement Compare feature (side-by-side node comparison)
+- [ ] Document competitive advantages in submission materials
+- [ ] Test all new features thoroughly
+- [ ] Update submission package with competitive analysis
+
+## Feature - Storage Statistics Display
+- [x] Add file_size field to NodeStats interface - already exists
+- [x] Display storage in expandable node cards (convert bytes to GB/TB)
+- [ ] Add storage column to Rankings table
+- [ ] Add storage chart to Performance trends page
+- [ ] Add total network storage to Dashboard stats
+- [ ] Update Performance Alerts to monitor storage thresholds
+
+## Feature - Watchlist System
+- [x] Create watchlist management using localStorage
+- [x] Add star/bookmark icon to node cards
+- [x] Create Watchlist page showing saved nodes
+- [x] Add /watchlist route to App.tsx
+- [ ] Add "Watchlist" link to Dashboard navigation
+- [x] Persist watchlist across sessions - automatic with localStorage
+- [ ] Add watchlist count badge to navigation
+
+## Feature - Node Comparison
+- [ ] Add multi-select checkboxes to node cards
+- [ ] Create Compare page with side-by-side layout
+- [ ] Display all metrics in comparison table
+- [ ] Add performance charts overlay for selected nodes
+- [ ] Limit to 4 nodes maximum for comparison
+- [ ] Add "Compare Selected" button to Dashboard

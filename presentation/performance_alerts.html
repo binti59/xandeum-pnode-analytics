@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px;
+        padding-left: 70px;
+        padding-right: 70px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 25px;
+        line-height: 1.2;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .highlight {
+        color: #00F0FF;
+      }
+      
+      /* Description */
+      .description {
+        font-family: 'Inter', sans-serif;
+        font-size: 19px;
+        line-height: 1.6;
+        color: #A0AEC0;
+        margin-bottom: 12px; /* reduced to save vertical space */
+        position: relative;
+        z-index: 10;
+        max-width: 1100px;
+      }
+      
+      /* Content grid */
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px; /* reduced gap */
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* Alert types panel */
+      .alert-types {
+        background: rgba(255, 0, 0, 0.05);
+        border: 1px solid rgba(255, 0, 0, 0.2);
+        border-radius: 12px;
+        padding-top: 12px; /* reduced */
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      
+      .panel-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px; /* reduced */
+      }
+      
+      .critical-title {
+        color: #FF4444;
+      }
+      
+      .warning-title {
+        color: #FFA500;
+      }
+      
+      .alert-category {
+        margin-bottom: 12px; /* reduced */
+      }
+      
+      .category-label {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: #FFFFFF;
+        margin-bottom: 6px;
+      }
+      
+      .threshold-item {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #A0AEC0;
+        margin-bottom: 6px;
+        padding-left: 12px;
+      }
+      
+      .threshold-value {
+        font-family: 'JetBrains Mono', monospace;
+        color: #00F0FF;
+        font-weight: 600;
+      }
+      
+      /* Intelligence panel */
+      .intelligence-panel {
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        border-radius: 12px;
+        padding-top: 12px; /* reduced */
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      
+      .intelligence-title {
+        color: #00F0FF;
+      }
+      
+      /* Make intelligence items flow into two columns to save height */
+      .intel-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 18px;
+        margin-top: 6px;
+      }
+      
+      .intel-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .intel-icon {
+        color: #7000FF;
+        font-size: 18px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      
+      .intel-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        line-height: 1.5;
+        color: #A0AEC0;
+      }
+      
+      .intel-highlight {
+        color: #FFFFFF;
+        font-weight: 600;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            Performance alerts detect <span class="highlight">critical issues</span><br>across four monitoring dimensions
+        </h2>
+        
+        <p class="description">
+            The Performance Alerts widget continuously scans all accessible nodes and automatically generates alerts when thresholds are exceeded. Critical alerts trigger for CPU >90%, RAM >95%, or offline status. Warning alerts catch emerging issues at CPU 80-90% and RAM 90-95% before they escalate.
+        </p>
+        
+        <div class="content-grid">
+            <div class="alert-types">
+                <div class="panel-title critical-title">Critical Alerts (&gt;90%)</div>
+                
+                <div class="alert-category">
+                    <div class="category-label">CPU Usage</div>
+                    <div class="threshold-item">Trigger: <span class="threshold-value">&gt;90%</span></div>
+                </div>
+                
+                <div class="alert-category">
+                    <div class="category-label">RAM Consumption</div>
+                    <div class="threshold-item">Trigger: <span class="threshold-value">&gt;95%</span></div>
+                </div>
+                
+                <div class="alert-category">
+                    <div class="category-label">Node Status</div>
+                    <div class="threshold-item">Offline or inaccessible</div>
+                </div>
+                
+                <div style="margin-top: 12px;">
+                    <div class="panel-title warning-title">Warning Alerts (80-90%)</div>
+                    
+                    <div class="alert-category">
+                        <div class="category-label">CPU Usage</div>
+                        <div class="threshold-item">Range: <span class="threshold-value">80-90%</span></div>
+                    </div>
+                    
+                    <div class="alert-category">
+                        <div class="category-label">RAM Consumption</div>
+                        <div class="threshold-item">Range: <span class="threshold-value">90-95%</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="intelligence-panel">
+                <div class="panel-title intelligence-title">Alert Intelligence:</div>
+                <div class="intel-grid">
+                  <div class="intel-item">
+                      <i class="fas fa-robot intel-icon"></i>
+                      <div class="intel-text">Automated scanning eliminates manual monitoring of <span class="intel-highlight">hundreds of nodes</span></div>
+                  </div>
+                  <div class="intel-item">
+                      <i class="fas fa-layer-group intel-icon"></i>
+                      <div class="intel-text">Severity classification <span class="intel-highlight">(Critical/Warning)</span> prioritizes operator response</div>
+                  </div>
+                  <div class="intel-item">
+                      <i class="fas fa-clock intel-icon"></i>
+                      <div class="intel-text">Real-time detection with <span class="intel-highlight">timestamp tracking</span> for incident analysis</div>
+                  </div>
+                  <div class="intel-item">
+                      <i class="fas fa-link intel-icon"></i>
+                      <div class="intel-text">Direct navigation links from alerts to <span class="intel-highlight">Performance page</span> for detailed investigation</div>
+                  </div>
+                  <div class="intel-item">
+                      <i class="fas fa-code-branch intel-icon"></i>
+                      <div class="intel-text">Version compliance monitoring flags nodes running <span class="intel-highlight">outdated software</span></div>
+                  </div>
+                  <div class="intel-item">
+                      <i class="fas fa-check-circle intel-icon"></i>
+                      <div class="intel-text"><span class="intel-highlight">"All Clear"</span> state provides confidence when no issues detected</div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

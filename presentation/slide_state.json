@@ -1,0 +1,132 @@
+{
+  "project_info": {
+    "title": "Xandeum pNode Analytics Platform",
+    "created": 1766569137.2198198,
+    "last_updated": 1766570110.2006395,
+    "total_slides": 15
+  },
+  "slides": {
+    "title": "edited",
+    "transformation": "edited",
+    "network_health": "edited",
+    "performance_alerts": "edited",
+    "rpc_scanning": "edited",
+    "rankings": "edited",
+    "historical_trends": "edited",
+    "user_experience": "edited",
+    "geographic": "edited",
+    "judging_criteria": "edited",
+    "architecture": "edited",
+    "operator_value": "edited",
+    "future": "edited",
+    "documentation": "edited",
+    "conclusion": "edited"
+  },
+  "outline": [
+    {
+      "id": "title",
+      "title": "Xandeum pNode Analytics Platform",
+      "summary": "Title slide introducing the platform with live URL and GitHub repository links. Enterprise-grade real-time monitoring for Xandeum storage network.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "transformation",
+      "title": "Platform transforms passive monitoring into proactive intelligence",
+      "summary": "Explains how the platform moves beyond static metrics to deliver automated intelligence through continuous scanning, health scoring, and real-time alerts.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "network_health",
+      "title": "Real-time network discovery reveals comprehensive pNode ecosystem health",
+      "summary": "Shows network statistics: 242 pNodes across 20 countries, 92/100 health score breakdown, version distribution analysis.",
+      "image_plan": "/home/ubuntu/upload/pasted_file_5xc888_image.png - The image directly illustrates the core concepts of this slide: the composite health score (92 Healthy), total nodes (242), online status (100%), countries (20), and version distribution.",
+      "slide_template_key": ""
+    },
+    {
+      "id": "performance_alerts",
+      "title": "Performance alerts detect critical issues across four monitoring dimensions",
+      "summary": "Details the alert system with CPU/RAM thresholds, severity classification, and automated detection capabilities.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "rpc_scanning",
+      "title": "Automated RPC accessibility scanning maps network connectivity patterns",
+      "summary": "Describes background scanning every 5 minutes, accessibility intelligence, and backend proxy for private nodes.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "rankings",
+      "title": "Intelligent rankings evaluate nodes across multiple performance dimensions",
+      "summary": "Explains weighted composite scoring algorithm evaluating uptime, version currency, RPC accessibility, and geographic diversity.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "historical_trends",
+      "title": "Historical performance tracking reveals trends and predicts capacity issues",
+      "summary": "Details 24-hour tracking with 5-minute snapshots, four interactive charts, and automated data collection.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "user_experience",
+      "title": "Production-quality user experience delivers intuitive professional interface",
+      "summary": "Highlights glassmorphism design, smooth animations, loading states, responsive layouts, and micro-interactions.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "geographic",
+      "title": "Geographic visualization and automated insights provide situational awareness",
+      "summary": "Shows interactive global map with clustering, automated insight generation, and geographic diversity assessment.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "judging_criteria",
+      "title": "Platform exceeds baseline requirements across all judging criteria",
+      "summary": "Evaluates platform against Functionality, Clarity, User Experience, and Innovation criteria.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "architecture",
+      "title": "Technical architecture ensures scalability and maintainability",
+      "summary": "Details frontend stack (React, TypeScript, Tailwind), backend infrastructure (Node.js, PostgreSQL), and deployment.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "operator_value",
+      "title": "Platform delivers measurable operator value",
+      "summary": "Quantifies operational efficiency gains, network health benefits, and decision support capabilities.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "future",
+      "title": "Future enhancements expand platform capabilities",
+      "summary": "Outlines planned features (configurable alerts, multi-node comparison) and scalability roadmap.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "documentation",
+      "title": "Comprehensive documentation ensures accessibility",
+      "summary": "Lists submission package contents and developer resources available on GitHub.",
+      "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "conclusion",
+      "title": "Platform represents first-place excellence",
+      "summary": "Final slide summarizing why the platform deserves first place with live URL and GitHub links.",
+      "image_plan": "",
+      "slide_template_key": ""
+    }
+  ]
+}

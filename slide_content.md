@@ -9,8 +9,7 @@ Enterprise-Grade Real-Time Monitoring for Xandeum Storage Network
 
 **Superteam Bounty Submission**
 
-Live Platform: https://xandanalytics.bikramjitchowdhury.com  
-GitHub: github.com/binti59/xandeum-pnode-analytics
+Live Platform: https://xandanalytics.bikramjitchowdhury.com
 
 ---
 
@@ -226,7 +225,6 @@ Xandeum pNode Analytics delivers enterprise-grade monitoring that transforms how
 - **Innovation**: Proactive monitoring system with automated intelligence
 
 **Live Platform**: https://xandanalytics.bikramjitchowdhury.com  
-**GitHub**: github.com/binti59/xandeum-pnode-analytics  
 **Documentation**: Complete submission package included
 
 Thank you for your consideration.

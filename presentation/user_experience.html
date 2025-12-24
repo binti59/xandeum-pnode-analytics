@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px;
+        padding-left: 70px;
+        padding-right: 70px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 30px;
+        line-height: 1.2;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .highlight {
+        color: #00F0FF;
+      }
+      
+      /* Description */
+      .description {
+        font-family: 'Inter', sans-serif;
+        font-size: 19px;
+        line-height: 1.7;
+        color: #A0AEC0;
+        margin-bottom: 40px;
+        max-width: 1100px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* UX Features Grid */
+      .ux-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .ux-card {
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        padding-top: 25px;
+        padding-left: 25px;
+        padding-right: 25px;
+        backdrop-filter: blur(10px);
+        display: flex;
+        gap: 20px;
+      }
+      
+      .ux-icon {
+        color: #7000FF;
+        font-size: 28px;
+        flex-shrink: 0;
+        margin-top: 5px;
+      }
+      
+      .ux-content {
+        flex: 1;
+      }
+      
+      .ux-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #00F0FF;
+        margin-bottom: 8px;
+      }
+      
+      .ux-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #A0AEC0;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            Production-quality user experience delivers<br><span class="highlight">intuitive professional interface</span>
+        </h2>
+        
+        <p class="description">
+            The platform prioritizes user experience through glassmorphism design, smooth animations, professional loading states with shimmer effects, and responsive layouts working seamlessly across all screen sizes. Every interaction feels polished with expandable node cards, interactive charts, instant search filtering, and color-coded health indicators.
+        </p>
+        
+        <div class="ux-grid">
+            <div class="ux-card">
+                <i class="fas fa-palette ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Professional Design Language</div>
+                    <div class="ux-text">
+                        Glassmorphism aesthetic with backdrop blur effects signals production-ready quality and modern interface standards
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ux-card">
+                <i class="fas fa-spinner ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Shimmer Loading States</div>
+                    <div class="ux-text">
+                        Professional skeleton screens replace generic spinners for improved perceived performance during data loading
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ux-card">
+                <i class="fas fa-inbox ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Thoughtful Empty States</div>
+                    <div class="ux-text">
+                        Clear guidance with actionable buttons when no data is available, preventing user confusion
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ux-card">
+                <i class="fas fa-traffic-light ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Color-Coded Indicators</div>
+                    <div class="ux-text">
+                        Green/yellow/red system enables instant status comprehension without reading detailed metrics
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ux-card">
+                <i class="fas fa-hand-pointer ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Polished Micro-Interactions</div>
+                    <div class="ux-text">
+                        Expandable cards, hover states, and smooth transitions throughout platform enhance engagement
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ux-card">
+                <i class="fas fa-mobile-alt ux-icon"></i>
+                <div class="ux-content">
+                    <div class="ux-title">Responsive Grid Layouts</div>
+                    <div class="ux-text">
+                        Seamless adaptation to desktop, tablet, and mobile viewports ensures accessibility across devices
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

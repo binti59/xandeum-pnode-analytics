@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px; /* keep upper padding */
+        padding-left: 70px;
+        padding-right: 70px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 20px; /* reduced spacing */
+        line-height: 1.2;
+        position: relative;
+        z-index: 10;
+        text-align: center;
+      }
+      
+      .highlight {
+        color: #00F0FF;
+      }
+      
+      /* Criteria Grid */
+      .criteria-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px; /* reduced gap */
+        position: relative;
+        z-index: 10;
+      }
+      
+      .criterion-card {
+        background: rgba(0, 240, 255, 0.03);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        padding-top: 16px; /* reduced inner padding */
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 14px;
+      }
+      
+      .criterion-card.purple-accent {
+        background: rgba(112, 0, 255, 0.03);
+        border-color: rgba(112, 0, 255, 0.2);
+      }
+      
+      .criterion-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      
+      .criterion-icon {
+        font-size: 24px;
+      }
+      
+      .criterion-icon.cyan {
+        color: #00F0FF;
+      }
+      
+      .criterion-icon.purple {
+        color: #7000FF;
+      }
+      
+      .criterion-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      
+      .criterion-title.cyan {
+        color: #00F0FF;
+      }
+      
+      .criterion-title.purple {
+        color: #7000FF;
+      }
+      
+      .criterion-points {
+        list-style: none;
+      }
+      
+      .criterion-point {
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #A0AEC0;
+        margin-bottom: 8px; /* slightly tighter */
+        padding-left: 16px;
+        position: relative;
+      }
+      
+      .criterion-point:before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #00F0FF;
+        font-weight: 700;
+      }
+      
+      .purple-accent .criterion-point:before {
+        color: #7000FF;
+      }
+      
+      .point-highlight {
+        color: #FFFFFF;
+        font-weight: 600;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            Platform <span class="highlight">exceeds baseline requirements</span><br>across all judging criteria
+        </h2>
+        
+        <div class="criteria-grid">
+            <!-- Functionality -->
+            <div class="criterion-card">
+                <div class="criterion-header">
+                    <i class="fas fa-cogs criterion-icon cyan"></i>
+                    <div class="criterion-title cyan">Functionality</div>
+                </div>
+                <ul class="criterion-points">
+                    <li class="criterion-point">
+                        <span class="point-highlight">Automated RPC scanning</span> every 5 minutes builds comprehensive accessibility maps
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Intelligent health scoring</span> algorithm evaluates availability, version, and distribution
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Real-time alerts</span> monitor CPU, RAM, uptime, and version compliance
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Historical trends</span> track 24-hour performance with 5-minute snapshots
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Clarity -->
+            <div class="criterion-card purple-accent">
+                <div class="criterion-header">
+                    <i class="fas fa-eye criterion-icon purple"></i>
+                    <div class="criterion-title purple">Clarity</div>
+                </div>
+                <ul class="criterion-points">
+                    <li class="criterion-point">
+                        <span class="point-highlight">Color-coded indicators</span> (green/yellow/red) enable instant status comprehension
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Automated insights</span> panel generates human-readable network assessments
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Intuitive visualizations</span> present complex data through charts and maps
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Clear information hierarchy</span> guides users to most important metrics
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- User Experience -->
+            <div class="criterion-card">
+                <div class="criterion-header">
+                    <i class="fas fa-heart criterion-icon cyan"></i>
+                    <div class="criterion-title cyan">User Experience</div>
+                </div>
+                <ul class="criterion-points">
+                    <li class="criterion-point">
+                        <span class="point-highlight">Glassmorphism design</span> with backdrop blur creates modern, polished aesthetic
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Smooth animations</span> and micro-interactions enhance engagement
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Professional loading states</span> with shimmer effects improve perceived performance
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Responsive layouts</span> work seamlessly across desktop, tablet, and mobile
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Innovation -->
+            <div class="criterion-card purple-accent">
+                <div class="criterion-header">
+                    <i class="fas fa-lightbulb criterion-icon purple"></i>
+                    <div class="criterion-title purple">Innovation</div>
+                </div>
+                <ul class="criterion-points">
+                    <li class="criterion-point">
+                        <span class="point-highlight">Proactive monitoring system</span> transforms reactive dashboards into predictive tools
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Automated intelligence</span> eliminates manual checking of 242+ nodes
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Multi-dimensional scoring</span> evaluates nodes beyond simple online/offline status
+                    </li>
+                    <li class="criterion-point">
+                        <span class="point-highlight">Historical trend analysis</span> enables capacity planning and issue prediction
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

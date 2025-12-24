@@ -4,7 +4,8 @@ import { statsCache } from "@/lib/statsCache";
 import { addPerformanceSnapshot } from "@/lib/performanceHistory";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
+import { Loader2, ChevronDown, ChevronUp, RefreshCw, Database, Star } from "lucide-react";
+import { isInWatchlist, toggleWatchlist } from "@/lib/watchlist";
 
 interface NodeCardProps {
   node: Pod;
@@ -17,6 +18,7 @@ export function NodeCard({ node }: NodeCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [stats, setStats] = useState<any>(null);
   const [loadingStats, setLoadingStats] = useState(false);
+  const [inWatchlist, setInWatchlist] = useState(isInWatchlist(node.address));
   
   useEffect(() => {
     const cached = statsCache.get(node.address);
@@ -226,6 +228,18 @@ export function NodeCard({ node }: NodeCardProps) {
             )}
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            const newState = toggleWatchlist(node.address);
+            setInWatchlist(newState);
+          }}
+          className="shrink-0"
+        >
+          <Star className={`h-5 w-5 ${inWatchlist ? 'fill-yellow-500 text-yellow-500' : 'text-gray-400'}`} />
+        </Button>
       </div>
 
       {/* Status Badge */}
@@ -350,9 +364,20 @@ export function NodeCard({ node }: NodeCardProps) {
                     <span className="text-xs text-muted-foreground uppercase tracking-wider">Packets Sent</span>
                     <p className="text-sm font-mono text-white">{stats.packets_sent?.toLocaleString()}</p>
                   </div>
+                  {stats.file_size && (
+                    <div className="space-y-1 col-span-2">
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                        <Database className="h-3 w-3" />
+                        Storage Size
+                      </span>
+                      <p className="text-sm font-mono text-white">
+                        {formatBytes(stats.file_size)}
+                      </p>
+                    </div>
+                  )}
                   {stats.disk_used && stats.disk_total && (
                     <div className="space-y-1 col-span-2">
-                      <span className="text-xs text-muted-foreground uppercase tracking-wider">Storage Usage</span>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider">Disk Usage</span>
                       <p className="text-sm font-mono text-white">
                         {formatBytes(stats.disk_used)} / {formatBytes(stats.disk_total)}
                         <span className="ml-2 text-xs text-muted-foreground">

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px;
+        padding-left: 70px;
+        padding-right: 70px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 35px;
+        line-height: 1.2;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .highlight {
+        color: #00F0FF;
+      }
+      
+      /* Architecture sections grid */
+      .arch-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* Section card */
+      .arch-section {
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.2);
+        padding-top: 25px;
+        padding-left: 25px;
+        padding-right: 25px;
+      }
+      
+      .section-icon {
+        color: #7000FF;
+        font-size: 32px;
+        margin-bottom: 15px;
+      }
+      
+      .section-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #00F0FF;
+        margin-bottom: 20px;
+      }
+      
+      .tech-list {
+        list-style: none;
+      }
+      
+      .tech-item {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      
+      .tech-bullet {
+        color: #7000FF;
+        font-size: 8px;
+        margin-top: 8px;
+        flex-shrink: 0;
+      }
+      
+      .tech-name {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 600;
+        color: #FFFFFF;
+        line-height: 1.5;
+      }
+      
+      .tech-desc {
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        color: #A0AEC0;
+        line-height: 1.4;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            <span class="highlight">Technical architecture</span> ensures<br>scalability and maintainability
+        </h2>
+        
+        <div class="arch-grid">
+            <!-- Frontend Stack -->
+            <div class="arch-section">
+                <div class="section-icon"><i class="fas fa-desktop"></i></div>
+                <div class="section-title">Frontend Stack:</div>
+                <ul class="tech-list">
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">React 19 + TypeScript</div>
+                            <div class="tech-desc">Type-safe component development</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Tailwind CSS 4</div>
+                            <div class="tech-desc">Custom design system for consistent styling</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Recharts</div>
+                            <div class="tech-desc">Interactive data visualization</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Wouter</div>
+                            <div class="tech-desc">Lightweight client-side routing</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">shadcn/ui</div>
+                            <div class="tech-desc">Production-ready UI primitives</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Backend Infrastructure -->
+            <div class="arch-section">
+                <div class="section-icon"><i class="fas fa-server"></i></div>
+                <div class="section-title">Backend Infrastructure:</div>
+                <ul class="tech-list">
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Node.js + Express</div>
+                            <div class="tech-desc">RPC proxy and API endpoints</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">PostgreSQL + Drizzle ORM</div>
+                            <div class="tech-desc">Type-safe database operations</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">localStorage caching</div>
+                            <div class="tech-desc">24-hour rolling window for performance data</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Automated background jobs</div>
+                            <div class="tech-desc">RPC scanning and data collection</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Deployment -->
+            <div class="arch-section">
+                <div class="section-icon"><i class="fas fa-cloud"></i></div>
+                <div class="section-title">Deployment:</div>
+                <ul class="tech-list">
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Custom domain with SSL</div>
+                            <div class="tech-desc">xandanalytics.bikramjitchowdhury.com</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Comprehensive documentation</div>
+                            <div class="tech-desc">README, USER_GUIDE, SUBMISSION materials</div>
+                        </div>
+                    </li>
+                    <li class="tech-item">
+                        <i class="fas fa-circle tech-bullet"></i>
+                        <div>
+                            <div class="tech-name">Production-ready</div>
+                            <div class="tech-desc">Error handling and graceful degradation</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

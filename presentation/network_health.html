@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .slide-container { 
+        width: 1280px; 
+        min-height: 720px; 
+        background: #0B0C15;
+        position: relative;
+        overflow: hidden;
+        padding-top: 50px;
+        padding-left: 70px;
+        padding-right: 70px;
+      }
+      
+      /* Background grid */
+      .grid-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+          linear-gradient(rgba(112, 0, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(112, 0, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+        opacity: 0.5;
+      }
+      
+      /* Heading */
+      .heading {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 35px;
+        line-height: 1.2;
+        position: relative;
+        z-index: 10;
+      }
+      
+      .highlight {
+        color: #7000FF;
+      }
+      
+      /* Content layout */
+      .content-grid {
+        display: grid;
+        grid-template-columns: 600px 1fr;
+        gap: 50px;
+        position: relative;
+        z-index: 10;
+      }
+      
+      /* Screenshot */
+      .screenshot {
+        width: 600px;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid rgba(112, 0, 255, 0.3);
+        box-shadow: 0 0 30px rgba(112, 0, 255, 0.2);
+      }
+      
+      /* Stats panel - refreshed layout: two columns to reduce vertical length */
+      .stats-panel {
+        background: rgba(112, 0, 255, 0.05);
+        border: 1px solid rgba(112, 0, 255, 0.2);
+        border-radius: 12px;
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-bottom: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 20px; /* row-gap, column-gap */
+      }
+      
+      .stats-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #7000FF;
+        margin-bottom: 8px;
+        grid-column: 1 / -1; /* span both columns */
+      }
+      
+      .stat-item {
+        /* remove vertical margins to let grid control spacing */
+        margin: 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .stat-icon {
+        color: #00F0FF;
+        font-size: 18px;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      
+      .stat-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #A0AEC0;
+      }
+      
+      .stat-value {
+        font-family: 'JetBrains Mono', monospace;
+        color: #FFFFFF;
+        font-weight: 600;
+      }
+      
+      .stat-highlight {
+        color: #00F0FF;
+      }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="grid-bg"></div>
+        
+        <h2 class="heading">
+            Real-time network discovery reveals<br><span class="highlight">comprehensive pNode ecosystem health</span>
+        </h2>
+        
+        <div class="content-grid">
+            <div>
+                <img src="/home/ubuntu/xandeum-pnode-analytics/presentation/dashboard_health.png" alt="Dashboard Health Metrics" class="screenshot">
+            </div>
+            
+            <div class="stats-panel">
+                <div class="stats-title">Network Intelligence:</div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-network-wired stat-icon"></i>
+                    <div class="stat-text">
+                        Automated gossip network discovery identifies <span class="stat-value">242 pNodes</span> across <span class="stat-value">20 countries</span> without manual configuration
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-heartbeat stat-icon"></i>
+                    <div class="stat-text">
+                        Composite health score: <span class="stat-highlight">92/100</span> based on availability <span class="stat-value">(100%)</span>, version health <span class="stat-value">(79%)</span>, distribution <span class="stat-value">(100%)</span>
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-code-branch stat-icon"></i>
+                    <div class="stat-text">
+                        Version distribution: <span class="stat-value">78.5%</span> on current 0.8.0, <span class="stat-value">11.6%</span> on 0.7.3, <span class="stat-value">7.9%</span> on test builds
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-globe stat-icon"></i>
+                    <div class="stat-text">
+                        Geographic spread across <span class="stat-value">20 countries</span> ensures network resilience and reduces single-point-of-failure risks
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-tachometer-alt stat-icon"></i>
+                    <div class="stat-text">
+                        Health score breakdown immediately highlights areas requiring operator attention
+                    </div>
+                </div>
+                
+                <div class="stat-item">
+                    <i class="fas fa-sync stat-icon"></i>
+                    <div class="stat-text">
+                        Real-time status updates every <span class="stat-value">30 seconds</span> maintain current operational awareness
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
