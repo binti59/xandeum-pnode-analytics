@@ -97,6 +97,27 @@ export const appRouter = router({
 
   // Rankings router for historical data and badges
   rankings: rankingsRouter,
+
+  // Credits proxy router for podcredits.xandeum.network
+  credits: router({
+    getPodCredits: publicProcedure.query(async () => {
+      try {
+        const response = await axios.get(
+          "https://podcredits.xandeum.network/api/pods-credits",
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            timeout: 10000,
+          }
+        );
+        return response.data;
+      } catch (error: any) {
+        console.error("Failed to fetch pod credits:", error);
+        throw new Error(error.message || "Failed to fetch pod credits");
+      }
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

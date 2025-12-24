@@ -460,3 +460,12 @@
 - [x] Display credits alongside storage capacity
 - [x] Create storageCredits service with caching (30min)
 - [x] Match credits by pubkey from podcredits API
+
+
+## Feature - CORS Proxy for Credits API
+- [x] Create backend API route `/api/trpc/credits.getPodCredits` to fetch podcredits data
+- [x] Add error handling and timeout (10s) for external API calls
+- [x] Update frontend storageCredits service to use proxy endpoint
+- [x] Fix nested TRPC response structure (result.data.json.pods_credits)
+- [x] Test Credits column displays actual credit values (47,944, 56,423, 54,456, etc.)
+- [x] Verify caching works with proxy (216 pods cached for 30min)

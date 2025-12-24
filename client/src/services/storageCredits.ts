@@ -12,7 +12,7 @@ interface PodCreditsResponse {
   pods_credits: PodCredit[];
 }
 
-const CREDITS_API_URL = "https://podcredits.xandeum.network/api/pods-credits";
+const CREDITS_API_URL = "/api/trpc/credits.getPodCredits";
 const CACHE_KEY = "xandeum_pod_credits_cache";
 const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 
@@ -48,14 +48,15 @@ export async function fetchStorageCredits(): Promise<Map<string, number>> {
     console.error("Failed to load credits from cache:", e);
   }
 
-  // Fetch fresh data
+  // Fetch fresh data via backend proxy
   try {
     const response = await fetch(CREDITS_API_URL);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data: PodCreditsResponse = await response.json();
+    const result = await response.json();
+    const data: PodCreditsResponse = result.result.data.json;
     
     // Convert to Map for efficient lookups
     const creditsMap = new Map<string, number>();
