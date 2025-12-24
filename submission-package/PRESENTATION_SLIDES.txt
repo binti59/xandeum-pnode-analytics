@@ -1,0 +1,6 @@
+# Xandeum pNode Analytics - Interactive Presentation
+
+View the interactive HTML presentation:
+manus-slides://SLlNes8w7DiU5zUOkWjjJM
+
+This 15-slide presentation showcases all platform features with professional design and animations.

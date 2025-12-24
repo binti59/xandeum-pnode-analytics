@@ -10,6 +10,14 @@
 
 This submission package contains all documentation and materials for the Xandeum pNode Analytics bounty submission.
 
+### 🎬 Interactive Presentation
+
+**PRESENTATION_SLIDES.txt**
+- Link to 15-slide interactive HTML presentation
+- Professional design with Deep Space Data aesthetic
+- Comprehensive feature showcase with animations
+- Covers all judging criteria and competitive advantages
+
 ### 📄 Documentation Files
 
 **README.md** (Project Root)
