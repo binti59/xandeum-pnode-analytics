@@ -32,7 +32,7 @@ import { fetchStorageCredits, formatCredits } from "@/services/storageCredits";
 
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
-type SortColumn = "rank" | "score" | "version" | "location" | "rpc" | "storage";
+type SortColumn = "rank" | "score" | "version" | "location" | "rpc" | "storage" | "credits";
 type SortDirection = "asc" | "desc";
 
 export default function Rankings() {
@@ -162,6 +162,11 @@ export default function Rankings() {
       case "storage":
         aVal = a.storageCapacity || 0;
         bVal = b.storageCapacity || 0;
+        break;
+      case "credits":
+        // Get credits for both nodes, treat N/A as -1 for sorting (sorts them last)
+        aVal = a.pubkey ? (podCredits.get(a.pubkey) ?? -1) : -1;
+        bVal = b.pubkey ? (podCredits.get(b.pubkey) ?? -1) : -1;
         break;
     }
 
@@ -398,8 +403,14 @@ export default function Rankings() {
                       <SortIcon column="storage" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                    Credits
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("credits")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Credits
+                      <SortIcon column="credits" />
+                    </div>
                   </th>
                   <th
                     className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"

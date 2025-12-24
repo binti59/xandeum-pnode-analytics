@@ -469,3 +469,15 @@
 - [x] Fix nested TRPC response structure (result.data.json.pods_credits)
 - [x] Test Credits column displays actual credit values (47,944, 56,423, 54,456, etc.)
 - [x] Verify caching works with proxy (216 pods cached for 30min)
+
+
+## Feature - Credits Column Sorting
+- [x] Make Credits column header clickable for sorting
+- [x] Add sort indicator (up/down arrow) to Credits column
+- [x] Implement ascending/descending sort by credits value
+- [x] Handle N/A credits values in sorting (treat as -1, sorts to end)
+- [x] Test sorting with actual credits data (63,095, 58,704, 57,837, etc.)
+- [x] Added "credits" to SortColumn type
+- [x] Implemented sorting logic in Rankings component
+- [x] Verified ascending sort (low to high)
+- [x] Verified descending sort (high to low)
