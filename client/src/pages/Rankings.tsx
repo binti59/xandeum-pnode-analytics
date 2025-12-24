@@ -31,7 +31,7 @@ import { getNodeBadges } from "@/lib/badges";
 
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
-type SortColumn = "rank" | "score" | "version" | "location" | "rpc";
+type SortColumn = "rank" | "score" | "version" | "location" | "rpc" | "storage";
 type SortDirection = "asc" | "desc";
 
 export default function Rankings() {
@@ -143,6 +143,10 @@ export default function Rankings() {
       case "rpc":
         aVal = a.rpcAccessible ? 1 : 0;
         bVal = b.rpcAccessible ? 1 : 0;
+        break;
+      case "storage":
+        aVal = a.storageCapacity || 0;
+        bVal = b.storageCapacity || 0;
         break;
     }
 
@@ -372,6 +376,15 @@ export default function Rankings() {
                   </th>
                   <th
                     className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    onClick={() => handleSort("storage")}
+                  >
+                    <div className="flex items-center gap-2">
+                      Storage
+                      <SortIcon column="storage" />
+                    </div>
+                  </th>
+                  <th
+                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("rpc")}
                   >
                     <div className="flex items-center gap-2">
@@ -519,6 +532,22 @@ export default function Rankings() {
                           </div>
                         )}
                       </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      {node.storageCapacity !== undefined ? (
+                        <div className="flex flex-col gap-1">
+                          <div className="text-sm text-white font-mono">
+                            {node.storageCapacity >= 1024
+                              ? `${(node.storageCapacity / 1024).toFixed(2)} TB`
+                              : `${node.storageCapacity.toFixed(2)} GB`}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Score: {node.storageScore}/20
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">N/A</span>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-2">

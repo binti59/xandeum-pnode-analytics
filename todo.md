@@ -399,11 +399,11 @@
 
 
 ## Feature - Storage Metrics in Rankings and Performance
-- [ ] Add Storage column to Rankings table
-- [ ] Add storage sorting option to Rankings
-- [ ] Add Storage chart to Performance trends page
-- [ ] Show storage usage over time in Performance visualization
-- [ ] Update Performance page to track storage in history
+- [x] Add Storage column to Rankings table
+- [x] Add storage sorting option to Rankings
+- [x] Add Storage chart to Performance trends page
+- [x] Show storage usage over time in Performance visualization
+- [x] Update Performance page to track storage in history
 
 
 ## Feature - Storage as Ranking Factor
