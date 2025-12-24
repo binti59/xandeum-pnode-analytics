@@ -370,3 +370,37 @@
 - [ ] Add performance charts overlay for selected nodes
 - [ ] Limit to 4 nodes maximum for comparison
 - [ ] Add "Compare Selected" button to Dashboard
+
+
+## Feature - Watchlist Navigation Link
+- [x] Add Watchlist link to Dashboard header navigation
+- [x] Add count badge showing number of saved nodes
+- [x] getWatchlistCount() function already exists in watchlist.ts
+- [ ] Add Watchlist link to Rankings header navigation
+- [ ] Add Watchlist link to Performance header navigation
+
+## Feature - Total Network Storage Dashboard Stat
+- [x] Calculate total network storage from all accessible nodes
+- [x] Add new stat card to Dashboard (5th card with Database icon)
+- [x] Format storage in TB/GB for display
+- [x] Update stat automatically when nodes are scanned (reactive calculation)
+
+## Feature - Node Comparison Page
+- [ ] Create Compare.tsx page component
+- [ ] Add /compare route to App.tsx
+- [ ] Add comparison checkboxes to node cards
+- [ ] Add "Compare Selected" floating button to Dashboard
+- [ ] Create side-by-side comparison table layout
+- [ ] Display all metrics (CPU, RAM, Storage, Uptime, etc.)
+- [ ] Add performance charts overlay for selected nodes
+- [ ] Limit selection to 4 nodes maximum
+- [ ] Show toast when limit reached
+- [ ] Add "Clear Selection" button
+
+
+## Feature - Storage Metrics in Rankings and Performance
+- [ ] Add Storage column to Rankings table
+- [ ] Add storage sorting option to Rankings
+- [ ] Add Storage chart to Performance trends page
+- [ ] Show storage usage over time in Performance visualization
+- [ ] Update Performance page to track storage in history

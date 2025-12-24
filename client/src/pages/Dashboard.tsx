@@ -18,11 +18,13 @@ import { calculateHealthMetrics } from "@/lib/healthScore";
 import { trpc } from "@/lib/trpc";
 import { Pod } from "@/services/prpc";
 import { motion } from "framer-motion";
-import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy, Activity } from "lucide-react";
+import { AlertTriangle, Download, FileJson, Loader2, RefreshCw, Zap, Clock, Play, Pause, Trophy, Activity, Star } from "lucide-react";
+import { getWatchlistCount } from "@/lib/watchlist";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { startBackgroundRpcScanning, stopBackgroundRpcScanning } from "@/lib/rpcScanner";
 import { startPerformanceCollection, stopPerformanceCollection, getCollectionProgress, CollectionProgress } from "@/lib/performanceCollector";
+import { statsCache } from "@/lib/statsCache";
 
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
@@ -191,6 +193,15 @@ export default function Dashboard() {
 
   // Calculate health metrics
   const healthMetrics = calculateHealthMetrics(nodes);
+  
+  // Calculate total network storage from accessible nodes
+  const totalStorage = nodes.reduce((sum, node) => {
+    const cached = statsCache.get(node.address);
+    if (cached && cached.accessible && cached.stats.file_size) {
+      return sum + cached.stats.file_size;
+    }
+    return sum;
+  }, 0);
 
   // Filter nodes based on search query and active filter
   const filteredNodes = nodes.filter(node => {
@@ -254,6 +265,17 @@ export default function Dashboard() {
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2">
                     <Activity className="h-4 w-4" />
                     Performance
+                  </Button>
+                </Link>
+                <Link href="/watchlist">
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10 flex items-center gap-2 relative">
+                    <Star className="h-4 w-4" />
+                    Watchlist
+                    {getWatchlistCount() > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-yellow-500 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        {getWatchlistCount()}
+                      </span>
+                    )}
                   </Button>
                 </Link>
               </div>
@@ -365,6 +387,7 @@ export default function Dashboard() {
                   onlineNodes={healthMetrics.onlineNodes}
                   uniqueCountries={healthMetrics.uniqueCountries}
                   atRiskNodes={healthMetrics.atRiskNodes}
+                  totalStorage={totalStorage}
                 />
                 <VersionDistributionChart
                   versionDistribution={healthMetrics.versionDistribution}

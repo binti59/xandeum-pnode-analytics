@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { AlertTriangle, Globe, Server, TrendingUp } from "lucide-react";
+import { AlertTriangle, Globe, Server, TrendingUp, Database } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface StatsCardsProps {
@@ -7,6 +7,7 @@ interface StatsCardsProps {
   onlineNodes: number;
   uniqueCountries: number;
   atRiskNodes: number;
+  totalStorage?: number; // Total network storage in bytes
 }
 
 export function StatsCards({
@@ -14,8 +15,20 @@ export function StatsCards({
   onlineNodes,
   uniqueCountries,
   atRiskNodes,
+  totalStorage,
 }: StatsCardsProps) {
   const onlinePercentage = totalNodes > 0 ? Math.round((onlineNodes / totalNodes) * 100) : 0;
+
+  // Format storage size
+  const formatStorage = (bytes?: number): string => {
+    if (!bytes || bytes === 0) return '0 TB';
+    const tb = bytes / (1024 ** 4);
+    if (tb >= 1) {
+      return `${tb.toFixed(2)} TB`;
+    }
+    const gb = bytes / (1024 ** 3);
+    return `${gb.toFixed(2)} GB`;
+  };
 
   const stats = [
     {
@@ -47,6 +60,13 @@ export function StatsCards({
       color: atRiskNodes > 0 ? "text-yellow-500" : "text-green-500",
       bgColor: atRiskNodes > 0 ? "bg-yellow-500/10" : "bg-green-500/10",
     },
+    ...(totalStorage ? [{
+      label: "Total Storage",
+      value: formatStorage(totalStorage),
+      icon: Database,
+      color: "text-cyan-500",
+      bgColor: "bg-cyan-500/10",
+    }] : []),
   ];
 
   return (
