@@ -28,6 +28,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { getNodeBadges } from "@/lib/badges";
+import { fetchStorageCredits, formatCredits } from "@/services/storageCredits";
 
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
@@ -44,6 +45,8 @@ export default function Rankings() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [previousSnapshots, setPreviousSnapshots] = useState<Map<string, { rank: number; score: number }>>(new Map());
   const [nodeBadges, setNodeBadges] = useState<Map<string, any[]>>(new Map());
+  const [podCredits, setPodCredits] = useState<Map<string, number>>(new Map());
+  const [creditsLoading, setCreditsLoading] = useState(true);
 
   const endpoint = localStorage.getItem("xandeum_rpc_endpoint") || DEFAULT_RPC_ENDPOINT;
 
@@ -66,7 +69,19 @@ export default function Rankings() {
 
   useEffect(() => {
     fetchData();
+    loadCredits();
   }, []);
+
+  const loadCredits = async () => {
+    try {
+      const credits = await fetchStorageCredits();
+      setPodCredits(credits);
+    } catch (error) {
+      console.error("Failed to load storage credits:", error);
+    } finally {
+      setCreditsLoading(false);
+    }
+  };
 
   useEffect(() => {
     const ranked = calculateNodeRanking(nodes);
@@ -383,6 +398,9 @@ export default function Rankings() {
                       <SortIcon column="storage" />
                     </div>
                   </th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                    Credits
+                  </th>
                   <th
                     className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("rpc")}
@@ -543,6 +561,22 @@ export default function Rankings() {
                           </div>
                           <div className="text-xs text-muted-foreground">
                             Score: {node.storageScore}/20
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">N/A</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      {creditsLoading ? (
+                        <span className="text-xs text-muted-foreground">Loading...</span>
+                      ) : node.pubkey && podCredits.has(node.pubkey) ? (
+                        <div className="flex flex-col gap-1">
+                          <div className="text-sm text-white font-mono">
+                            {formatCredits(podCredits.get(node.pubkey)!)}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Storage Credits
                           </div>
                         </div>
                       ) : (

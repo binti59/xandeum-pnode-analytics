@@ -28,7 +28,7 @@ export function FilterBar({
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search pNodes..."
+          placeholder="Search by IP, pubkey, or location..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-10 h-12 bg-black/20 border-white/10 focus:border-primary/50 focus:ring-primary/20 text-lg"

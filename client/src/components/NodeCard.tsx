@@ -218,11 +218,22 @@ export function NodeCard({ node }: NodeCardProps) {
             <span className="text-3xl">{node.geo.flag}</span>
           )}
           <div>
-            <h3 className="text-lg font-bold text-white font-mono">
-              {node.address}
-            </h3>
+            {node.pubkey && (
+              <div className="mb-1">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Public Key</p>
+                <h3 className="text-sm font-bold text-primary font-mono break-all">
+                  {node.pubkey}
+                </h3>
+              </div>
+            )}
+            <div className="mt-2">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">IP Address</p>
+              <p className="text-sm font-semibold text-white/80 font-mono">
+                {node.address}
+              </p>
+            </div>
             {node.geo?.city && (
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mt-1">
                 {node.geo.city}
               </p>
             )}

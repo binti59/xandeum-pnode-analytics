@@ -432,3 +432,31 @@
 - [x] Updated scanAllNodesRpcAccessibility() to cache real stats data
 - [x] Verified storage values display correctly (406.06 GB, 24.21 GB, 316.65 GB)
 - [x] Tested storage column sorting functionality - works correctly
+
+
+## UI Improvements - Watchlist Background
+- [x] Match Watchlist tab background color to Dashboard styling
+- [x] Ensure consistent dark theme across all tabs
+
+## Feature - Storage Tracking in Performance Trends
+- [x] Add storage size to Performance page historical charts
+- [x] Show storage usage over time alongside CPU, RAM, uptime
+- [x] Format storage values consistently (GB/TB)
+- [x] Update Performance page background to match Dashboard
+
+## Feature - Public Key Display Priority
+- [x] Display public keys prominently in Dashboard node cards
+- [x] Move pubkey above IP address (pubkey more important for staking)
+- [x] Ensure pubkey is easily copyable with mono font
+
+## Feature - Public Key Search
+- [x] Enable searching nodes by public key in addition to IP address (already implemented)
+- [x] Update search placeholder to indicate pubkey search support
+- [x] Implement pubkey matching in search filter logic (already implemented)
+
+## Feature - Storage Credits Integration
+- [x] Fetch storage credits data from https://podcredits.xandeum.network/
+- [x] Add storage credits column/statistic to Rankings table
+- [x] Display credits alongside storage capacity
+- [x] Create storageCredits service with caching (30min)
+- [x] Match credits by pubkey from podcredits API

@@ -77,7 +77,13 @@ export default function Performance() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white p-8">
+    <div className="min-h-screen text-foreground selection:bg-primary/30">
+      {/* Background Glow Effects */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/5 blur-[120px]" />
+      </div>
+
       <div className="container py-8 space-y-8">
         {/* Header */}
         <motion.div
