@@ -164,13 +164,20 @@ The platform introduces multiple innovative features that differentiate it from 
 
 **Innovation #1: Intelligent Ranking System**
 
-Unlike simple sorting by uptime or version, this platform implements a sophisticated multi-factor scoring algorithm that evaluates nodes across five dimensions:
+Unlike simple sorting by uptime or version, this platform implements a sophisticated multi-factor scoring algorithm that evaluates nodes across six dimensions:
 
 **Base Score (50 points)** - All nodes start with 50 points, ensuring positive scores even for new nodes.
 
 **Version Currency (20 points)** - Nodes running the latest version (0.8.0) receive full points. Older versions receive proportionally fewer points based on version distance.
 
 **RPC Accessibility (10 points)** - Nodes with open RPC ports (port 6000 accessible) receive bonus points, incentivizing operators to enable public access.
+
+**Storage Capacity (20 points)** - Nodes with accessible RPC ports are scored on storage capacity:
+- 20 points for >1TB storage
+- 15 points for 500GB-1TB
+- 10 points for 100-500GB
+- 5 points for <100GB
+- Encourages operators to provide high-capacity infrastructure
 
 **Performance Metrics (20 points)** - Nodes with accessible RPC ports are scored on:
 - CPU Efficiency (5 points): Lower CPU usage indicates better optimization
@@ -180,7 +187,7 @@ Unlike simple sorting by uptime or version, this platform implements a sophistic
 
 **Geographic Diversity (bonus)** - Nodes that are the only representative in their country receive a "Geographic Pioneer" badge, encouraging network decentralization.
 
-This scoring system provides a holistic view of node quality beyond simple metrics, helping operators understand what makes a "good" pNode.
+This scoring system provides a holistic view of node quality beyond simple metrics, helping operators understand what makes a "good" pNode. The platform is the only pNode analytics tool that factors storage capacity into rankings.
 
 **Innovation #2: Automated Performance Collection**
 
@@ -238,6 +245,29 @@ Instead of requiring navigation to a separate detail page, nodes with accessible
 **Smart Caching** - Recently fetched statistics cached to minimize redundant requests
 
 This interaction pattern reduces clicks and keeps users in context, improving workflow efficiency.
+
+**Innovation #7: Storage Capacity Tracking**
+
+The platform uniquely tracks and displays storage capacity metrics across the network, making it the only pNode analytics platform to expose this critical infrastructure metric:
+
+**Storage Column in Rankings** - Sortable column showing each node's file_size in GB/TB format with score breakdowns (e.g., "125.45 GB, Score: 15/20")
+**Performance Trends Integration** - Historical storage usage charts in the Performance page show capacity growth over time
+**Network Storage Aggregation** - Dashboard displays total network storage capacity (e.g., "316.65 GB TOTAL STORAGE")
+**Storage Scoring** - Ranking algorithm awards up to 20 points based on storage capacity, incentivizing operators to provide high-capacity nodes
+
+This feature provides unprecedented visibility into network storage infrastructure, helping operators identify high-capacity providers and plan capacity expansion.
+
+**Innovation #8: Storage Credits Integration**
+
+The platform integrates with the official Xandeum podcredits.xandeum.network API to display storage credits earned by each node:
+
+**Credits Column** - Sortable column in Rankings table showing storage credits with thousands separators (e.g., "47,944 Storage Credits")
+**CORS Proxy** - Backend proxy routes podcredits API requests server-side to bypass browser CORS restrictions
+**Smart Caching** - Credits data cached for 30 minutes to minimize API load while ensuring freshness
+**Pubkey Matching** - Credits matched by node public key from the podcredits database (216 pods tracked)
+**Competitive Advantage** - Only platform among competitors that displays storage credits as a sortable ranking metric
+
+This integration makes the platform the single source of truth for both node performance and storage credit earnings, eliminating the need for operators to check multiple dashboards.
 
 ---
 

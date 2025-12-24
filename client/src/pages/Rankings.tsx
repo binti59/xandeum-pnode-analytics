@@ -471,11 +471,11 @@ export default function Rankings() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-mono text-sm text-white">
-                        {node.address}
+                      <div className="font-mono text-sm font-semibold text-cyan-400">
+                        {node.pubkey?.substring(0, 20)}...{node.pubkey?.substring(node.pubkey.length - 4)}
                       </div>
                       <div className="text-xs text-muted-foreground mt-1 font-mono">
-                        {node.pubkey?.substring(0, 16)}...
+                        {node.address}
                       </div>
                     </td>
                     <td className="px-6 py-4">

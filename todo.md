@@ -481,3 +481,32 @@
 - [x] Implemented sorting logic in Rankings component
 - [x] Verified ascending sort (low to high)
 - [x] Verified descending sort (high to low)
+
+
+## Documentation - Update Submission Package & Slides
+- [x] Update submission package document with new features
+- [x] Add storage metrics section (Storage column in Rankings, Performance charts)
+- [x] Add credits integration section (podcredits API, CORS proxy, Credits column)
+- [x] Add sortable columns section (Storage and Credits sorting)
+- [x] Update presentation slides with latest features
+- [x] Add slides for storage tracking and credits integration
+- [x] Update competitive advantages section with new features
+- [x] Update rankings slide with storage capacity factor
+- [x] Review and finalize both documents
+
+
+## Package - Update Submission Tar File
+- [x] Export updated presentation slides to PDF (Xandeum_pNode_Analytics_Platform.pdf)
+- [x] Create updated submission package tar file (1.5MB)
+- [x] Include updated SUBMISSION.md with storage & credits innovations
+- [x] Include updated presentation PDF (17 slides)
+- [x] Include all supporting documentation (README, USER_GUIDE, PRESENTATION_SCRIPT, competitive_analysis)
+- [x] Deliver updated package to user
+
+
+## UI Improvement - Rankings Pubkey Display
+- [x] Update Rankings table to display pubkey as primary identifier
+- [x] Show IP address below pubkey in smaller text (cyan pubkey, gray IP)
+- [x] Match Dashboard node cards styling (pubkey prominent, IP secondary)
+- [x] Test display with actual node data
+- [x] Format pubkey: first 20 chars + ... + last 4 chars

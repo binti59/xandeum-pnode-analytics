@@ -2,8 +2,8 @@
   "project_info": {
     "title": "Xandeum pNode Analytics Platform",
     "created": 1766569137.2198198,
-    "last_updated": 1766570110.2006395,
-    "total_slides": 15
+    "last_updated": 1766599366.8689408,
+    "total_slides": 17
   },
   "slides": {
     "title": "edited",
@@ -12,6 +12,8 @@
     "performance_alerts": "edited",
     "rpc_scanning": "edited",
     "rankings": "edited",
+    "storage_tracking": "edited",
+    "credits_integration": "edited",
     "historical_trends": "edited",
     "user_experience": "edited",
     "geographic": "edited",
@@ -63,6 +65,20 @@
       "title": "Intelligent rankings evaluate nodes across multiple performance dimensions",
       "summary": "Explains weighted composite scoring algorithm evaluating uptime, version currency, RPC accessibility, and geographic diversity.",
       "image_plan": "",
+      "slide_template_key": ""
+    },
+    {
+      "id": "storage_tracking",
+      "title": "Storage capacity tracking provides unprecedented infrastructure visibility",
+      "summary": "Details the unique storage tracking feature: sortable storage column in Rankings (GB/TB format with scores), Performance trends integration with historical charts, network storage aggregation on Dashboard, and storage scoring (up to 20 points). Emphasizes this is the only pNode analytics platform exposing storage metrics.",
+      "image_plan": "No image needed - focus on data visualization concepts",
+      "slide_template_key": ""
+    },
+    {
+      "id": "credits_integration",
+      "title": "Storage credits integration creates single source of truth for operators",
+      "summary": "Explains the podcredits.xandeum.network API integration: sortable Credits column with thousands separators (47,944 credits), backend CORS proxy for seamless access, 30-minute smart caching, pubkey matching across 216 pods, and competitive advantage as the only platform displaying credits alongside performance metrics.",
+      "image_plan": "No image needed - focus on integration architecture",
       "slide_template_key": ""
     },
     {
