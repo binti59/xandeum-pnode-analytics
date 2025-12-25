@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, ChevronDown, ChevronUp, RefreshCw, Database, Star } from "lucide-react";
 import { isInWatchlist, toggleWatchlist } from "@/lib/watchlist";
+import { StatusIndicator } from "@/components/StatusIndicator";
 
 interface NodeCardProps {
   node: Pod;
@@ -214,6 +215,8 @@ export function NodeCard({ node }: NodeCardProps) {
       {/* Header with Flag and Location */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
+          {/* Status Indicator */}
+          <StatusIndicator online={true} size="md" />
           {node.geo?.flag && (
             <span className="text-3xl">{node.geo.flag}</span>
           )}
@@ -227,7 +230,9 @@ export function NodeCard({ node }: NodeCardProps) {
               </div>
             )}
             <div className="mt-2">
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">IP Address</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                IP Address
+              </p>
               <p className="text-sm font-semibold text-white/80 font-mono">
                 {node.address}
               </p>

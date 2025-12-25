@@ -617,7 +617,7 @@
 - [x] Test: Scan nodes in Browser A, open Browser B, verify nodes appear - SUCCESS!
 - [x] Admin dashboard shows 20+ nodes saved with 368.80 GB total storage
 - [x] Background sync runs every 1 minute automatically
-- [ ] Push fix to GitHub repository
+- [x] Push fix to GitHub repository
 
 
 ## Bug Fix - Rankings Table Status Column Not Visible
@@ -648,3 +648,12 @@
 - [x] Handle case where pubkey exists but address changed (update address)
 - [x] Run database migration to apply schema changes (migration 0004)
 - [x] Tested: Database now tracks nodes by pubkey, handles IP address changes
+
+
+## Feature - Visual Status Indicators
+- [x] Create StatusIndicator component with green (online) and red (offline) dots
+- [x] Add status indicators to Dashboard node cards
+- [x] Add status indicators to Rankings table rows
+- [x] Implemented with pulsing animation for online status
+- [x] Shows "Online" label with green dot in Status column
+- [x] Test visual appearance and accessibility - SUCCESS!

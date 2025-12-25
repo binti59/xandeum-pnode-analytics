@@ -26,6 +26,7 @@ import {
   TrendingDown,
   Minus,
 } from "lucide-react";
+import { StatusIndicator } from "@/components/StatusIndicator";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { getNodeBadges } from "@/lib/badges";
@@ -654,10 +655,7 @@ export default function Rankings() {
                     </td>
                     <td className="px-3 py-3">
                       <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-                          <span className="text-sm text-green-400">Online</span>
-                        </div>
+                        <StatusIndicator online={true} size="sm" showLabel={true} />
                         {node.rpcAccessible !== undefined && (
                           <div className="flex items-center gap-1">
                             <span className="text-xs">
