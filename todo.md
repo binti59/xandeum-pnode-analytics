@@ -529,7 +529,7 @@
 - [ ] Update performanceCollector to save to database (Phase 2 - DEFERRED)
 - [ ] Update watchlist to use database (Phase 2 - IN PROGRESS)
 - [ ] Test cross-browser persistence (Phase 2 - IN PROGRESS)
-- [x] Push all code to GitHub repository (commit 89bf70d)
+- [x] Push all code to GitHub repository (commit 5c99e06)
 
 
 ## Feature - Storage Capacity Filters (Rankings Page)
@@ -549,3 +549,25 @@
 - [ ] Restrict access to admin users only (deferred)
 - [x] Add 6 stat cards with icons and color-coded panels
 - [x] Add Database Management panel with 3 action buttons
+
+
+## Feature - Background Sync Service (localStorage → Database)
+- [ ] Create background sync service module
+- [ ] Implement sync for nodeStats (RPC scan results)
+- [ ] Implement sync for watchlist data
+- [ ] Add periodic sync (every 5 minutes)
+- [ ] Add sync on app initialization (load from DB if localStorage empty)
+- [ ] Add manual sync trigger in Admin dashboard
+- [ ] Add sync status indicator
+- [ ] Test cross-browser persistence after sync
+
+
+## Feature - Background Sync Service (COMPLETED)
+- [x] Create backgroundSync.ts service with sync logic
+- [x] Implement performSync() function to save localStorage to DB
+- [x] Implement loadFromDatabase() function to restore from DB on init
+- [x] Add automatic sync interval (every 5 minutes)
+- [x] Integrate with Dashboard initialization (useEffect on mount)
+- [x] Add manual sync trigger in Admin dashboard (with spinner animation)
+- [x] Test sync functionality - infrastructure working, ready for data
+- [ ] Verify cross-browser persistence (deferred - needs actual scan data)

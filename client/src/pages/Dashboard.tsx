@@ -25,6 +25,7 @@ import { Link } from "wouter";
 import { startBackgroundRpcScanning, stopBackgroundRpcScanning } from "@/lib/rpcScanner";
 import { startPerformanceCollection, stopPerformanceCollection, getCollectionProgress, CollectionProgress } from "@/lib/performanceCollector";
 import { statsCache } from "@/lib/statsCache";
+import { loadFromDatabase, startBackgroundSync } from "@/lib/backgroundSync";
 
 // Default to public node
 const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
@@ -37,6 +38,12 @@ export default function Dashboard() {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+  
+  // Initialize background sync on mount
+  useEffect(() => {
+    loadFromDatabase().catch(console.error);
+    startBackgroundSync();
+  }, []);
 
   
   const [endpoint, setEndpoint] = useState<string>(() => {

@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { performSync } from "@/lib/backgroundSync";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   Database,
@@ -16,15 +18,26 @@ import {
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 
+interface DatabaseStats {
+  totalNodes: number;
+  accessibleNodes: number;
+  totalStorage: number;
+  avgStoragePerNode: number;
+  watchlistCount: number;
+  lastScanTime: Date | null;
+}
+
 export default function Admin() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<DatabaseStats>({
     totalNodes: 0,
     accessibleNodes: 0,
     totalStorage: 0,
     avgStoragePerNode: 0,
     watchlistCount: 0,
-    lastScanTime: null as Date | null,
+    lastScanTime: null,
   });
+  
+  const [syncing, setSyncing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const allNodeStatsQuery = trpc.persistence.getAllNodeStats.useQuery();
@@ -80,6 +93,21 @@ export default function Admin() {
     watchlistQuery.refetch();
   };
 
+  const handleManualSync = async () => {
+    setSyncing(true);
+    try {
+      const result = await performSync();
+      toast.success(`Sync complete: ${result.nodesSynced} nodes synced`);
+      // Refresh stats after sync
+      handleRefresh();
+    } catch (error) {
+      console.error("Manual sync failed:", error);
+      toast.error("Sync failed. Check console for details.");
+    } finally {
+      setSyncing(false);
+    }
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
       {/* Subtle background glow effects */}
@@ -308,14 +336,15 @@ export default function Admin() {
 
             <Button
               variant="outline"
-              className="glass-input hover:bg-white/10 border-white/10 text-white justify-start h-auto py-4"
-              disabled
+              className="w-full justify-start text-left h-auto py-4"
+              onClick={handleManualSync}
+              disabled={syncing}
             >
-              <RefreshCw className="h-5 w-5 mr-3" />
+              <RefreshCw className={`h-5 w-5 mr-3 ${syncing ? 'animate-spin' : ''}`} />
               <div className="text-left">
                 <div className="font-semibold">Sync LocalStorage</div>
                 <div className="text-xs text-muted-foreground">
-                  Manual sync to DB (Coming soon)
+                  {syncing ? 'Syncing...' : 'Manual sync to DB'}
                 </div>
               </div>
             </Button>
