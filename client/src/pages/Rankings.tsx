@@ -34,6 +34,7 @@ const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
 
 type SortColumn = "rank" | "score" | "version" | "location" | "rpc" | "storage" | "credits";
 type SortDirection = "asc" | "desc";
+type StorageFilter = "all" | "over_1tb" | "500gb_1tb" | "100gb_500gb" | "under_100gb";
 
 export default function Rankings() {
   const [nodes, setNodes] = useState<Pod[]>([]);
@@ -42,6 +43,7 @@ export default function Rankings() {
   const [prioritizeRpc, setPrioritizeRpc] = useState<boolean>(true); // Prioritize RPC accessible nodes by default
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [filter, setFilter] = useState<"all" | "top10" | "top50" | "rpc_accessible">("all");
+  const [storageFilter, setStorageFilter] = useState<StorageFilter>("all");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [previousSnapshots, setPreviousSnapshots] = useState<Map<string, { rank: number; score: number }>>(new Map());
   const [nodeBadges, setNodeBadges] = useState<Map<string, any[]>>(new Map());
@@ -177,7 +179,8 @@ export default function Rankings() {
     }
   });
 
-  const filteredNodes =
+  // Apply rank/RPC filter first
+  let filteredNodes =
     filter === "top10"
       ? sortedNodes.slice(0, 10)
       : filter === "top50"
@@ -185,6 +188,26 @@ export default function Rankings() {
       : filter === "rpc_accessible"
       ? sortedNodes.filter(node => node.rpcAccessible === true)
       : sortedNodes;
+
+  // Apply storage filter
+  if (storageFilter !== "all") {
+    filteredNodes = filteredNodes.filter(node => {
+      const storageGB = node.storageCapacity || 0;
+      
+      switch (storageFilter) {
+        case "over_1tb":
+          return storageGB >= 1000;
+        case "500gb_1tb":
+          return storageGB >= 500 && storageGB < 1000;
+        case "100gb_500gb":
+          return storageGB >= 100 && storageGB < 500;
+        case "under_100gb":
+          return storageGB < 100;
+        default:
+          return true;
+      }
+    });
+  }
 
   const loading = proxyMutation.isPending;
 
@@ -280,24 +303,52 @@ export default function Rankings() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-4 rounded-xl"
         >
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Show:</span>
-            <div className="flex gap-2 flex-wrap">
-              {(["all", "top10", "top50", "rpc_accessible"] as const).map((f) => (
-                <Button
-                  key={f}
-                  variant={filter === f ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilter(f)}
-                  className={
-                    filter === f
-                      ? "bg-primary text-primary-foreground"
-                      : "glass-input hover:bg-white/10 border-white/10 text-white"
-                  }
-                >
-                  {f === "all" ? "All" : f === "top10" ? "Top 10" : f === "top50" ? "Top 50" : "🔓 RPC Accessible"}
-                </Button>
-              ))}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Show:</span>
+              <div className="flex gap-2 flex-wrap">
+                {(["all", "top10", "top50", "rpc_accessible"] as const).map((f) => (
+                  <Button
+                    key={f}
+                    variant={filter === f ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setFilter(f)}
+                    className={
+                      filter === f
+                        ? "bg-primary text-primary-foreground"
+                        : "glass-input hover:bg-white/10 border-white/10 text-white"
+                    }
+                  >
+                    {f === "all" ? "All" : f === "top10" ? "Top 10" : f === "top50" ? "Top 50" : "🔓 RPC Accessible"}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Storage:</span>
+              <div className="flex gap-2 flex-wrap">
+                {([
+                  { value: "all", label: "All" },
+                  { value: "over_1tb", label: ">1TB" },
+                  { value: "500gb_1tb", label: "500GB-1TB" },
+                  { value: "100gb_500gb", label: "100-500GB" },
+                  { value: "under_100gb", label: "<100GB" },
+                ] as const).map((sf) => (
+                  <Button
+                    key={sf.value}
+                    variant={storageFilter === sf.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setStorageFilter(sf.value)}
+                    className={
+                      storageFilter === sf.value
+                        ? "bg-cyan-600 text-white"
+                        : "glass-input hover:bg-white/10 border-white/10 text-white"
+                    }
+                  >
+                    {sf.label}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">

@@ -524,9 +524,28 @@
 - [x] Create TRPC endpoints: savePerformanceSnapshot, getPerformanceHistory
 - [x] Create TRPC endpoints: addToWatchlist, removeFromWatchlist, getWatchlist, isInWatchlist
 - [x] Create persistence router and add to appRouter
-- [ ] Update rpcScanner to save to database (Phase 2)
-- [ ] Update statsCache to load from database (Phase 2)
-- [ ] Update performanceCollector to save to database (Phase 2)
-- [ ] Update watchlist to use database (Phase 2)
-- [ ] Test cross-browser persistence (Phase 2)
-- [ ] Push all code to GitHub repository
+- [ ] Update rpcScanner to save to database (Phase 2 - IN PROGRESS)
+- [ ] Update statsCache to load from database (Phase 2 - IN PROGRESS)
+- [ ] Update performanceCollector to save to database (Phase 2 - DEFERRED)
+- [ ] Update watchlist to use database (Phase 2 - IN PROGRESS)
+- [ ] Test cross-browser persistence (Phase 2 - IN PROGRESS)
+- [x] Push all code to GitHub repository (commit 89bf70d)
+
+
+## Feature - Storage Capacity Filters (Rankings Page)
+- [x] Add filter buttons for storage tiers: >1TB, 500GB-1TB, 100-500GB, <100GB, All
+- [x] Implement filter logic to segment nodes by storage capacity
+- [x] Add visual indicator for active filter (cyan highlight)
+- [x] Update filtered node count display
+- [x] Test filter functionality with actual node data
+
+## Feature - Admin Dashboard
+- [x] Create Admin page route and navigation (/admin)
+- [x] Add database statistics panel (total nodes, scans, watchlist items)
+- [x] Add storage usage metrics (total storage tracked, avg per node)
+- [x] Add system health indicators (last scan time, database status)
+- [x] Add data cleanup controls (delete old scans >7 days) - UI ready, functionality marked as "Coming soon"
+- [x] Add export functionality for database backups - UI ready, functionality marked as "Coming soon"
+- [ ] Restrict access to admin users only (deferred)
+- [x] Add 6 stat cards with icons and color-coded panels
+- [x] Add Database Management panel with 3 action buttons

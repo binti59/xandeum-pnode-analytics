@@ -11,6 +11,7 @@ import NodeHistory from "./pages/NodeHistory";
 import Performance from "./pages/Performance";
 import Watchlist from "./pages/Watchlist";
 import Compare from "./pages/Compare";
+import Admin from "./pages/Admin";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/performance"} component={Performance} />
       <Route path={"/watchlist"} component={Watchlist} />
       <Route path={"/compare"} component={Compare} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
