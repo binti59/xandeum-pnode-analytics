@@ -1,0 +1,8 @@
+{
+  "query": "SELECT COUNT(*) as total_nodes, SUM(CAST(json_extract(stats, '$.file_size') AS INTEGER)) as total_storage FROM nodeStats;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT COUNT(*) as total_nodes, SUM(CAST(json_extract(stats, '$.file_size') AS INTEGER)) as total_storage FROM nodeStats;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your TiDB version for the right syntax to use line 1 column 86 near \"INTEGER)) as total_storage FROM nodeStats\""
+  ]
+}

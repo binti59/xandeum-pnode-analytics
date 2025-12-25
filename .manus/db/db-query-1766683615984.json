@@ -1,0 +1,31 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "nodeBadges"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "nodeStats"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "performanceHistory"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "rankingSnapshots"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "users"
+    },
+    {
+      "Tables_in_Gaagcxc4LEuSt54wSrkKWm": "watchlist"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_Gaagcxc4LEuSt54wSrkKWm\n__drizzle_migrations\nnodeBadges\nnodeStats\nperformanceHistory\nrankingSnapshots\nusers\nwatchlist\n",
+  "stderr": "",
+  "execution_time_ms": 2391
+}

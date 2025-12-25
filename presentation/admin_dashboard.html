@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 720px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 60px;
+            line-height: 1.2;
+            color: #06b6d4;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+        }
+        /* Reflow stats to 3 columns x 2 rows to reduce vertical space */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 12px;
+            padding: 8px; /* shrunk inner padding to reduce height */
+        }
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #06b6d4;
+            margin-bottom: 6px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .stat-sublabel {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .management-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 16px;
+            padding: 16px; /* reduced padding to shrink panel height */
+        }
+        .panel-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 16px;
+        }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px; /* reduced padding */
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 8px;
+        }
+        .btn-icon {
+            font-size: 24px;
+        }
+        .btn-content {
+            flex: 1;
+        }
+        .btn-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+        .btn-desc {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .sync-badge {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #22c55e;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <h1>Admin dashboard provides system monitoring and database management</h1>
+        
+        <div class="content-grid">
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value">248</div>
+                    <div class="stat-label">Total Nodes</div>
+                    <div class="stat-sublabel">Cached in database</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🔓</div>
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Accessible Nodes</div>
+                    <div class="stat-sublabel">6.0% online rate</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">💾</div>
+                    <div class="stat-value">1.36 TB</div>
+                    <div class="stat-label">Total Storage</div>
+                    <div class="stat-sublabel">Across accessible nodes</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value">90.67 GB</div>
+                    <div class="stat-label">Avg per Node</div>
+                    <div class="stat-sublabel">Average capacity</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Watchlist</div>
+                    <div class="stat-sublabel">Monitored nodes</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🕐</div>
+                    <div class="stat-value">2m ago</div>
+                    <div class="stat-label">Last Scan</div>
+                    <div class="stat-sublabel">Most recent RPC scan</div>
+                </div>
+            </div>
+            
+            <div class="management-panel">
+                <div class="panel-title">Database Management</div>
+                
+                <div class="action-buttons">
+                    <div class="action-btn">
+                        <div class="btn-icon">🔄</div>
+                        <div class="btn-content">
+                            <div class="btn-title">Manual Sync <span class="sync-badge">Every 1 min</span></div>
+                            <div class="btn-desc">Sync localStorage to PostgreSQL database</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-btn">
+                        <div class="btn-icon">📥</div>
+                        <div class="btn-content">
+                            <div class="btn-title">Export Database</div>
+                            <div class="btn-desc">Download CSV/JSON backup of all data</div>
+                        </div>
+                    </div>
+                    
+                    <div class="action-btn">
+                        <div class="btn-icon">🗑️</div>
+                        <div class="btn-content">
+                            <div class="btn-title">Cleanup Old Data</div>
+                            <div class="btn-desc">Remove scan results older than 7 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

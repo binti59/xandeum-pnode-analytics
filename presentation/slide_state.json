@@ -2,8 +2,8 @@
   "project_info": {
     "title": "Xandeum pNode Analytics Platform",
     "created": 1766569137.2198198,
-    "last_updated": 1766599366.8689408,
-    "total_slides": 17
+    "last_updated": 1766638512.1287107,
+    "total_slides": 19
   },
   "slides": {
     "title": "edited",
@@ -14,6 +14,8 @@
     "rankings": "edited",
     "storage_tracking": "edited",
     "credits_integration": "edited",
+    "storage_filters": "edited",
+    "admin_dashboard": "edited",
     "historical_trends": "edited",
     "user_experience": "edited",
     "geographic": "edited",
@@ -79,6 +81,20 @@
       "title": "Storage credits integration creates single source of truth for operators",
       "summary": "Explains the podcredits.xandeum.network API integration: sortable Credits column with thousands separators (47,944 credits), backend CORS proxy for seamless access, 30-minute smart caching, pubkey matching across 216 pods, and competitive advantage as the only platform displaying credits alongside performance metrics.",
       "image_plan": "No image needed - focus on integration architecture",
+      "slide_template_key": ""
+    },
+    {
+      "id": "storage_filters",
+      "title": "Storage capacity filters enable instant node segmentation by tier",
+      "summary": "Details the storage filter feature on Rankings page: quick-filter buttons (>1TB, 500GB-1TB, 100-500GB, <100GB, All) with cyan active highlighting, instant filtering without page reload, and operator workflow optimization for capacity planning.",
+      "image_plan": "No image needed - focus on filtering functionality",
+      "slide_template_key": ""
+    },
+    {
+      "id": "admin_dashboard",
+      "title": "Admin dashboard provides system monitoring and database management",
+      "summary": "Explains the Admin dashboard at /admin: six stat cards displaying total nodes, accessible nodes, storage metrics, watchlist count, and last scan time; database management panel with manual sync trigger, export functionality, and cleanup controls; background sync service running every 1 minute for cross-browser persistence.",
+      "image_plan": "No image needed - focus on admin capabilities",
       "slide_template_key": ""
     },
     {

@@ -1,0 +1,60 @@
+{
+  "query": "SELECT nodeAddress, accessible, lastScanned FROM nodeStats LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT nodeAddress, accessible, lastScanned FROM nodeStats LIMIT 10;",
+  "rows": [
+    {
+      "nodeAddress": "173.212.207.32:9001",
+      "accessible": "1",
+      "lastScanned": "2025-12-25 17:38:38"
+    },
+    {
+      "nodeAddress": "45.151.122.71:9001",
+      "accessible": "1",
+      "lastScanned": "2025-12-25 17:39:11"
+    },
+    {
+      "nodeAddress": "178.236.183.183:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:14"
+    },
+    {
+      "nodeAddress": "207.180.203.27:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:18"
+    },
+    {
+      "nodeAddress": "109.123.247.212:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:38:51"
+    },
+    {
+      "nodeAddress": "46.250.253.68:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:21"
+    },
+    {
+      "nodeAddress": "207.180.249.161:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:05"
+    },
+    {
+      "nodeAddress": "152.53.142.52:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:38:48"
+    },
+    {
+      "nodeAddress": "31.220.99.33:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:05"
+    },
+    {
+      "nodeAddress": "82.208.23.61:9001",
+      "accessible": "0",
+      "lastScanned": "2025-12-25 17:39:30"
+    }
+  ],
+  "messages": [],
+  "stdout": "nodeAddress\taccessible\tlastScanned\n173.212.207.32:9001\t1\t2025-12-25 17:38:38\n45.151.122.71:9001\t1\t2025-12-25 17:39:11\n178.236.183.183:9001\t0\t2025-12-25 17:39:14\n207.180.203.27:9001\t0\t2025-12-25 17:39:18\n109.123.247.212:9001\t0\t2025-12-25 17:38:51\n46.250.253.68:9001\t0\t2025-12-25 17:39:21\n207.180.249.161:9001\t0\t2025-12-25 17:39:05\n152.53.142.52:9001\t0\t2025-12-25 17:38:48\n31.220.99.33:9001\t0\t2025-12-25 17:39:05\n82.208.23.61:9001\t0\t2025-12-25 17:39:30\n",
+  "stderr": "",
+  "execution_time_ms": 5067
+}

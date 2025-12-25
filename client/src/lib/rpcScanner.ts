@@ -100,6 +100,9 @@ export async function scanAllNodesRpcAccessibility(
       progress.accessible++;
       // Cache with actual stats data including file_size
       statsCache.set(node.address, result.stats, true);
+      
+      // Note: Database persistence is handled by background sync service
+      // which runs every 1 minute and syncs localStorage to database
     } else {
       statsCache.setInaccessible(node.address);
     }

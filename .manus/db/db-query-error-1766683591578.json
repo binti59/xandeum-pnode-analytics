@@ -1,0 +1,8 @@
+{
+  "query": "SELECT COUNT(*) as count FROM node_stats;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT COUNT(*) as count FROM node_stats;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'gaagcxc4leust54wsrkkwm.node_stats' doesn't exist"
+  ]
+}
