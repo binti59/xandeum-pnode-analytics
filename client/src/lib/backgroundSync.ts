@@ -13,10 +13,10 @@ async function apiCall(endpoint: string, input?: any): Promise<any> {
     throw new Error(`API call failed: ${response.statusText}`);
   }
   const data = await response.json();
-  return data.result.data.json || data.result.data;
+  return data.result.data.json || data.result;
 }
 
-const SYNC_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const SYNC_INTERVAL = 1 * 60 * 1000; // Sync every 1 minute
 const CACHE_KEY_PREFIX = "node_stats_";
 const WATCHLIST_KEY = "watchlist";
 

@@ -571,3 +571,9 @@
 - [x] Add manual sync trigger in Admin dashboard (with spinner animation)
 - [x] Test sync functionality - infrastructure working, ready for data
 - [ ] Verify cross-browser persistence (deferred - needs actual scan data)
+
+
+## Update - Background Sync Interval
+- [x] Change sync interval from 5 minutes to 1 minute in backgroundSync.ts
+- [x] Update SYNC_INTERVAL constant from 5 * 60 * 1000 to 1 * 60 * 1000
+- [x] Test sync frequency
