@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import {
   ArrowDown,
   ArrowUp,
+  Database,
   Download,
   FileJson,
   Loader2,
@@ -271,6 +272,12 @@ export default function Rankings() {
                     Rankings
                   </Button>
                 </Link>
+              <Link href="/admin">
+                <Button variant="outline" size="sm">
+                  <Database className="h-4 w-4 mr-2" />
+                  Admin
+                </Button>
+              </Link>
               </div>
             </div>
           </div>
@@ -402,12 +409,12 @@ export default function Rankings() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="glass-panel rounded-2xl overflow-hidden"
         >
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto border border-white/10 rounded-lg">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/10">
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("rank")}
                   >
                     <div className="flex items-center gap-2">
@@ -415,11 +422,11 @@ export default function Rankings() {
                       <SortIcon column="rank" />
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                  <th className="px-3 py-3 text-left text-xs font-semibold text-white">
                     Node
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("location")}
                   >
                     <div className="flex items-center gap-2">
@@ -428,7 +435,7 @@ export default function Rankings() {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("version")}
                   >
                     <div className="flex items-center gap-2">
@@ -437,7 +444,7 @@ export default function Rankings() {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("score")}
                   >
                     <div className="flex items-center gap-2">
@@ -446,7 +453,7 @@ export default function Rankings() {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("storage")}
                   >
                     <div className="flex items-center gap-2">
@@ -455,7 +462,7 @@ export default function Rankings() {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("credits")}
                   >
                     <div className="flex items-center gap-2">
@@ -464,7 +471,7 @@ export default function Rankings() {
                     </div>
                   </th>
                   <th
-                    className="px-6 py-4 text-left text-sm font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
+                    className="px-3 py-3 text-left text-xs font-semibold text-white cursor-pointer hover:bg-white/5 transition-colors"
                     onClick={() => handleSort("rpc")}
                   >
                     <div className="flex items-center gap-2">
@@ -483,7 +490,7 @@ export default function Rankings() {
                     transition={{ duration: 0.3, delay: index * 0.02 }}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="flex items-center gap-2">
                         <div
                           className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border font-mono text-sm ${getRankBadgeColor(
@@ -521,7 +528,7 @@ export default function Rankings() {
                         })()}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="font-mono text-sm font-semibold text-cyan-400">
                         {node.pubkey?.substring(0, 20)}...{node.pubkey?.substring(node.pubkey.length - 4)}
                       </div>
@@ -529,7 +536,7 @@ export default function Rankings() {
                         {node.address}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">{node.geo?.flag || "🌍"}</span>
                         <div>
@@ -542,12 +549,12 @@ export default function Rankings() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <span className="font-mono text-sm text-white">
                         {node.version || "N/A"}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
                           <div
@@ -613,7 +620,7 @@ export default function Rankings() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       {node.storageCapacity !== undefined ? (
                         <div className="flex flex-col gap-1">
                           <div className="text-sm text-white font-mono">
@@ -629,7 +636,7 @@ export default function Rankings() {
                         <span className="text-xs text-muted-foreground">N/A</span>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       {creditsLoading ? (
                         <span className="text-xs text-muted-foreground">Loading...</span>
                       ) : node.pubkey && podCredits.has(node.pubkey) ? (
@@ -645,7 +652,7 @@ export default function Rankings() {
                         <span className="text-xs text-muted-foreground">N/A</span>
                       )}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 py-3">
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
                           <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />

@@ -618,3 +618,33 @@
 - [x] Admin dashboard shows 20+ nodes saved with 368.80 GB total storage
 - [x] Background sync runs every 1 minute automatically
 - [ ] Push fix to GitHub repository
+
+
+## Bug Fix - Rankings Table Status Column Not Visible
+- [x] Fix Rankings table layout to make Status column visible
+- [x] Reduce column padding from px-6 to px-3 or px-4
+- [x] Make table horizontally scrollable with scroll bar at the top
+- [x] Move Admin Dashboard button to the top of Rankings page
+- [x] Test on different screen sizes
+
+## Feature - Automatic Database Cleanup
+- [ ] Add cleanup function to remove stale node records (30+ days old)
+- [ ] Implement cleanup trigger in Admin dashboard
+- [ ] Add automatic cleanup on app initialization
+- [ ] Add confirmation dialog before cleanup
+- [ ] Show cleanup results (number of records deleted)
+- [ ] Test cleanup functionality
+
+
+## User Request - Remove Cleanup Button
+- [x] Remove "Cleanup Old Data" button from Admin Dashboard
+- [x] Remove cleanupStaleNodes endpoint from persistence router
+- [x] Remove cleanup-related state and handlers from Admin.tsx
+
+## Critical Fix - Use Pubkey as Unique Identifier
+- [x] Update database schema to make nodePubkey unique instead of nodeAddress
+- [x] Remove unique constraint from nodeAddress
+- [x] Update saveNodeStats to check by pubkey first, then address as fallback
+- [x] Handle case where pubkey exists but address changed (update address)
+- [x] Run database migration to apply schema changes (migration 0004)
+- [x] Tested: Database now tracks nodes by pubkey, handles IP address changes

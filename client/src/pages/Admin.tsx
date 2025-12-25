@@ -5,15 +5,14 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   Database,
-  HardDrive,
   Activity,
   Users,
-  Trash2,
   Download,
   RefreshCw,
   Loader2,
-  Server,
   Clock,
+  HardDrive,
+  Server,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
@@ -107,6 +106,7 @@ export default function Admin() {
       setSyncing(false);
     }
   };
+
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
@@ -305,7 +305,7 @@ export default function Admin() {
           className="glass-panel p-6 rounded-xl"
         >
           <h2 className="text-xl font-semibold mb-4">Database Management</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button
               variant="outline"
               className="glass-input hover:bg-white/10 border-white/10 text-white justify-start h-auto py-4"
@@ -316,20 +316,6 @@ export default function Admin() {
                 <div className="font-semibold">Export Database</div>
                 <div className="text-xs text-muted-foreground">
                   Download backup (Coming soon)
-                </div>
-              </div>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="glass-input hover:bg-white/10 border-white/10 text-white justify-start h-auto py-4"
-              disabled
-            >
-              <Trash2 className="h-5 w-5 mr-3" />
-              <div className="text-left">
-                <div className="font-semibold">Cleanup Old Data</div>
-                <div className="text-xs text-muted-foreground">
-                  Remove scans &gt;7 days (Coming soon)
                 </div>
               </div>
             </Button>

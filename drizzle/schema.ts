@@ -88,10 +88,10 @@ export type InsertNodeBadge = typeof nodeBadges.$inferInsert;
  */
 export const nodeStats = mysqlTable("nodeStats", {
   id: int("id").autoincrement().primaryKey(),
-  /** Node address (IP:port) */
-  nodeAddress: varchar("nodeAddress", { length: 255 }).notNull().unique(),
-  /** Node public key */
-  nodePubkey: text("nodePubkey"),
+  /** Node address (IP:port) - can change if node operator moves */
+  nodeAddress: varchar("nodeAddress", { length: 255 }).notNull(),
+  /** Node public key - unique identifier for the node (when available) */
+  nodePubkey: varchar("nodePubkey", { length: 255 }).unique(),
   /** RPC stats JSON (cpu, ram, uptime, file_size, etc.) */
   stats: text("stats").notNull(),
   /** Whether RPC port is accessible */

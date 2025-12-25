@@ -19,24 +19,46 @@ export const persistenceRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const existing = await db
-        .select()
-        .from(nodeStats)
-        .where(eq(nodeStats.nodeAddress, input.nodeAddress))
-        .limit(1);
+      // Check by pubkey first (preferred), then by address as fallback
+      let existing = null;
+      if (input.nodePubkey) {
+        const byPubkey = await db
+          .select()
+          .from(nodeStats)
+          .where(eq(nodeStats.nodePubkey, input.nodePubkey))
+          .limit(1);
+        if (byPubkey.length > 0) {
+          existing = byPubkey[0];
+        }
+      }
 
-      if (existing.length > 0) {
+      // If not found by pubkey, check by address
+      if (!existing) {
+        const byAddress = await db
+          .select()
+          .from(nodeStats)
+          .where(eq(nodeStats.nodeAddress, input.nodeAddress))
+          .limit(1);
+        if (byAddress.length > 0) {
+          existing = byAddress[0];
+        }
+      }
+
+      if (existing) {
+        // Update existing record (address may have changed)
         await db
           .update(nodeStats)
           .set({
-            nodePubkey: input.nodePubkey,
+            nodeAddress: input.nodeAddress, // Update address in case it changed
+            nodePubkey: input.nodePubkey || existing.nodePubkey, // Keep existing pubkey if new one is missing
             stats: JSON.stringify(input.stats),
             accessible: input.accessible ? 1 : 0,
             lastScanned: new Date(),
             updatedAt: new Date(),
           })
-          .where(eq(nodeStats.nodeAddress, input.nodeAddress));
+          .where(eq(nodeStats.id, existing.id));
       } else {
+        // Insert new record
         await db.insert(nodeStats).values({
           nodeAddress: input.nodeAddress,
           nodePubkey: input.nodePubkey,
@@ -199,4 +221,6 @@ export const persistenceRouter = router({
         .limit(1);
       return result.length > 0;
     }),
+
+
 });
