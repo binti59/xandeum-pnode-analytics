@@ -81,3 +81,62 @@ export const nodeBadges = mysqlTable("nodeBadges", {
 
 export type NodeBadge = typeof nodeBadges.$inferSelect;
 export type InsertNodeBadge = typeof nodeBadges.$inferInsert;
+
+/**
+ * Node RPC stats table.
+ * Stores RPC scan results for cross-browser persistence.
+ */
+export const nodeStats = mysqlTable("nodeStats", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Node address (IP:port) */
+  nodeAddress: varchar("nodeAddress", { length: 255 }).notNull().unique(),
+  /** Node public key */
+  nodePubkey: text("nodePubkey"),
+  /** RPC stats JSON (cpu, ram, uptime, file_size, etc.) */
+  stats: text("stats").notNull(),
+  /** Whether RPC port is accessible */
+  accessible: int("accessible").default(0).notNull(),
+  /** Last scan timestamp */
+  lastScanned: timestamp("lastScanned").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NodeStats = typeof nodeStats.$inferSelect;
+export type InsertNodeStats = typeof nodeStats.$inferInsert;
+
+/**
+ * Performance history table.
+ * Stores historical performance snapshots for trend analysis.
+ */
+export const performanceHistory = mysqlTable("performanceHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Node address (IP:port) */
+  nodeAddress: varchar("nodeAddress", { length: 255 }).notNull(),
+  /** Performance snapshot JSON (cpu, ram, uptime, storage, etc.) */
+  snapshot: text("snapshot").notNull(),
+  /** Snapshot timestamp */
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PerformanceHistory = typeof performanceHistory.$inferSelect;
+export type InsertPerformanceHistory = typeof performanceHistory.$inferInsert;
+
+/**
+ * Watchlist table.
+ * Stores user's watchlisted nodes.
+ */
+export const watchlist = mysqlTable("watchlist", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Node address (IP:port) */
+  nodeAddress: varchar("nodeAddress", { length: 255 }).notNull().unique(),
+  /** Node public key */
+  nodePubkey: text("nodePubkey"),
+  /** Date added to watchlist */
+  addedAt: timestamp("addedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Watchlist = typeof watchlist.$inferSelect;
+export type InsertWatchlist = typeof watchlist.$inferInsert;

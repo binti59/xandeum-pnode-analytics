@@ -510,3 +510,23 @@
 - [x] Match Dashboard node cards styling (pubkey prominent, IP secondary)
 - [x] Test display with actual node data
 - [x] Format pubkey: first 20 chars + ... + last 4 chars
+
+
+## Feature - Persistent Storage Migration (localStorage → PostgreSQL)
+- [x] Design database schema for RPC scan results (nodeStats table)
+- [x] Create Drizzle schema for nodeStats with fields
+- [x] Run database migration to create nodeStats table
+- [x] Identify all localStorage usage: statsCache, performanceHistory, watchlist, podCredits
+- [x] Add performanceHistory table schema
+- [x] Add watchlist table schema  
+- [x] Run migration for new tables (3 tables: nodeStats, performanceHistory, watchlist)
+- [x] Create TRPC endpoints: saveNodeStats, getNodeStats, getAllNodeStats
+- [x] Create TRPC endpoints: savePerformanceSnapshot, getPerformanceHistory
+- [x] Create TRPC endpoints: addToWatchlist, removeFromWatchlist, getWatchlist, isInWatchlist
+- [x] Create persistence router and add to appRouter
+- [ ] Update rpcScanner to save to database (Phase 2)
+- [ ] Update statsCache to load from database (Phase 2)
+- [ ] Update performanceCollector to save to database (Phase 2)
+- [ ] Update watchlist to use database (Phase 2)
+- [ ] Test cross-browser persistence (Phase 2)
+- [ ] Push all code to GitHub repository

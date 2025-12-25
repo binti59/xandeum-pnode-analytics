@@ -15,6 +15,20 @@
       "when": 1766414843813,
       "tag": "0001_daffy_dragon_lord",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766629938837,
+      "tag": "0002_oval_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766630056776,
+      "tag": "0003_funny_thunderbird",
+      "breakpoints": true
     }
   ]
 }
