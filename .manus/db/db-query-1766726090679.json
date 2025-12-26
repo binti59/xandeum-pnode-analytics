@@ -1,0 +1,40 @@
+{
+  "query": "SELECT nodeAddress, nodePubkey, accessible, lastScanned FROM nodeStats LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT nodeAddress, nodePubkey, accessible, lastScanned FROM nodeStats LIMIT 5;",
+  "rows": [
+    {
+      "nodeAddress": "173.212.207.32:9001",
+      "nodePubkey": "NULL",
+      "accessible": "1",
+      "lastScanned": "2025-12-26 05:13:17"
+    },
+    {
+      "nodeAddress": "45.151.122.71:9001",
+      "nodePubkey": "NULL",
+      "accessible": "1",
+      "lastScanned": "2025-12-26 05:00:14"
+    },
+    {
+      "nodeAddress": "178.236.183.183:9001",
+      "nodePubkey": "NULL",
+      "accessible": "0",
+      "lastScanned": "2025-12-26 05:12:37"
+    },
+    {
+      "nodeAddress": "207.180.203.27:9001",
+      "nodePubkey": "NULL",
+      "accessible": "0",
+      "lastScanned": "2025-12-26 05:12:59"
+    },
+    {
+      "nodeAddress": "109.123.247.212:9001",
+      "nodePubkey": "NULL",
+      "accessible": "0",
+      "lastScanned": "2025-12-26 04:59:52"
+    }
+  ],
+  "messages": [],
+  "stdout": "nodeAddress\tnodePubkey\taccessible\tlastScanned\n173.212.207.32:9001\tNULL\t1\t2025-12-26 05:13:17\n45.151.122.71:9001\tNULL\t1\t2025-12-26 05:00:14\n178.236.183.183:9001\tNULL\t0\t2025-12-26 05:12:37\n207.180.203.27:9001\tNULL\t0\t2025-12-26 05:12:59\n109.123.247.212:9001\tNULL\t0\t2025-12-26 04:59:52\n",
+  "stderr": "",
+  "execution_time_ms": 6915
+}

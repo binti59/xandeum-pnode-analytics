@@ -1,0 +1,14 @@
+{
+  "query": "SELECT COUNT(*) as total, COUNT(nodePubkey) as with_pubkey FROM nodeStats;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT COUNT(*) as total, COUNT(nodePubkey) as with_pubkey FROM nodeStats;",
+  "rows": [
+    {
+      "total": "313",
+      "with_pubkey": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\twith_pubkey\n313\t0\n",
+  "stderr": "",
+  "execution_time_ms": 6442
+}

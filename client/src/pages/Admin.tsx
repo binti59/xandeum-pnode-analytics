@@ -18,7 +18,8 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 
 interface DatabaseStats {
-  totalNodes: number;
+  activeNodes: number;
+  databaseRecords: number;
   accessibleNodes: number;
   totalStorage: number;
   avgStoragePerNode: number;
@@ -28,7 +29,8 @@ interface DatabaseStats {
 
 export default function Admin() {
   const [stats, setStats] = useState<DatabaseStats>({
-    totalNodes: 0,
+    activeNodes: 0,
+    databaseRecords: 0,
     accessibleNodes: 0,
     totalStorage: 0,
     avgStoragePerNode: 0,
@@ -48,13 +50,20 @@ export default function Admin() {
   useEffect(() => {
     if (allNodeStatsQuery.data && watchlistQuery.data) {
       const nodes = allNodeStatsQuery.data;
+      
+      // Count unique pubkeys OR addresses (for nodes without pubkey)
+      const uniqueIdentifiers = new Set(
+        nodes.map(n => n.pubkey || n.address)
+      );
+      
       const accessibleNodes = nodes.filter(n => n.accessible);
       const totalStorage = accessibleNodes.reduce((sum, n) => {
         return sum + (n.stats?.file_size || 0);
       }, 0);
 
       setStats({
-        totalNodes: nodes.length,
+        activeNodes: uniqueIdentifiers.size, // Total unique nodes (by pubkey or address)
+        databaseRecords: nodes.length,
         accessibleNodes: accessibleNodes.length,
         totalStorage: totalStorage / (1024 * 1024 * 1024), // Convert to GB
         avgStoragePerNode: accessibleNodes.length > 0 
@@ -178,7 +187,7 @@ export default function Admin() {
               </div>
               <div className="text-right">
                 <p className="text-sm text-muted-foreground">Total Nodes</p>
-                <p className="text-3xl font-bold">{stats.totalNodes}</p>
+                <p className="text-3xl font-bold">{stats.activeNodes}</p>
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -203,8 +212,8 @@ export default function Admin() {
               </div>
             </div>
             <div className="text-xs text-muted-foreground">
-              {stats.totalNodes > 0
-                ? `${((stats.accessibleNodes / stats.totalNodes) * 100).toFixed(1)}% online`
+              {stats.activeNodes > 0
+                ? `${((stats.accessibleNodes / stats.activeNodes) * 100).toFixed(1)}% online`
                 : "0% online"}
             </div>
           </motion.div>

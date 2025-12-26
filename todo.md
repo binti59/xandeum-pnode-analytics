@@ -667,3 +667,14 @@
 - [x] Verify duplicate prevention is working in saveNodeStats
 - [x] Strengthen saveNodeStats to auto-delete duplicates during saves
 - [x] Test cleanup script - SUCCESS! Removed 7 duplicates (320 → 313 nodes)
+
+
+## Bug Fix - Admin Dashboard Shows Wrong Node Count
+- [x] Count nodes based on unique pubkeys OR addresses (for nodes without pubkey)
+- [x] Admin Dashboard shows database records (313 historical nodes)
+- [x] Dashboard shows current network state (250 active nodes)
+- [x] Decision: Keep both counts - they serve different purposes
+- [x] Admin Dashboard = historical database records (nodes seen recently)
+- [x] Dashboard = current network snapshot (nodes online now)
+- [x] Cleanup button removes stale nodes (>7 days) and duplicates
+- [x] Tested: Cleanup removed 0 nodes (all scanned within 7 days)

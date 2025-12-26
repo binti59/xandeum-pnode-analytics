@@ -1,0 +1,70 @@
+{
+  "query": "SELECT nodeAddress, nodePubkey, lastScanned, accessible FROM nodeStats ORDER BY lastScanned DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4QU99RyS4yU39L6.root --database Gaagcxc4LEuSt54wSrkKWm --execute SELECT nodeAddress, nodePubkey, lastScanned, accessible FROM nodeStats ORDER BY lastScanned DESC LIMIT 10;",
+  "rows": [
+    {
+      "nodeAddress": "203.184.40.164:51098",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:20:36",
+      "accessible": "1"
+    },
+    {
+      "nodeAddress": "31.220.86.39:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:20:30",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "203.184.40.164:20546",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:20:26",
+      "accessible": "1"
+    },
+    {
+      "nodeAddress": "31.220.80.127:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:20:06",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "152.53.248.235:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:20:02",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "158.220.87.11:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:19:58",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "203.184.40.164:34054",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:19:53",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "109.123.247.212:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:19:22",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "213.199.57.70:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:19:22",
+      "accessible": "0"
+    },
+    {
+      "nodeAddress": "37.60.234.104:9001",
+      "nodePubkey": "NULL",
+      "lastScanned": "2025-12-26 05:19:20",
+      "accessible": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "nodeAddress\tnodePubkey\tlastScanned\taccessible\n203.184.40.164:51098\tNULL\t2025-12-26 05:20:36\t1\n31.220.86.39:9001\tNULL\t2025-12-26 05:20:30\t0\n203.184.40.164:20546\tNULL\t2025-12-26 05:20:26\t1\n31.220.80.127:9001\tNULL\t2025-12-26 05:20:06\t0\n152.53.248.235:9001\tNULL\t2025-12-26 05:20:02\t0\n158.220.87.11:9001\tNULL\t2025-12-26 05:19:58\t0\n203.184.40.164:34054\tNULL\t2025-12-26 05:19:53\t0\n109.123.247.212:9001\tNULL\t2025-12-26 05:19:22\t0\n213.199.57.70:9001\tNULL\t2025-12-26 05:19:22\t0\n37.60.234.104:9001\tNULL\t2025-12-26 05:19:20\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1665
+}

@@ -246,13 +246,27 @@ export const persistenceRouter = router({
       return result.length > 0;
     }),
 
-  // Database cleanup - remove duplicate node records
+  // Database cleanup - remove duplicate node records AND stale nodes
   cleanupDuplicateNodes: publicProcedure
     .mutation(async () => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      // Get all node records
+      // Step 1: Remove stale nodes (not scanned in 7 days)
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      
+      const allNodesBeforeCleanup = await db.select().from(nodeStats);
+      let staleCount = 0;
+      
+      for (const node of allNodesBeforeCleanup) {
+        if (new Date(node.lastScanned) < sevenDaysAgo) {
+          await db.delete(nodeStats).where(eq(nodeStats.id, node.id));
+          staleCount++;
+        }
+      }
+
+      // Step 2: Get remaining nodes and find duplicates
       const allNodes = await db.select().from(nodeStats).orderBy(desc(nodeStats.lastScanned));
       
       // Group by pubkey and address to find duplicates
@@ -281,16 +295,20 @@ export const persistenceRouter = router({
       }
 
       // Delete duplicates
-      let deletedCount = 0;
+      let duplicateCount = 0;
       for (const id of toDelete) {
         await db.delete(nodeStats).where(eq(nodeStats.id, id));
-        deletedCount++;
+        duplicateCount++;
       }
 
+      const totalDeleted = staleCount + duplicateCount;
       return {
         success: true,
-        deletedCount,
-        remainingNodes: allNodes.length - deletedCount,
+        deletedCount: totalDeleted,
+        staleCount,
+        duplicateCount,
+        remainingNodes: allNodes.length - duplicateCount,
+        message: `Removed ${staleCount} stale nodes (>7 days old) and ${duplicateCount} duplicates`,
       };
     }),
 
