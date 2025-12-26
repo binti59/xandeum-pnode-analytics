@@ -21,6 +21,8 @@ export const persistenceRouter = router({
 
       // Check by pubkey first (preferred), then by address as fallback
       let existing = null;
+      let addressMatch = null;
+      
       if (input.nodePubkey) {
         const byPubkey = await db
           .select()
@@ -32,16 +34,38 @@ export const persistenceRouter = router({
         }
       }
 
-      // If not found by pubkey, check by address
-      if (!existing) {
-        const byAddress = await db
-          .select()
-          .from(nodeStats)
-          .where(eq(nodeStats.nodeAddress, input.nodeAddress))
-          .limit(1);
-        if (byAddress.length > 0) {
-          existing = byAddress[0];
+      // Always check by address to detect potential duplicates
+      const byAddress = await db
+        .select()
+        .from(nodeStats)
+        .where(eq(nodeStats.nodeAddress, input.nodeAddress))
+        .limit(1);
+      if (byAddress.length > 0) {
+        addressMatch = byAddress[0];
+      }
+
+      // If found by pubkey, update that record
+      if (existing) {
+        // If address changed, update it
+        await db
+          .update(nodeStats)
+          .set({
+            nodeAddress: input.nodeAddress,
+            nodePubkey: input.nodePubkey || existing.nodePubkey,
+            stats: JSON.stringify(input.stats),
+            accessible: input.accessible ? 1 : 0,
+            lastScanned: new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(nodeStats.id, existing.id));
+        
+        // If there's also an address match with a different record, delete it (duplicate)
+        if (addressMatch && addressMatch.id !== existing.id) {
+          await db.delete(nodeStats).where(eq(nodeStats.id, addressMatch.id));
         }
+      } else if (addressMatch) {
+        // Found by address only - update it (may now have pubkey)
+        existing = addressMatch;
       }
 
       if (existing) {
@@ -222,5 +246,52 @@ export const persistenceRouter = router({
       return result.length > 0;
     }),
 
+  // Database cleanup - remove duplicate node records
+  cleanupDuplicateNodes: publicProcedure
+    .mutation(async () => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Get all node records
+      const allNodes = await db.select().from(nodeStats).orderBy(desc(nodeStats.lastScanned));
+      
+      // Group by pubkey and address to find duplicates
+      const seenPubkeys = new Set<string>();
+      const seenAddresses = new Set<string>();
+      const toDelete: number[] = [];
+      
+      for (const node of allNodes) {
+        // If node has pubkey, use it as primary identifier
+        if (node.nodePubkey) {
+          if (seenPubkeys.has(node.nodePubkey)) {
+            // Duplicate by pubkey - mark for deletion
+            toDelete.push(node.id);
+          } else {
+            seenPubkeys.add(node.nodePubkey);
+          }
+        } else {
+          // No pubkey, use address
+          if (seenAddresses.has(node.nodeAddress)) {
+            // Duplicate by address - mark for deletion
+            toDelete.push(node.id);
+          } else {
+            seenAddresses.add(node.nodeAddress);
+          }
+        }
+      }
+
+      // Delete duplicates
+      let deletedCount = 0;
+      for (const id of toDelete) {
+        await db.delete(nodeStats).where(eq(nodeStats.id, id));
+        deletedCount++;
+      }
+
+      return {
+        success: true,
+        deletedCount,
+        remainingNodes: allNodes.length - deletedCount,
+      };
+    }),
 
 });

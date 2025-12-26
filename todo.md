@@ -657,3 +657,13 @@
 - [x] Implemented with pulsing animation for online status
 - [x] Shows "Online" label with green dot in Status column
 - [x] Test visual appearance and accessibility - SUCCESS!
+
+
+## Database Cleanup - Remove Duplicate Records
+- [x] Create cleanup script to identify duplicate node records
+- [x] Keep only the most recent record per pubkey
+- [x] Remove old duplicate records from before pubkey fix
+- [x] Add cleanup button to Admin Dashboard
+- [x] Verify duplicate prevention is working in saveNodeStats
+- [x] Strengthen saveNodeStats to auto-delete duplicates during saves
+- [x] Test cleanup script - SUCCESS! Removed 7 duplicates (320 → 313 nodes)

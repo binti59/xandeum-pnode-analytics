@@ -38,6 +38,9 @@ export default function Admin() {
   
   const [syncing, setSyncing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cleaning, setCleaning] = useState(false);
+
+  const cleanupMutation = trpc.persistence.cleanupDuplicateNodes.useMutation();
 
   const allNodeStatsQuery = trpc.persistence.getAllNodeStats.useQuery();
   const watchlistQuery = trpc.persistence.getWatchlist.useQuery();
@@ -331,6 +334,33 @@ export default function Admin() {
                 <div className="font-semibold">Sync LocalStorage</div>
                 <div className="text-xs text-muted-foreground">
                   {syncing ? 'Syncing...' : 'Manual sync to DB'}
+                </div>
+              </div>
+            </Button>
+
+            <Button
+              variant="outline"
+              className="w-full justify-start text-left h-auto py-4 border-yellow-500/30 hover:bg-yellow-500/10"
+              onClick={async () => {
+                toast.info('Starting cleanup of duplicate node records...');
+                setCleaning(true);
+                try {
+                  const result = await cleanupMutation.mutateAsync();
+                  toast.success(`Cleanup complete! Removed ${result.deletedCount} duplicates. ${result.remainingNodes} nodes remaining.`);
+                  allNodeStatsQuery.refetch();
+                } catch (error) {
+                  toast.error('Failed to cleanup duplicates: ' + (error as Error).message);
+                } finally {
+                  setCleaning(false);
+                }
+              }}
+              disabled={cleaning}
+            >
+              <Database className={`h-5 w-5 mr-3 ${cleaning ? 'animate-pulse' : ''}`} />
+              <div className="text-left">
+                <div className="font-semibold">Cleanup Duplicates</div>
+                <div className="text-xs text-muted-foreground">
+                  {cleaning ? 'Cleaning...' : 'Remove old duplicate records'}
                 </div>
               </div>
             </Button>
