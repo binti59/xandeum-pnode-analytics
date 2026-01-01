@@ -703,4 +703,11 @@
 - [x] Update insights panel version alerts
 - [x] Update RPC stats panel scoring
 - [x] Test and verify all version checks (dev server restarted successfully)
+- [x] Deploy and push to GitHub (commit 2032723 pushed successfully)
+
+
+## Bug Fix - Missing Pubkey Display in NodeCard
+- [x] Investigate why pubkey is not showing for some nodes (API returns null for some nodes)
+- [x] Fix NodeCard component to handle missing/undefined pubkey values (shows "Not Available")
+- [x] Test with nodes that have missing data (HMR applied successfully)
 - [ ] Deploy and push to GitHub
