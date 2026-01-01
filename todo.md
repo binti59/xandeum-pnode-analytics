@@ -678,3 +678,12 @@
 - [x] Dashboard = current network snapshot (nodes online now)
 - [x] Cleanup button removes stale nodes (>7 days) and duplicates
 - [x] Tested: Cleanup removed 0 nodes (all scanned within 7 days)
+
+
+## Critical Bug - Published Site API Routes 404 Error
+- [x] Investigate why /api/proxy-rpc returns 404 on published site
+- [x] Check if backend server is included in deployment - CONFIRMED working
+- [x] Verify server/_core/index.ts API routes are properly configured
+- [x] Test API endpoint with curl - SUCCESS! Returns proper error
+- [x] Root cause: pNode at 192.190.136.36:6000 is offline/unreachable
+- [x] Solution: API endpoint works correctly, just needs working pNode
