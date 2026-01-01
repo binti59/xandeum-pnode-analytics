@@ -687,3 +687,10 @@
 - [x] Test API endpoint with curl - SUCCESS! Returns proper error
 - [x] Root cause: pNode at 192.190.136.36:6000 is offline/unreachable
 - [x] Solution: API endpoint works correctly, just needs working pNode
+
+
+## CRITICAL - Production Fix (Offline Default pNode)
+- [x] Update default pNode endpoint from 192.190.136.36:6000 to 62.171.135.107:6000
+- [x] Test endpoint change locally (backend proxy working correctly)
+- [ ] Deploy and verify production fix
+- [ ] Push changes to GitHub

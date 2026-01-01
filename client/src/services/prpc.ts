@@ -62,9 +62,9 @@ export interface JsonRpcResponse<T> {
   };
 }
 
-// Default to public node for testing
+// Default to user's working pNode
 // User can change this in settings
-export const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
+export const DEFAULT_RPC_ENDPOINT = "http://62.171.135.107:6000/rpc";
 
 /**
  * Fetch all pNodes using the backend proxy
@@ -108,8 +108,8 @@ export const getPods = async (endpoint: string = DEFAULT_RPC_ENDPOINT): Promise<
 
 /**
  * Fetch detailed stats for a specific node
- * Uses public RPC node as fallback since most nodes don't expose port 6000 publicly
- * @param nodeAddress - The IP:port address of the node (e.g., "192.190.136.36:6000")
+ * Uses user's working pNode as fallback since most nodes don't expose port 6000 publicly
+ * @param nodeAddress - The IP:port address of the node (e.g., "62.171.135.107:6000")
  */
 export async function getNodeStats(nodeAddress: string, customEndpoint?: string): Promise<NodeStats> {
   // Use custom endpoint if provided, otherwise fall back to public RPC node
