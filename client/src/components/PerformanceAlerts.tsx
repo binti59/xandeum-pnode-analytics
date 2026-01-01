@@ -94,7 +94,7 @@ export function PerformanceAlerts({ nodes }: PerformanceAlertsProps) {
       }
 
       // Version Alert (outdated)
-      if (node.version !== "0.8.0") {
+      if (node.version !== "1.2.0") {
         newAlerts.push({
           id: `${node.address}-version`,
           type: "version",

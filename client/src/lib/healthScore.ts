@@ -26,14 +26,14 @@ export function calculateHealthMetrics(nodes: Pod[]): HealthMetrics {
   const availabilityScore = totalNodes > 0 ? (onlineNodes / totalNodes) * 100 : 0;
   
   // Version Health Score (35% weight)
-  // Higher score if more nodes are on version 0.8.0 (current stable)
+  // Higher score if more nodes are on version 1.2.0 (current stable)
   const versionCounts: Record<string, number> = {};
   nodes.forEach(node => {
     versionCounts[node.version] = (versionCounts[node.version] || 0) + 1;
   });
   
-  // Use 0.8.0 as the current stable version
-  const latestVersion = "0.8.0";
+  // Use 1.2.0 as the current stable version
+  const latestVersion = "1.2.0";
   const nodesOnLatest = versionCounts[latestVersion] || 0;
   const versionHealthScore = totalNodes > 0 ? (nodesOnLatest / totalNodes) * 100 : 0;
   

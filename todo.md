@@ -692,5 +692,15 @@
 ## CRITICAL - Production Fix (Offline Default pNode)
 - [x] Update default pNode endpoint from 192.190.136.36:6000 to 62.171.135.107:6000
 - [x] Test endpoint change locally (backend proxy working correctly)
-- [ ] Deploy and verify production fix
-- [ ] Push changes to GitHub
+- [x] Deploy and verify production fix (manually published and working)
+- [x] Push changes to GitHub (commit 7d7a25d pushed successfully)
+
+
+## Version Recognition Update (1.2.0 as Latest)
+- [x] Update ranking algorithm to recognize 1.2.0 as latest version
+- [x] Update health metrics calculation to use 1.2.0
+- [x] Update badge system to award "Latest Version" badge for 1.2.0
+- [x] Update insights panel version alerts
+- [x] Update RPC stats panel scoring
+- [x] Test and verify all version checks (dev server restarted successfully)
+- [ ] Deploy and push to GitHub

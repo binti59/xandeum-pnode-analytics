@@ -51,8 +51,8 @@ export function calculateEarnedBadges(
 ): BadgeType[] {
   const badges: BadgeType[] = [];
 
-  // Latest Version badge (0.8.0 is current stable)
-  if (node.version === "0.8.0") {
+  // Latest Version badge (1.2.0 is current stable)
+  if (node.version === "1.2.0") {
     badges.push("latest_version");
   }
 
