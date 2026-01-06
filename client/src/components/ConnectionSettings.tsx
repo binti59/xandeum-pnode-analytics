@@ -64,7 +64,7 @@ export function ConnectionSettings({
               id="endpoint"
               value={endpoint}
               onChange={(e) => setEndpoint(e.target.value)}
-              placeholder="http://192.190.136.36:6000/rpc"
+              placeholder="http://62.171.135.107:6000/rpc"
               className="font-mono text-sm border-2 border-foreground rounded-none focus-visible:ring-0 focus-visible:border-primary"
             />
             <p className="text-xs text-muted-foreground">

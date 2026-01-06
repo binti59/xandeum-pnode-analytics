@@ -32,7 +32,7 @@ import { Link } from "wouter";
 import { getNodeBadges } from "@/lib/badges";
 import { fetchStorageCredits, formatCredits } from "@/services/storageCredits";
 
-const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
+const DEFAULT_RPC_ENDPOINT = "http://62.171.135.107:6000/rpc";
 
 type SortColumn = "rank" | "score" | "version" | "location" | "rpc" | "storage" | "credits";
 type SortDirection = "asc" | "desc";

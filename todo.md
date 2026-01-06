@@ -710,4 +710,19 @@
 - [x] Investigate why pubkey is not showing for some nodes (API returns null for some nodes)
 - [x] Fix NodeCard component to handle missing/undefined pubkey values (shows "Not Available")
 - [x] Test with nodes that have missing data (HMR applied successfully)
+- [x] Deploy and push to GitHub (commit be63312 pushed successfully)
+
+
+## LocalStorage Migration - Auto-update Old Endpoint
+- [ ] Create migration script to detect and update old cached endpoint
+- [ ] Run migration on app initialization
+- [ ] Test migration with old localStorage values
 - [ ] Deploy and push to GitHub
+
+
+## CRITICAL - Find ALL Old Endpoint References
+- [x] Search entire codebase for 192.190.136.36 (found 3 more places)
+- [x] Fix all remaining occurrences (Dashboard.tsx, Rankings.tsx, ConnectionSettings.tsx)
+- [x] Verify no hardcoded old endpoints remain
+- [x] Test and deploy complete fix (120 nodes loading successfully!)
+- [ ] Push to GitHub

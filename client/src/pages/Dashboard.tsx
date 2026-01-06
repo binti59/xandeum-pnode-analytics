@@ -27,8 +27,8 @@ import { startPerformanceCollection, stopPerformanceCollection, getCollectionPro
 import { statsCache } from "@/lib/statsCache";
 import { loadFromDatabase, startBackgroundSync } from "@/lib/backgroundSync";
 
-// Default to public node
-const DEFAULT_RPC_ENDPOINT = "http://192.190.136.36:6000/rpc";
+// Default to user's working pNode
+const DEFAULT_RPC_ENDPOINT = "http://62.171.135.107:6000/rpc";
 
 type FilterType = "all" | "online" | "offline";
 
