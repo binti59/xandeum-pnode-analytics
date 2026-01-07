@@ -51,7 +51,7 @@
 - [x] Update NodeDetailsDrawer to fetch individual node stats on click
 - [x] Add loading state while fetching node details
 - [x] Handle errors gracefully if node doesn't respond
-- [ ] Use public RPC node (192.190.136.36:6000) as fallback for stats
+- [ ] Use public RPC node (62.171.135.107:6000) as fallback for stats
 - [ ] Display real uptime, storage, CPU, RAM, and network stats in drawer
 
 ## New Feature Request (Custom RPC Endpoint Support)
@@ -685,12 +685,12 @@
 - [x] Check if backend server is included in deployment - CONFIRMED working
 - [x] Verify server/_core/index.ts API routes are properly configured
 - [x] Test API endpoint with curl - SUCCESS! Returns proper error
-- [x] Root cause: pNode at 192.190.136.36:6000 is offline/unreachable
+- [x] Root cause: pNode at 62.171.135.107:6000 is offline/unreachable
 - [x] Solution: API endpoint works correctly, just needs working pNode
 
 
 ## CRITICAL - Production Fix (Offline Default pNode)
-- [x] Update default pNode endpoint from 192.190.136.36:6000 to 62.171.135.107:6000
+- [x] Update default pNode endpoint from 62.171.135.107:6000 to 62.171.135.107:6000
 - [x] Test endpoint change locally (backend proxy working correctly)
 - [x] Deploy and verify production fix (manually published and working)
 - [x] Push changes to GitHub (commit 7d7a25d pushed successfully)
@@ -725,4 +725,12 @@
 - [x] Fix all remaining occurrences (Dashboard.tsx, Rankings.tsx, ConnectionSettings.tsx)
 - [x] Verify no hardcoded old endpoints remain
 - [x] Test and deploy complete fix (120 nodes loading successfully!)
+- [x] Push to GitHub (commit d6a0329 pushed successfully)
+
+
+## Documentation Updates - Endpoint Migration
+- [x] Update README.md with new endpoint
+- [x] Update SUBMISSION.md with new endpoint
+- [x] Update USER_GUIDE.md with new endpoint
+- [x] Update submission-package docs (INDEX.md, README.md, SUBMISSION.md, USER_GUIDE.md)
 - [ ] Push to GitHub

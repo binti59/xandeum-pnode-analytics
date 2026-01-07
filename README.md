@@ -191,7 +191,7 @@ pnpm dev
 
 6. Open your browser to `http://localhost:3000`
 
-The platform will automatically connect to the default Xandeum RPC endpoint (`http://192.190.136.36:6000/rpc`) and begin fetching pNode data.
+The platform will automatically connect to the default Xandeum RPC endpoint (`http://62.171.135.107:6000/rpc`) and begin fetching pNode data.
 
 ---
 

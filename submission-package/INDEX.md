@@ -85,7 +85,7 @@ The platform is fully deployed and accessible for review. Key features to test:
 
 **Implementation**:
 - ✅ Valid pRPC integration using `get-pods` method
-- ✅ Official Xandeum RPC endpoint (http://192.190.136.36:6000/rpc)
+- ✅ Official Xandeum RPC endpoint (http://62.171.135.107:6000/rpc)
 - ✅ Comprehensive error handling and timeout management
 - ✅ Extended capabilities: direct node queries, custom endpoints, proxy architecture
 - ✅ Type-safe parsing with TypeScript interfaces

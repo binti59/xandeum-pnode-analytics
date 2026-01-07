@@ -459,7 +459,7 @@ The platform provides several configuration options accessible via the settings 
 ### Connection Settings
 
 **RPC Endpoint**:
-- **Default**: `http://192.190.136.36:6000/rpc` (official Xandeum public node)
+- **Default**: `http://62.171.135.107:6000/rpc` (official Xandeum public node)
 - **Custom**: Enter your own RPC endpoint URL if you're running a local node or prefer a different endpoint
 - **Format**: Must be a valid HTTP/HTTPS URL ending in `/rpc`
 

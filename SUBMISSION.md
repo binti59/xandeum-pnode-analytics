@@ -29,7 +29,7 @@ The platform demonstrates excellence across all judging criteria: **Functionalit
 The platform implements a robust pRPC integration that goes beyond basic requirements. The core data retrieval uses the official Xandeum `get-pods` method to fetch all pNodes appearing in gossip, with additional advanced features:
 
 **Primary pRPC Integration**
-- **Endpoint**: `http://192.190.136.36:6000/rpc` (official Xandeum public node)
+- **Endpoint**: `http://62.171.135.107:6000/rpc` (official Xandeum public node)
 - **Method**: `get-pods` (retrieves complete pNode gossip list)
 - **Protocol**: JSON-RPC 2.0 compliant requests
 - **Error Handling**: Comprehensive error catching with user-friendly messages
